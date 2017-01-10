@@ -11,4 +11,6 @@ for i in range(amountOfPages):
     for site in sites:
         top100Sites.append(site.text.strip())
 
-print(top100Sites)
+with open('top100sites.txt', 'w') as sites:
+    for site in top100Sites:
+        sites.write(f'{site}\n')
