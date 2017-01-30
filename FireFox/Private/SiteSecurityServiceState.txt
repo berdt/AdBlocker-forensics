@@ -1,0 +1,2 @@
+easylist-downloads.adblockplus.org:HSTS	0	17186	1516409718157,1,0
+notification.adblockplus.org:HSTS	0	17186	1516409776636,1,0

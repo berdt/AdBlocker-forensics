@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>telegraaf.nl cookie consent</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <style>
+      body {
+          margin:0;
+          padding:0;
+          width: 100%;
+          min-height: 100%;
+          font-family:"Arial Bold", Arial;
+          font-size:13px;
+          color:#333;
+          background-repeat:no-repeat;
+          background-image:url("//tmgonlinemedia.nl/blur/telegraaf.nl.jpg");
+          background-position: center top;
+      }
+      #shade {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        background-color: rgba(0,0,0,.5);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000);
+        -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000);
+      }
+      #tmg-consent {
+          background-color: #fff;
+          border: solid 1px #000;
+          width: 373px;
+          /*The below should be overridden by blur service*/
+          margin: auto;
+      }
+      #tmg-consent .consent {
+          background-color: #fff;
+          border: solid 1px #000;
+    	  margin: 20px;
+      }
+      #tmg-consent .header {
+          width: 100%;
+      }
+      #tmg-consent .header .close {
+        float: right;
+        margin: 5px 10px;
+        font-size: 20pt;
+        cursor: pointer;
+      }
+      #tmg-consent .content {
+          width: 100%;
+          padding: 10px;
+      }
+      #tmg-consent p {
+      	font-family: 'Arial';
+      	font-size: 13px;
+      	font-style: normal;
+      	font-weight: 400;
+      	line-height: normal;
+        max-width: 95%;
+        text-align: left;
+      }
+      #tmg-consent #footer {
+          font-size: smaller;
+          width: 100%;
+          border-top:1px solid #000;
+      }
+      #tmg-consent #footer p{
+        margin: 0 auto;
+        padding: 10px 0;
+        text-align:center;
+      }
+      #tmg-consent img.logo {
+        float: left;
+        max-width: 100%;
+        max-height: 100%;
+        margin: 6px 6px 6px 13px;
+        border: none;
+      }
+      h1 {
+          color:#333;
+          font-size:18px;
+          font-style:normal;
+          font-weight:700;
+          line-height:normal;
+          margin: 0;
+          text-align:left;
+      }
+      h2 {
+          color:#444;
+          font-size:14pt;
+      }
+      h3 {
+          color:#444;
+          font-size:12pt;
+      }
+      .geavanceerd .options {
+        width: 100%;
+      }
+      .geavanceerd .option {
+		  display: block;
+		  float: left;
+          padding: 0;
+          width: 92px;
+		  height: 40px;
+		  margin: 0 5px;
+          text-align: center;
+          cursor: pointer;
+      }
+	  .geavanceerd .option img {
+		  width: 102px;
+		  height: 50px;
+	  }
+	  .geavanceerd .option.selected img {
+		  width: 92px;
+		  height: 40px;
+	  }
+      .geavanceerd .option .text {
+		  bottom: 40px;
+		  color: #FFF;
+		  font-weight: 700;
+		  position: relative;
+	  }
+	  .geavanceerd .option.selected .text {
+		  bottom: 30px;
+		  color: #000;
+	  }
+      .geavanceerd .option .list {
+        display: none;
+      }
+      .choice {
+        position: relative;
+        max-width: 90%;
+        margin: 10px auto 20px auto;
+      }
+      .choice div.advanced, .choice div.cancel , .choice input.CookiesOK {
+        margin-top: 20px;
+        padding: 10px 0;
+        font-size: 18px;
+        background:#999;
+        color: #fff;
+        border:solid 1px #999;
+        cursor: pointer;
+        width: 300px;
+        text-align: center;
+      }
+      .choice form {
+        display: inline-block;
+        vertical-align: text-bottom;
+      }
+      .choice input[type=submit]{
+          padding:10px 30px;
+          font-size: 18px;
+          background:#68cb69;
+          color: #fff;
+          border:solid 1px #68cb69;
+          cursor: pointer;
+      }
+      .consequences ul {
+        padding: 0;
+        float: left;
+        display: inline-block;
+        width: 95%;
+        margin: 1%;
+        min-height: 150px;
+      }
+      .consequences ul li {
+        list-style-type: none;
+        padding-left: 18px;
+        background-repeat: no-repeat;
+      }
+      #delete-warning, .flashes {
+        border: solid 1px #cb0000;
+      }
+      .flashes {
+        width: 90%;
+        margin: 10px auto;
+      }
+      #delete-warning {
+        width: 93%;
+        margin: 10px 0 10px 10px;
+      }
+      #delete-warning h3, .flashes h3 {
+        background-color: #cb0000;
+      }
+      #delete-warning h3, .flashes h3 {
+        margin: 0;
+        padding: 5px 10px;
+        color: #fff;
+      }
+      .flashes .messages li {
+        list-style-type: none;
+      }
+      .hidden{
+          display:none;
+      }
+      a, a:active, a:hover, a:visited {
+          color:#333;
+      }
+      .header a, .header a:active, .header a:hover, .header a:visited {
+          color:#222;
+          text-decoration: none;
+      }
+      .cf:before,
+      .cf:after {
+          content: " ";
+          display: table;
+      }
+      .cf:after {
+          clear: both;
+      }
+      .cf {
+          *zoom: 1;
+      }
+/*
+      @media only screen and (min-device-width: 768px) and (max-device-width: 1024px),
+      only screen and (max-device-width: 480px) {
+        .choice input[type=submit]{
+          font-size: x-large;
+        }
+      }
+ */
+  </style>
+  <link rel="stylesheet" type="text/css" href="//tmgonlinemedia.nl/blur/telegraaf.nl.css"/>
+</head>
+
+<body>
+<div id="tmg-consent" class="cf">
+	<div class="consent cf">
+    	<div class="header cf">
+      		<img class="logo" src="//tmgonlinemedia.nl/blur/telegraaf.nl.logo.png" alt="telegraaf.nl logo" height="35">
+     	 	<div class="close hidden">&times;</div>
+   		</div>
+		<div class="content">
+			<div class="flashes cf hidden">
+        		<h3>Fout</h3>
+				<ul class="messages">
+          			
+					
+						
+					
+       			 </ul>
+      		</div>
+      		<div class="intro">
+      			<h1>Cookies op telegraaf.nl en andere TMG websites</h1>
+        		<p>
+<a href="//tmgonlinemedia.nl/nl/website-overzicht" target="_blank">TMG websites en apps</a> maken gebruik van cookies en vergelijkbare technieken i) voor functionele en analytische doeleinden, ii) om het mogelijk te maken content via social media te delen, iii) om informatie te verzamelen over uw voorkeuren en de informatie toe te voegen aan uw klantprofiel en iv) om de inhoud van haar websites en advertenties af te stemmen op uw voorkeuren. Voor meer informatie over het cookie gebruik op de <a href="//tmgonlinemedia.nl/nl/website-overzicht" target="_blank">TMG websites en apps</a>, kunt u hieronder op <a class="advanced" href="#geavanceerd">Meer informatie</a> klikken.
+        		</p>
+       			 <p>
+Cookies kunnen ook geplaatst en gebruikt worden door derden, zoals advertentienetwerken en adverteerders. Door op "Akkoord en naar telegraaf.nl" te klikken, gaat u akkoord met de plaatsing en gebruik van cookies via <a href="//tmgonlinemedia.nl/nl/website-overzicht" target="_blank">TMG websites en apps</a> door TMG en derden. Ook gaat u dan akkoord met de verwerking van de (persoons)gegevens die met behulp van cookies kunnen worden verzameld en verwerkt voor de onder i) tot en met iv) genoemde doeleinden. Meer informatie over deze verwerking van (persoons)gegevens kunt u vinden in de toepasselijke <a href="//www.tmg.nl/nl/privacy" target="_blank">privacyverklaring</a> respectievelijk deze derden.
+        		</p>
+			</div>
+      		<div class="geavanceerd hidden">
+        		<h1>Geavanceerde cookie instellingen</h1>
+        		<p>
+TMG websites maken gebruik van cookies. Een cookie is een klein bestandje dat met pagina's van deze website wordt meegestuurd en door uw browser op de harde schijf van uw computer wordt opgeslagen.
+        		</p>
+        		<p>
+Het gebruik van cookies en vergelijkbare technieken gebeurt i) voor functionele en analytische doeleinden, ii) om het mogelijk te maken content via social media te delen, iii) om informatie te verzamelen over uw voorkeuren en de informatie toe te voegen aan uw klantprofiel en iv) om de inhoud van haar websites en advertenties af te stemmen op uw voorkeuren.        
+        		</p>
+        		<p>
+Via onderstaande instellingen kunt u aangeven welke cookies u wilt accepteren bij gebruik van de TMG websites en apps. Houd er rekening mee dat door niet alle cookies te accepteren een deel van deze websites niet goed zal kunnen werken. Meer informatie over het gebruik van cookies en de verschillende soorten cookies vindt u in onderstaande link <a href="//tmgonlinemedia.nl/nl/website-overzicht" target="_blank">cookie informatie</a>
+        		</p>
+        		<h2>Kies hieronder uw instelling:</h2>
+        		<div id="delete-warning" class="hidden">
+          			<h3>Let op!</h3>
+          			<p>U kiest ervoor om minder cookies toe te staan dan u al heeft. Wij kunnen de bestaande cookies niet voor u verwijderen, dit dient u zelf te doen in uw browser.</p>
+        		</div>
+        		<div class="options cf">
+					<div class="option cookie-level-select" id="cookie-level-3">
+						<img src="/consent/img/not_pressed.png"/>
+						<div class="text">Standaard</div>
+						<span class="list will-not">
+						</span>
+						<span class="list will">
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Advertenties vertonen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Anonieme statistieken verzamelen&lt;/li&gt;
+             				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Video vertonen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Audio luisteren&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Advertenties tonen op basis van surfgedrag&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Artikelen delen via social media&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; U laten reageren op artikelen&lt;/li&gt;
+             				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Advertenties personaliseren&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Inloggen via social media&lt;/li&gt;
+            			</span>
+					</div>
+					<div class="option cookie-level-select" id="cookie-level-2">
+            			<img src="/consent/img/not_pressed.png"/>
+            			<div class="text">Beperkt</div>
+            			<span class="list will">
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Advertenties vertonen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Anonieme statistieken verzamelen&lt;/li&gt;
+             				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Video vertonen (beperkt)&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Audio luisteren (beperkt)&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Advertenties tonen op basis van surfgedrag&lt;/li&gt;
+            			</span>
+            			<span class="list will-not">
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Artikelen delen via social media&lt;/li&gt;
+             				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; U laten reageren op artikelen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Advertenties personaliseren&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Inloggen via social media&lt;/li&gt;
+            			</span>
+          			</div>
+					<div class="option cookie-level-select" id="cookie-level-1">
+						<img src="/consent/img/not_pressed.png"/>
+						<div class="text">Functioneel</div>
+						<span class="list will">
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Advertenties vertonen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Anonieme statistieken verzamelen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Video vertonen (beperkt)&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#008000;"&gt;✓&lt;/span&gt; Audio luisteren (beperkt)&lt;/li&gt;
+            			</span>
+						<span class="list will-not">
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Artikelen delen via social media&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; U laten reageren op artikelen&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Advertenties personaliseren&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Inloggen via social media&lt;/li&gt;
+              				&lt;li&gt;&lt;span style="font-family:'Arial Bold', 'Arial';font-weight:700;color:#FF0000;"&gt;X&lt;/span&gt; Advertenties tonen op basis van surfgedrag&lt;/li&gt;
+            			</span>
+					</div>
+        		</div>
+        		<div class="consequences cf">
+          			<ul id="will-not">
+            			<h3>telegraaf.nl zal niet:</h3>
+          			</ul>
+          		</div>
+          		<div class="consequences cf">
+          			<ul id="will">
+            			<h3>telegraaf.nl zal wel:</h3>
+          			</ul>
+        		</div>
+      		</div>
+    	</div>
+
+    	<div class="choice cf">
+        	
+    <form action="" method="POST">
+        <input id="csrf_token" name="csrf_token" type="hidden" value="20170120022055##523d702645941495bcce727a4ad66aa7a709c43d">
+        
+          	<div class="hidden">
+            	<input type="hidden" name="level" id="level" />
+            	
+    <div class="form_field">
+        <label for="essential">Essentieel</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" checked id="essential" name="essential" type="checkbox" value="y">
+        
+    </div>
+
+            	
+    <div class="form_field">
+        <label for="functional">Functioneel</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" checked id="functional" name="functional" type="checkbox" value="y">
+        
+    </div>
+
+            	
+    <div class="form_field">
+        <label for="advertising">Advertenties</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" checked id="advertising" name="advertising" type="checkbox" value="y">
+        
+    </div>
+
+           		
+    <div class="form_field">
+        <label for="analytics">Statistieken om de site beter te maken</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" checked id="analytics" name="analytics" type="checkbox" value="y">
+        
+    </div>
+
+            	
+    <div class="form_field">
+        <label for="advertising_network">Advertenties van TMG en partners</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" checked id="advertising_network" name="advertising_network" type="checkbox" value="y">
+        
+    </div>
+
+            	
+    <div class="form_field">
+        <label for="social">Social Media</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" id="social" name="social" type="checkbox" value="y">
+        
+    </div>
+
+            	
+    <div class="form_field">
+        <label for="advertising_targeting">Gerichte advertenties</label>
+        
+            <input caller="&lt;Macro anonymous&gt;" id="advertising_targeting" name="advertising_targeting" type="checkbox" value="y">
+        
+    </div>
+
+         	 </div>
+        	
+        <input type="submit" value="Akkoord en naar telegraaf.nl" class="CookiesOK" />
+    </form>
+
+        	<div class="cancel hidden cf">Cancel</div>
+        	<div class="advanced cf">Meer informatie en instelling wijzigen</div>
+    	</div>
+    	<div id="footer">
+    		<p><a href="//www.tmg.nl/nl/privacy" target="_blank">Privacy</a><span style="color:#333333;">&nbsp;&nbsp; |&nbsp;&nbsp; </span><a href="http://tmgonlinemedia.nl/cookies/telegraaf.nl" target="_blank">FAQ</a><span style="color:#333333;">&nbsp;&nbsp; |&nbsp;&nbsp; </span><a target="_blank" href="//www.tmg.nl/nl/contact">Neem contact met ons op</a></p>
+    	</div>
+    </div>
+</div>
+
+<div id="shade"></div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
+<script>window.jQuery || document.write("<script src='/consent/script/jquery-1.8.2.min.js'>\x3C/script>")</script>
+
+<script>
+
+var levels = [];
+levels[0] = ['essential', 'functional', 'advertising', 'analytics'];
+levels[1] = ['advertising_network'];
+levels[2] = ['social', 'advertising_targeting'];
+
+function getCookie(c_name) {
+    var i, x, y, ARRcookies = document.cookie.split(";");
+    for(i = 0; i < ARRcookies.length; i++) {
+        x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+        y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+        x = x.replace(/^\s+|\s+$/g, "");
+        if(x == c_name) {
+            return unescape(y);
+        }
+    }
+}
+
+function detectLevel() {
+  var cookies = (getCookie('cc') || '').split('.');
+  for (var i = levels.length - 1; i >= 0; i--) {
+    var n = 0;
+    $.each(levels[i], function(_, cat) {
+      if($.inArray(cat, cookies) >= 0) {
+        ++n;
+      } else {
+        return false;
+      }
+    })
+    if(n==levels[i].length) {
+      return 1+i;
+    }
+  };
+  return null;
+}
+
+function changeLevel(level) {
+  var preset = 3;
+  var currentLevel = detectLevel() || preset;
+  level = level || currentLevel;
+  levelID = 'cookie-level-'+(level);
+  //$('#'+levelID).attr('checked', true);
+  $('.option').removeClass('selected');
+  $('.option img').attr('src', '/consent/img/not_pressed.png');
+  $('#'+levelID).addClass('selected');
+  $('#'+levelID + ' img').attr('src', '/consent/img/pressed.png');
+  $('#level').attr('value', levelID);
+  $('#will').find('li').remove();
+  $('#will').append($('#' + levelID + ' .will').text())
+  $('#will-not').find('li').remove();
+  $('#will-not').append($('#' + levelID + ' .will-not').text())
+  detectLevel() && level < currentLevel ? $('#delete-warning').show() : $('#delete-warning').hide()
+  $('#tip').text(level == preset ? 'de normale gebruikerservaring' : 'uw huidige selectie');
+  if (level == 3) {
+	  $('#will-not').hide();
+  } else {
+	  $('#will-not').show();
+  }
+
+  // reset and select levels
+  $('input[type=checkbox]').attr('checked', false);
+  while (level > 0) {
+  	$(levels[--level]).each(function(i, elm){
+  	  $('#' + elm).attr('checked', true);
+	});
+  }
+}
+
+function cookieCheck() {
+  var cookieEnabled = (navigator.cookieEnabled) ? true : false;
+  if (typeof navigator.cookieEnabled == "undefined" && !cookieEnabled) {
+    document.cookie="__cverify=1";
+    cookieEnabled = (document.cookie.indexOf("__cverify") != -1) ? true : false;
+    var expires = new Date(1984,8,24);
+    document.cookie = "__cverify=1;expires=" + expires.toUTCString();
+  }
+  return cookieEnabled;
+}
+
+$(function(){
+    /*
+     * Respond to <enter> keystroke
+     */
+    $(document).keydown(function(e) {
+        if (e.keyCode == 13) { //enter
+            e.preventDefault();
+            $('form').submit();
+        }
+        if(e.keyCode == 27) { //escape
+          e.preventDefault();
+          $('.cancel').click();
+        }
+    });
+
+    /*
+     * Activate "advanced" link
+     */
+    $('div.advanced').on('click', function(ev) {
+      window.location.hash = 'geavanceerd';
+      ev.preventDefault();
+      $('.intro').hide();
+      $('.geavanceerd').show();
+      $('div.advanced').hide();
+      $('.cancel').show();
+	  $('.header .close').show();
+    });
+    $('.cancel').on('click', function(ev) {
+      ev.preventDefault();
+      $('.geavanceerd').hide();
+      $('.intro').show();
+      $(this).hide();
+      $('div.advanced').show();
+    });
+    $('.header .close').on('click', function() {
+      $('.cancel').click();
+    })
+    /*
+     * Change list contents on radio select
+     */
+    $('.cookie-level-select').on('click', function(ev) {
+      changeLevel(parseInt($(ev.currentTarget).attr('id').slice(-1)));
+    })
+    /*
+     * Set default level
+     */
+    changeLevel();
+    /*
+     * Respect hash for advanced page
+     */
+    if(window.location.hash == '#geavanceerd') {
+      $('.cancel').off();
+      $('.cancel').on('click', function(ev) {
+        ev.preventDefault();
+        window.location.href = 'http://www.telegraaf.nl/?';
+      })
+      $('.header .close').show();
+      $('div.advanced').click();
+    }
+    /*
+     * Maybe show flashes
+     */
+    
+      
+    
+    /*
+     * Check if cookies are even accepted
+     */
+    if(!cookieCheck()) {
+      $('.flashes .messages').append($('<li></li>').text('Uw browser accepteert geen cookies. Hierdoor is het niet mogelijk uw voorkeur op te slaan. Pas de instellingen van uw browser aan en probeer het daarna opnieuw.'));
+      $('.flashes').show();
+    }
+});
+</script>
+<script async="async" src="//tmgonlinemedia.nl/blur/telegraaf.nl.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+ 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-41794665-1']);  
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_setDomainName', 'tmgonlinemedia.nl']);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+ 
+</script>
+
+</body>
+</html>�Z�JDg      X�^�X�^�=X�       �    :http://tmgonlinemedia.nl/consent/consent/?return=http%3A%2F%2Fwww.telegraaf.nl%2F&clienttime=1484873457256&version=0&detect=true request-method GET response-head HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Cache-Control: private, max-age=0
+P3P: CP="Telegraaf Media Groep does not have a P3P policy. Learn why here: http://tmgonlinemedia.nl/p3p/"
+X-Cache: cookies2
+Content-Length: 23194
+Accept-Ranges: bytes
+Date: Fri, 20 Jan 2017 00:50:55 GMT
+X-Varnish: 1015793931
+Age: 0
+Via: 1.1 varnish
+ charset UTF-8 uncompressed-len 0 predictor::resource-count 8 predictor::http://tmgonlinemedia.nl/blur/telegraaf.nl.css 1,1,1484873457,0 predictor::http://tmgonlinemedia.nl/blur/telegraaf.nl.logo.png 1,1,1484873457,0 predictor::http://tmgonlinemedia.nl/consent/img/not_pressed.png 1,1,1484873457,0 predictor::http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js 1,1,1484873457,0 predictor::http://tmgonlinemedia.nl/blur/telegraaf.nl.js 1,1,1484873457,0 predictor::http://tmgonlinemedia.nl/blur/telegraaf.nl.jpg 1,1,1484873457,0 predictor::http://www.google-analytics.com/ga.js 1,1,1484873457,0 predictor::http://tmgonlinemedia.nl/consent/img/pressed.png 1,1,1484873457,0   Z�
