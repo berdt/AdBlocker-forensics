@@ -1,0 +1,114 @@
+[2748:2940:0129/124103:INFO:CONSOLE(6)] "SW registered", source: https://www.google.com/_/chrome/newtab?espv=2&ie=UTF-8 (6)
+[2748:6964:0129/124107:WARNING:extension_protocols.cc(445)] Failed to GetPathForExtension: pkedcjkdefgpdelpbcmbmeomcjbeemfm
+[2748:6964:0129/124107:WARNING:url_request_job_manager.cc(89)] Failed to map: chrome-extension://pkedcjkdefgpdelpbcmbmeomcjbeemfm/cast_sender.js
+[2748:6964:0129/124107:WARNING:extension_protocols.cc(445)] Failed to GetPathForExtension: fjhoaacokmgbjemoflkofnenfaiekifl
+[2748:6964:0129/124107:WARNING:url_request_job_manager.cc(89)] Failed to map: chrome-extension://fjhoaacokmgbjemoflkofnenfaiekifl/cast_sender.js
+[2748:6964:0129/124107:WARNING:extension_protocols.cc(445)] Failed to GetPathForExtension: boadgeojelhgndaghljhdicfkmllpafd
+[2748:6964:0129/124107:WARNING:url_request_job_manager.cc(89)] Failed to map: chrome-extension://boadgeojelhgndaghljhdicfkmllpafd/cast_sender.js
+[2748:6964:0129/124108:WARNING:extension_protocols.cc(445)] Failed to GetPathForExtension: dliochdbjfkdbacpmhlcpmleaejidimm
+[2748:6964:0129/124108:WARNING:url_request_job_manager.cc(89)] Failed to map: chrome-extension://dliochdbjfkdbacpmhlcpmleaejidimm/cast_sender.js
+[2748:6964:0129/124108:WARNING:extension_protocols.cc(445)] Failed to GetPathForExtension: enhhojjnijigcajfphajepfemndkmdlo
+[2748:6964:0129/124108:WARNING:url_request_job_manager.cc(89)] Failed to map: chrome-extension://enhhojjnijigcajfphajepfemndkmdlo/cast_sender.js
+[2748:6964:0129/124108:WARNING:extension_protocols.cc(445)] Failed to GetPathForExtension: fmfcbgogabcbclcofgocippekhfcmgfj
+[2748:6964:0129/124108:WARNING:url_request_job_manager.cc(89)] Failed to map: chrome-extension://fmfcbgogabcbclcofgocippekhfcmgfj/cast_sender.js
+[2748:6964:0129/124112:WARNING:spdy_session.cc(2216)] Received HEADERS for invalid stream 7
+[2748:2940:0129/124118:INFO:CONSOLE(0)] "
+%cStop!", source:  (0)
+[2748:2940:0129/124118:INFO:CONSOLE(0)] "
+%cThis is a browser feature intended for developers. If someone told you to copy-paste something here to enable a Facebook feature or "hack" someone's account, it is a scam and will give them access to your Facebook account.", source:  (0)
+[2748:2940:0129/124118:INFO:CONSOLE(0)] "
+%cSee https://www.facebook.com/selfxss for more information.", source:  (0)
+[2748:2940:0129/124118:INFO:CONSOLE(0)] "
+%c", source:  (0)
+[2748:2940:0129/124142:INFO:CONSOLE(3)] "DARLA notice: 548", source: https://www.yahoo.com/sy/rq/darla/2-9-9/js/g-r-min.js (3)
+[2748:2940:0129/124142:INFO:CONSOLE(3)] "DARLA notice: 546", source: https://www.yahoo.com/sy/rq/darla/2-9-9/js/g-r-min.js (3)
+[2748:2940:0129/124143:INFO:CONSOLE(14)] "yui: NOT loaded: td-applet-activitylist-atomic-templates-list.tumblr", source: https://www.yahoo.com/sy/zz/combo?yui:/3.18.0/yui/yui-min.js&/ss/rapid-3.29.1.js&/os/mit/td/aperollup-min-88bb8029_desktop_advance.js (14)
+[2748:2940:0129/124143:INFO:CONSOLE(14)] "yui: NOT loaded: td-applet-activitylist-atomic-templates-list.tumblr", source: https://www.yahoo.com/sy/zz/combo?yui:/3.18.0/yui/yui-min.js&/ss/rapid-3.29.1.js&/os/mit/td/aperollup-min-88bb8029_desktop_advance.js (14)
+[2748:2940:0129/124143:INFO:CONSOLE(14)] "yui: NOT loaded: td-applet-activitylist-atomic-templates-list.tumblr", source: https://www.yahoo.com/sy/zz/combo?yui:/3.18.0/yui/yui-min.js&/ss/rapid-3.29.1.js&/os/mit/td/aperollup-min-88bb8029_desktop_advance.js (14)
+[2748:2940:0129/124143:INFO:CONSOLE(14)] "yui: NOT loaded: td-applet-activitylist-atomic-templates-list.tumblr", source: https://www.yahoo.com/sy/zz/combo?yui:/3.18.0/yui/yui-min.js&/ss/rapid-3.29.1.js&/os/mit/td/aperollup-min-88bb8029_desktop_advance.js (14)
+[2748:2940:0129/124215:INFO:CONSOLE(14)] "1485690135774: loading flight:1653620", source: https://s.zkcdn.net/ados.js?cb=01350e9 (14)
+[2748:2940:0129/124216:INFO:CONSOLE(14)] "1485690136485: flight is loaded for div: main and flightId:1653620", source: https://s.zkcdn.net/ados.js?cb=01350e9 (14)
+[2748:2940:0129/124216:INFO:CONSOLE(14)] "1485690136485: writing pixel for div: main and flightId:1653620", source: https://s.zkcdn.net/ados.js?cb=01350e9 (14)
+[2748:2940:0129/124227:INFO:CONSOLE(20)] "JQMIGRATE: Migrate is installed with logging active, version 1.4.1", source: https://abs.twimg.com/k/en/init.en.a5e87d897f2a1cc1e5e3.js (20)
+[2748:2940:0129/124227:INFO:CONSOLE(20)] "JQMIGRATE: jQuery.browser is deprecated", source: https://abs.twimg.com/k/en/init.en.a5e87d897f2a1cc1e5e3.js (20)
+[2748:2940:0129/124227:INFO:CONSOLE(20)] "console.trace", source: https://abs.twimg.com/k/en/init.en.a5e87d897f2a1cc1e5e3.js (20)
+[2748:2940:0129/124230:INFO:CONSOLE(0)] "The resource https://abs.twimg.com/k/en/9.pages_home.en.c9df1136d5c28c0fd1dd.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it wasn't preloaded for nothing.", source: https://twitter.com/ (0)
+[2748:2940:0129/124232:INFO:CONSOLE(16)] "Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience. For more help, check https://xhr.spec.whatwg.org/.", source: https://abs.twimg.com/k/en/init.en.a5e87d897f2a1cc1e5e3.js (16)
+[2748:2940:0129/124232:INFO:CONSOLE(20)] "console.trace", source: https://abs.twimg.com/k/en/init.en.a5e87d897f2a1cc1e5e3.js (20)
+[2748:2940:0129/124234:INFO:CONSOLE(4)] "Uncaught SyntaxError: Unexpected token <", source: https://www.parimatch-sport4.com/syncc.html?btag=a_4530b_5c_666661 (4)
+[2748:2940:0129/124235:INFO:CONSOLE(1)] "Uncaught SyntaxError: Unexpected token <", source: https://pokerdom10.co/ru?partner=p27142p117060pe1b4t8134 (1)
+[2748:2940:0129/124235:INFO:CONSOLE(0)] "Refused to execute script from 'https://www.leon.ru/?wm=3001971' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.", source: http://betsonsport.ru/click/lend333.php (0)
+[2748:2940:0129/124235:INFO:CONSOLE(2)] "Uncaught SyntaxError: Unexpected token <", source: https://secure.ecopayz.com/ (2)
+[2748:2940:0129/124235:INFO:CONSOLE(1)] "Uncaught SyntaxError: Unexpected token <", source: https://member.neteller.com/signUp/?lang=ru&btag=a_37477b_3366c_666661&program=NTAFFILIATE (1)
+[2748:2940:0129/124235:INFO:CONSOLE(4)] "Uncaught SyntaxError: Unexpected token <", source: https://www.reg.ru/?rid=2469893 (4)
+[2748:2940:0129/124235:INFO:CONSOLE(4)] "Uncaught SyntaxError: Unexpected token <", source: https://www.parimatch.com/syncc.html?btag=a_4530b_14c_66666111 (4)
+[2748:2940:0129/124235:INFO:CONSOLE(2)] "Uncaught SyntaxError: Unexpected token <", source: https://www.pinnacle.com/ru/?aup=True (2)
+[2748:2940:0129/124236:INFO:CONSOLE(2)] "Uncaught SyntaxError: Unexpected token <", source: https://sports.bwin.com/en/sports?wm=4495122&zoneId=1729563 (2)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.bannerclicked: function (a,b,c){dataLayer.push({event:"GAevent",eventCategory:"BANNER_CLICKED",eventAction:b,eventLabel:c})}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.visit: function (){yaCounter24133222.reachGoal("VISIT_PAGE",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.totostatisticsvisit: function (){yaCounter24133222.reachGoal("VISIT_TOTO_STATISTIC_PAGE",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.joinpagevisit: function (){yaCounter24133222.reachGoal("JOIN_PAGE_VISIT",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.join: function (){yaCounter24133222.reachGoal("JOIN",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.registration: function (){yaCounter24133222.reachGoal("REGISTRATION",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.bannerclicked: function (a,d,b){a={banner_clicked_statisticKey:d};yaCounter24133222.reachGoal("BANNER_CLICKED",a)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.betplaced: function (){yaCounter24133222.reachGoal("BET_PLACED",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.login: function (a,d){yaCounter24133222.reachGoal("LOGIN",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.deposit: function (a,d){yaCounter24133222.reachGoal("DEPOSIT",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.totobetplaced: function (){yaCounter24133222.reachGoal("TOTO_BET_PLACED",void 0)}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.join: function (a,d){var b=$.cookie("landing-utm-source"),
+c=$.cookie("referer-landing");null!=c&&(yaCounter24133222.reachGoal("NEWUSERLANDING"),yaCounter24133222.params(c,"utm-source",b));yaCounter24133222.reachGoal("NEWUSER")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.triggering event TrackingEngine.visit", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.triggering event TrackingEngine.joinpagevisit", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.visit: function (){b("VISIT_PAGE")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.totostatisticsvisit: function (){b("VISIT_TOTO_STATISTIC_PAGE")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.joinpagevisit: function (){b("JOIN_PAGE_VISIT")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.join: function (){b("JOIN")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.registration: function (){b("REGISTRATION")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.bannerclicked: function (a,c,d){dataLayer.push({banner_statisticKey:c,banner_language:d});b("BANNER_CLICKED")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.betplaced: function (a,c){dataLayer.push({eventIds:c});b("BET_PLACED")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.login: function (a,c){dataLayer.push({punterId:c});b("LOGIN")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.deposit: function (a,c){dataLayer.push({punterId:c});b("DEPOSIT")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124237:INFO:CONSOLE(1)] "TrackingEngine.subscribing callback on event TrackingEngine.totobetplaced: function (){b("TOTO_BET_PLACED")}", source: https://www.marathonbet.com/cdn/3-0-489-519-PAN-40745-22/js/common/panbet.js (1)
+[2748:2940:0129/124251:INFO:CONSOLE(24)] "So, you like to look under the hood? Why not help us build the engine? %chttps://www.livejasmin.com/en/careers", source: https://static1.dditscdn.com/jsm2/master/script/bundle/jas.min-cc2d4.js (24)
+[2748:2940:0129/124257:INFO:CONSOLE(85)] "A Parser-blocking, cross-origin script, http://rc.bt.ilsemedia.nl/Get/ilsemedia/JS/GetRcmd.js?ord=1485690177243, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://www.nu.nl/ (85)
+[2748:2940:0129/124257:INFO:CONSOLE(85)] "A Parser-blocking, cross-origin script, http://rc.bt.ilsemedia.nl/Get/ilsemedia/JS/GetRcmd.js?ord=1485690177243, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://www.nu.nl/ (85)
+[2748:2940:0129/124257:INFO:CONSOLE(1)] "A Parser-blocking, cross-origin script, http://sb.scorecardresearch.com/c2/6035634/cs.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://cts.snmmd.nl/service/js/nunl/home/ (1)
+[2748:2940:0129/124257:INFO:CONSOLE(1)] "A Parser-blocking, cross-origin script, http://sb.scorecardresearch.com/c2/6035634/cs.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://cts.snmmd.nl/service/js/nunl/home/ (1)
+[2748:2940:0129/124317:INFO:CONSOLE(1442)] "headline.inline.js: 8.060ms", source: https://mail.ru/ (1442)
+[2748:2940:0129/124318:INFO:CONSOLE(231)] "headline.external.js: 9.826ms", source: https://img.imgsmail.ru/ph/0.45.10/external.min.js (231)
+[2748:2940:0129/124342:INFO:CONSOLE(109)] "A Parser-blocking, cross-origin script, http://tmgonlinemedia.nl/consent/script/consent.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://www.telegraaf.nl/ (109)
+[2748:2940:0129/124342:INFO:CONSOLE(109)] "A Parser-blocking, cross-origin script, http://tmgonlinemedia.nl/consent/script/consent.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://www.telegraaf.nl/ (109)
+[2748:2940:0129/124342:INFO:CONSOLE(1)] "A Parser-blocking, cross-origin script, http://tmgonlinemedia.nl/cc1485690222316.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://tmgonlinemedia.nl/consent/script/consent.js (1)
+[2748:2940:0129/124342:INFO:CONSOLE(1)] "A Parser-blocking, cross-origin script, http://tmgonlinemedia.nl/cc1485690222316.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://tmgonlinemedia.nl/consent/script/consent.js (1)
+[2748:2940:0129/124401:INFO:CONSOLE(88)] "Uncaught ReferenceError: cxApi is not defined", source: https://xhamster.com/ (88)
+[2748:2940:0129/124427:INFO:CONSOLE(1)] "
+      _
+     (_)
+      _ _ __ ___   __ _ _   _ _ __
+     | | '_ ` _ \ / _` | | | | '__|
+     | | | | | | | (_| | |_| | |
+     |_|_| |_| |_|\__, |\__,_|_|
+                   __/ |
+                  |___/
+========================================
+You opened the console! Know some code,
+do you? Want to work for one of the best
+startups around? http://imgur.com/jobs
+========================================
+", source: http://s.imgur.com/min/global.js?1485563209 (1)
+[2748:2940:0129/124439:INFO:CONSOLE(9)] "A Parser-blocking, cross-origin script, http://partner.googleadservices.com/gampad/google_ads.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://partner.googleadservices.com/gampad/google_service.js (9)
+[2748:2940:0129/124439:INFO:CONSOLE(9)] "A Parser-blocking, cross-origin script, http://partner.googleadservices.com/gampad/google_ads.js, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: http://partner.googleadservices.com/gampad/google_service.js (9)
+[2748:2940:0129/124441:INFO:CONSOLE(0)] "Mixed Content: The page at 'https://mychannels.com//embed/4211' was loaded over HTTPS, but requested an insecure video 'http://streams.minoto-video.com/id/TT9twCyYV3Tu_web_hq.mp4'. This content should also be served over HTTPS.", source: https://mychannels.com//embed/4211 (0)
+[2748:2940:0129/124441:INFO:CONSOLE(1)] "Failed to load https://imasdk.googleapis.com/js/sdkloader/ima3.js", source: https://ssl.p.jwpcdn.com/player/v/7.8.7/googima.js (1)
+[2748:2940:0129/124441:INFO:CONSOLE(0)] "Mixed Content: The page at 'https://mychannels.com//embed/4211' was loaded over HTTPS, but requested an insecure video 'http://strmprxy03-rtd.minoto-video.com/s/df2dc936732f0468264afa26aa64326c588dd950/TT9twCyYV3Tu_web_hq.mp4'. This content should also be served over HTTPS.", source: https://mychannels.com//embed/4211 (0)
+[2748:2940:0129/124442:INFO:CONSOLE(0)] "Mixed Content: The page at 'https://mychannels.com//embed/4211' was loaded over HTTPS, but requested an insecure video 'http://strmprxy03-rtd.minoto-video.com/s/df2dc936732f0468264afa26aa64326c588dd950/TT9twCyYV3Tu_web_hq.mp4'. This content should also be served over HTTPS.", source: https://mychannels.com//embed/4211 (0)
+[2748:2940:0129/124442:INFO:CONSOLE(0)] "Mixed Content: The page at 'https://mychannels.com//embed/4211' was loaded over HTTPS, but requested an insecure video 'http://strmprxy03-rtd.minoto-video.com/s/df2dc936732f0468264afa26aa64326c588dd950/TT9twCyYV3Tu_web_hq.mp4'. This content should also be served over HTTPS.", source: https://mychannels.com//embed/4211 (0)
+[2748:2940:0129/124447:INFO:CONSOLE(0)] "Mixed Content: The page at 'https://mychannels.com//embed/4211' was loaded over HTTPS, but requested an insecure video 'http://strmprxy03-rtd.minoto-video.com/s/df2dc936732f0468264afa26aa64326c588dd950/TT9twCyYV3Tu_web_hq.mp4'. This content should also be served over HTTPS.", source: https://mychannels.com//embed/4211 (0)
+[2748:2940:0129/124452:INFO:CONSOLE(2)] "Refused to load the script 'https://fastly3.cedexis.fastlylb.net/node_id.js?rnd=1-13960-0-0-15287-M7ZnYnqO-_CgJqNBAUGAEiBQgBEIhtKKG51skNMLOrt8QFOLOrt8QFQL705NwMShAIAxCdARjHZiAAKLyMgKAEUABaCggAEAAYACAAKABgAWoTYnV0dG9uMy5hbXMuaHYucHJvZIIBEAgDEJ0BGMdmIAAou4yAoASIAY_hssgH' because it violates the following Content Security Policy directive: "script-src 'self' https://assets.tumblr.com https://assets.tumblr.com https://sb.scorecardresearch.com https://*.google-analytics.com https://fc.yahoo.com https://s.yimg.com https://*.cedexis.com https://*.cedexis-test.com 'unsafe-eval' 'nonce-AQhQgAt1WFPnEgBuZXtTW1DLI' https://www.google.com/recaptcha/api.js https://www.gstatic.com".
+", source: https://assets.tumblr.com/assets/scripts/vendor/cedexis/cedexis.radar.js?_v=0617a41f613fb6de733e8b614ac60762 (2)
+[2748:2940:0129/124523:INFO:CONSOLE(0)] "Access to Font at 'http://www-assets.npo.nl/assets/rounded/omrndbd_-webfont-b53f41a7ef0bf4c19c2604a4475b2e5a.woff' from origin 'http://nos.nl' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://nos.nl' is therefore not allowed access. The response had HTTP status code 404.", source: http://nos.nl/ (0)
+[2748:2940:0129/124523:INFO:CONSOLE(0)] "Access to Font at 'http://www-assets.npo.nl/assets/rounded/omrndbd_-webfont-e937353cf5e460864c2eeb36dca3c2f0.ttf' from origin 'http://nos.nl' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://nos.nl' is therefore not allowed access. The response had HTTP status code 404.", source: http://nos.nl/ (0)
+[2748:2940:0129/124532:INFO:CONSOLE(14)] "Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience. For more help, check https://xhr.spec.whatwg.org/.", source: https://www.abnamro.nl/nl/includes/js/segments.js (14)
+[2748:2940:0129/124556:INFO:CONSOLE(167)] "A Parser-blocking, cross-origin script, https://vice-useast.gscontxt.net/main/channels.fcgi?url=https%3A%2F%2Fwww.vice.com%2Fnl, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: https://www.vice.com/nl (167)
+[2748:2940:0129/124556:INFO:CONSOLE(167)] "A Parser-blocking, cross-origin script, https://vice-useast.gscontxt.net/main/channels.fcgi?url=https%3A%2F%2Fwww.vice.com%2Fnl, is invoked via document.write. This may be blocked by the browser if the device has poor network connectivity. See https://www.chromestatus.com/feature/5718547946799104 for more details.", source: https://www.vice.com/nl (167)
+[2748:2940:0129/124617:INFO:CONSOLE(127)] "", source: https://www.microsoft.com/nl-nl/ (127)
