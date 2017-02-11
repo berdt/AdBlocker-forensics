@@ -9,9 +9,9 @@ from time import time
 
 print(selenium.__version__)
 
-Control = False
+Control = True
 AdBlock = False
-Private = True
+Private = False
 
 if Control:
     mode = 'Control'
@@ -34,7 +34,7 @@ elif AdBlock:
 
     dataDir = ff.firefox_profile.path
     print('Getting AdBlock sample')
-    timestamps = open('Firefox_AdBlock_Sample.txt', 'w')
+    timestamps = open('Firefox_AdBlock_Sample2.txt', 'w')
 
 elif Private:
     mode = 'Private'
@@ -51,7 +51,7 @@ elif Private:
     timestamps = open('Firefox_Private_Sample.txt', 'w')
 
 for site in main.top100sites:
-    ff.get(f'http://{site}')
+    ff.get(f'http://{site[1]}')
     timestamps.write(f'{site} {str(time())}\n')
     sleep(5)
 
@@ -64,6 +64,6 @@ ff.close()
 sleep(5)
 
 #copy dir over
-shutil.copytree(dataDir, f'{os.getcwd()}/{mode}')
+shutil.copytree(dataDir, f'{os.getcwd()}/{mode}2')
 
 print('done')

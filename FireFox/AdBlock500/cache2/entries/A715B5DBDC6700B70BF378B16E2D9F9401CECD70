@@ -1,0 +1,549 @@
+
+var BIT_ETRACKER = BIT_ETRACKER || {};
+
+
+BIT_ETRACKER.Tracker = function(language, etPageName, isDebug) {
+
+	this.TYPE_DOWNLOAD = 1;
+	this.TYPE_FORM = 2;
+	this.TYPE_AUDIO = 3;
+	this.TYPE_IMAGE = 4;
+	this.TYPE_SHOPPINGBASKET = 5;
+	
+	this.TYPEFORM_START = "";
+	this.TYPEFORM_SUBMIT = "Abgeschickt";
+	this.TYPEFORM_ERROR = this.TYPEFORM_SUBMIT + "/Validierungsfehler";
+	this.TYPEFORM_SUCCESS = this.TYPEFORM_SUBMIT + "/Erfolg";
+	this.TYPEFORM_SUCCESS_AFTER_ERROR = this.TYPEFORM_ERROR + "/Erfolg" ;
+
+	var language = language || "de";
+	var etPageName = etPageName || "Click";
+	var isPartial = isPartial || false;
+	var isDebug = isDebug || false;
+	var categories = {};
+	var formStatusValidationFailed = false;
+	
+	var etAreasLineMaxLen = 90;
+	
+	var encode = function(input) {
+		return encodeURIComponent(input).replace(/\(/gi, "%28").replace(/\)/gi, "%29");
+	}
+	
+	var decode = function(input) {
+		return decodeURIComponent(input);
+	}
+
+
+	this.enhanceEtrackerVars = function() {
+		et_pagename += encode('[' + this.deviceviewport.getViewport() + ']');
+		
+		
+		var etAreaTmp = decode(et_areas).substr(0, etAreasLineMaxLen);
+		// __INDEX__ should be changed in Java Class to page name
+		if(etAreaTmp.indexOf("__INDEX__") >= 0) {
+			if(decode(et_pagename).search(/__INDEX__\s([^\s]+)/) != -1) {
+				etAreaTmp = etAreaTmp.replace(/__INDEX__/, RegExp.$1);
+			}
+		}		
+		
+		while(etAreaTmp.length > etAreasLineMaxLen) {
+			etAreaTmp = etAreaTmp.substring(0, etAreaTmp.lastIndexOf('/'));
+		}
+		
+		var etAreaTmp1 = etAreaTmp;
+		var firstItem = etAreaTmp1.indexOf("/");
+		if(firstItem == -1) {
+			etAreaTmp1 = "[" + etAreaTmp1 + "]";
+		} else {
+			etAreaTmp1 = "[" + etAreaTmp1.substr(0, firstItem) + "]" + etAreaTmp1.substr(firstItem);
+		}
+		
+		et_areas = encode(etAreaTmp1) + ',' + encode(this.deviceviewport.ViewportName + "/[" + this.deviceviewport.getViewport() + "]/" + etAreaTmp);
+
+		if(isDebug) {
+			console.log("et_pagename = " + et_pagename);
+			console.log("et_areas = " + et_areas);
+		}
+	}
+
+
+	//ET_Event.eventStart('Kategorie', 'Object', 'Aktion')
+	//ET_Event.eventStart('Category', et_pagename, 'Target URL')
+	this.addEtEvent = function($jqObjects, category, type) {
+		if(!$jqObjects.length) {
+			return;
+		}
+
+		category = this.categories.getCategory(category);
+		var deviceviewport = this.deviceviewport;
+
+		if(type && type == this.TYPE_DOWNLOAD) {
+			$jqObjects.each(function() {
+				var $this = $(this);
+				var downloadMeta = getDownloadMeta($this);
+				addEvent($this, category, downloadMeta, false, deviceviewport);
+			});
+		} else if(type && type == this.TYPE_FORM) {
+			$jqObjects.each(function() {
+				var $this = $(this);
+				addEventForm($this, category, deviceviewport);
+			});
+		} else if(type && type == this.TYPE_AUDIO) {
+			$jqObjects.each(function() {
+				var $this = $(this);
+				addEventAudio($this, category, deviceviewport);
+			});
+		} else if(type && type == this.TYPE_SHOPPINGBASKET) {
+			$jqObjects.each(function() {
+				var $this = $(this);
+				addEventShoppingBasket($this, category, deviceviewport);
+			});
+		} else {
+			var useSrc = type && type == this.TYPE_IMAGE;
+			$jqObjects.each(function() {
+				var $this = $(this);
+				addEvent($this, category, "", useSrc, deviceviewport);
+			});
+		}
+
+
+	}
+	
+	
+	// Track Search (OnSite Campaign)
+	/* et_cc_wrapper
+		Position    Variable    Beschreibung
+		1           WAKEY       Sicherheitscode des verwendeten Accounts
+		2           pagename    Seitenname (im etracker-Code et_pagename)
+		3           areas       Bereich (et_areas)
+		4           ilevel      Besucherinteresse (et_ilevel)
+		5           url         Browselink (et_url)
+		6           target      Website-Ziel (et_target)
+		7           tval        Gesamtbestellwert (et_tval)
+		8           tonr        Eindeutige Bestellnummer (et_tonr)
+		9           tsale       Bestellstatus (et_tsale)
+		10          cust        Kundenart (et_cust)
+		11          basket      Warenkorb (et_basket)
+		12          lpage       Landingpage-Parameter (et_lpage)
+		13          trig        Trigger (aus aÃàlterer Code-Version, et_trig)
+		14          tag         Tag fuÃàr freie Segmente (et_tag)
+		15          sub         Subkanal-Parameter (et_sub, nur in Kombination mit et_lpage)
+		16          CCKEY       Sicherheitscode des verwendeten Accounts fuÃàr die Nutzung von Campaign Control
+	*/
+	this.trackSearch = function(dataSecureCode, campaignIdForSearchWithResult, campaignIdForSearchWithoutResult) {				
+		if(location.hash && location.hash.length > 1) {
+			var campaign = $("#totalResults").text() > 0 ? campaignIdForSearchWithResult : campaignIdForSearchWithoutResult;
+			if(isDebug) {
+				console.log('et_eC_Wrapper(' + dataSecureCode + ', ' + decode(et_pagename) + ', ' + decode(et_areas) + ', "", ' + et_url + ', "", "", "", "","", "", ' + campaign + ', "", "", ' + location.hash.substring(1) + " [" + language + "]" + ')');
+			}
+			try {
+				
+				setTimeout(function(){et_eC_Wrapper(dataSecureCode, decode(et_pagename), decode(et_areas), "", et_url, "", "", "", "","", "", campaign, "", "", location.hash.substring(1) + " [" + language + ']')}, 300);
+			} catch(e) {
+				console.error(e);
+			}
+		}
+	}
+	
+	this.trackForm = function(dataSecureCode, etArea, formType, status) {
+		var end = status.length == 0 ? '' : '/';
+		
+		if(status == this.TYPEFORM_ERROR) {
+			formStatusValidationFailed = true;
+		} else if(status == this.TYPEFORM_SUCCESS && formStatusValidationFailed) {
+			status = this.TYPEFORM_SUCCESS_AFTER_ERROR;
+		}
+		
+		var etTarget = decode(etArea).replace(/\//g, "|") + " [" + formType + "]" + end + status;
+
+		// Click on submit button -> status is any of TYPEFORM_SUBMIT, TYPEFORM_SUCCESS, TYPEFORM_ERROR
+		if(status.length > 0) {			
+			if(isDebug) {
+				console.log('et_eC_Wrapper(' + dataSecureCode + ', ' + decode(et_pagename) + ', ' + decode(et_areas) + ', "", ' + et_url + ', ' + etTarget + ');');
+			}
+			try {
+				setTimeout(function(){et_eC_Wrapper(dataSecureCode, decode(et_pagename), decode(et_areas), "", et_url, etTarget)}, 300);
+			} catch(e) {
+				console.error(e);
+			}
+		} else {
+			et_target = etTarget;
+			if(isDebug) {
+				console.log("et_target=" + et_target);
+			}
+		}
+		
+	}
+	
+	
+	
+
+	// Default Tracking Events
+	var addEvent = function($jqObject, category, downloadMeta, useSrc, deviceviewport) {
+
+		var etEvent = getEtEventStart(category, downloadMeta, deviceviewport);
+
+		var href = $jqObject.attr(useSrc ? "src" : "href");
+		if(!href || !href.length || href == '#' || href.substring(0,1) == '#') {
+			href = $jqObject.attr("data-analytics");
+			href = href || '';
+		}
+
+		etEvent += "'" + encode(href) + "'";
+		etEvent +=')';
+
+		$jqObject.on("mousedown", function(){eval(etEvent)});
+		if(isDebug) {
+			$jqObject.attr("data-etEvent", etEvent);
+		}
+	}
+
+	// Track audio
+	var addEventAudio = function($jqObject, category, deviceviewport) {
+		var etEvent = getEtEventStart(category, "", deviceviewport);
+
+		var src = $jqObject.find("source").attr("src");
+		if(!src || !src.length || src == '#') {
+			src = $jqObject.attr("data-analytics");
+		}
+
+		etEvent += "'" + encode(src) + "'";
+		etEvent +=')';
+
+		$jqObject.on("playing", function(){if(!this.isTracked) {eval(etEvent);this.isTracked=true;}});
+		if(isDebug) {
+			$jqObject.attr("data-etEvent", etEvent);
+		}
+	}
+
+	// Track Forms
+	var addEventForm = function($jqObject, category, deviceviewport) {
+		var etEvent = getEtEventStart(category, "", deviceviewport);
+		var isForm = $jqObject.prop("tagName") == "form";
+		var $form = !isForm ? $jqObject.parents("form") : $jqObject;
+
+		var action = $form.attr("action");
+		if(!action || !action.length || action == '#') {
+			action = $form.attr("data-analytics");
+			if(!action) {
+				action = "";
+			}
+		}
+
+		etEvent += "'" + encode(action) + "'";
+		etEvent +=')';
+
+		if(isForm) {
+			$form.on("submit", function(){eval(etEvent)});
+		} else {
+			$jqObject.on("mousedown", function(){eval(etEvent)});
+		}
+		if(isDebug) {
+			$jqObject.attr("data-etEvent", etEvent);
+		}
+	}
+	
+	// Track Shopping basket
+	var addEventShoppingBasket = function($jqObject, category, deviceviewport) {
+		var etEvent = getEtEventStart(category, "", deviceviewport);
+
+		var $form = $jqObject.parents("form");
+		var pubTitle = "pubTitle:" + $("input[name='productTitle']", $form).val();
+		var pubId = ",pubId:" + $("input[name='productId']", $form).val();
+
+		etEvent += "'" + encode(pubTitle + pubId) + "'";
+		etEvent +=')';
+
+		$jqObject.on("mousedown", function(){eval(etEvent)});
+		if(isDebug) {
+			$jqObject.attr("data-etEvent", etEvent);
+		}
+	}
+
+	//ET_Event.eventStart('Category', et_pagename,
+	var getEtEventStart = function(category, downloadMeta, deviceviewport) {
+		var etEventStart = "ET_Event.eventStart('" + encode(category + downloadMeta + '[' + language + "][" + deviceviewport.getViewport() + ']') + "',";
+		etEventStart += "'" + etPageName + "',";
+		return etEventStart;
+	}
+
+
+	var getDownloadMeta = function($jqObject) {
+		var downloadMeta = $jqObject.find("span.text-dimmed").text();
+		var downloadType = "";
+		if(downloadMeta.length && downloadMeta.indexOf('(') != -1 && downloadMeta.indexOf(',') != -1) {
+			downloadType = downloadMeta.substring(downloadMeta.indexOf('(') + 1, downloadMeta.indexOf(','));
+		}
+		return '[' + downloadType + ']';
+	}
+};
+
+
+
+BIT_ETRACKER.Categories = function() {
+
+	// categories used for onclick events
+	var categories = {
+			"mod-teaserfocus" : "Brennpunkte-Teaser",
+			"mod-teaser" : "Teaser",
+			"mod-teaserlist" : "Teaser",
+			"links-social" : "Social Links Footer",
+			"mod-socialshare" : "Social Share Links",
+			"mod-socialshare" : "Social Share Links",
+			"mod-download" : "Download",
+			"mod-downloadlist" : "Download",
+			"mod-external" : "Externe Anwendung",
+			"skin-layout-template-publications download" : "Publikation-Download",
+			"skin-layout-template-publications mod-one-line-form" : "Publikation-Warenkorb",
+			"mod-form-webcode" : "Webcode",
+			"print" : "Drucken",
+			"mod-audio" : "Audio",
+			"mod-twitterstream" : "Twitterstream",
+			"mod-imagegallery" : "Bildergallerie",
+			"mod-slideshow" : "Slideshow",
+			"richfooter" : "Richfooter",
+			"mod-form-subscribe" : "NSB-Abo",
+			"mod-themes topics" : "A-Z-Flyout Themen",
+			"mod-themes keywords" : "A-Z-Flyout Schlagw√∂rter",
+			"mod-themes glossary" : "A-Z-Flyout Glossar",
+			"mod-teaser-flyout" : "Flyout Teaser",
+			"mod-teaserlist-flyout" : "Flyout Teaserlist",
+			"mod-sitemap-flyout" : "Flyout Sitemap",
+			"a-themes" : "Link Themen A-Z",
+			"a-download-themes" : "Download Themen A-Z"
+	}
+
+	this.getCategory = function(key) {
+			key = key.substring(0,1) == '.' ? key.substring (1, key.length) : key;
+			return categories[key] || key;
+	}
+};
+// add Categories object to Tracker class
+BIT_ETRACKER.Tracker.prototype.categories = new BIT_ETRACKER.Categories();
+
+
+BIT_ETRACKER.DeviceAndViewport = function() {
+
+	var DEVICE_DESKTOP = "Desktop";
+	var DEVICE_TABLET = "Tablet";
+	var DEVICE_SMARTPHONE = "Smartphone";
+	var DEVICE_OTHER = "Other";
+
+	var VIEW_LARGE = "Large";
+	var VIEW_DEFAULT = "Normal";
+	var VIEW_TABLETPORTRAIT = "Middle";
+	var VIEW_SMALL = "Small";
+
+	var device;
+	var viewport;
+	
+	this.ViewportName = "View";
+
+	this.getDevice = function() {
+		if (device) {
+				return device;
+		}
+		if(!window.WURFL) {
+			return DEVICE_DESKTOP;
+		}
+		switch(WURFL.form_factor) {
+			case "Desktop":
+				device = DEVICE_DESKTOP;
+				break;
+			case "Tablet":
+				device = DEVICE_TABLET;
+				break;
+			case "Smartphone":
+				device = DEVICE_SMARTPHONE;
+				break;
+			default:
+				device =  DEVICE_OTHER;
+				break;
+		}
+		return device;
+	}
+
+	this.getViewport = function() {
+		if (viewport) {
+				return viewport;
+		}
+
+		if (matchMedia("(max-width:767px)").matches) {
+			viewport = VIEW_SMALL;
+		} else if (matchMedia("(min-width:768px) and (max-width:991px)").matches) {
+			viewport = VIEW_TABLETPORTRAIT;
+		} else if (matchMedia("(min-width:992px) and (max-width:1199px)").matches) {
+			viewport = VIEW_DEFAULT;
+		} else { // (min-width:1200px)
+			viewport = VIEW_LARGE;
+		}
+		return viewport;
+	}
+};
+// add device and viewport detection object to Tracker class
+BIT_ETRACKER.Tracker.prototype.deviceviewport = new BIT_ETRACKER.DeviceAndViewport();
+
+
+// create new Tracker instance
+BIT_ETRACKER.tracker = new BIT_ETRACKER.Tracker(BIT_ETRACKER.language, et_pagename, BIT_ETRACKER.isDebug);
+
+
+BIT_ETRACKER.initAnalytics = function() {
+	if(BIT_ETRACKER.isDebug) {
+		console.log("init Analytics ");
+	}
+
+	// include etracker script into current page
+	var etrackerScriptTag = document.getElementById("_etLoader");
+	var element = document.createElement("script");
+	element.setAttribute("src", etrackerScriptTag.getAttribute("data-src"));
+	element.setAttribute("data-secure-code", etrackerScriptTag.getAttribute("data-secure-code"));
+	element.setAttribute("type","text/javascript");
+	element.setAttribute("charset", "UTF-8");
+	document.body.appendChild(element);
+
+	BIT_ETRACKER.tracker.enhanceEtrackerVars();
+}
+
+
+BIT_ETRACKER.addEvents = function($obj) {
+
+	$obj = $obj || $("body");
+	
+	if($obj.hasClass("mod-mainnavigation")) {
+		
+		// Sitemap within flyout 
+		BIT_ETRACKER.tracker.addEtEvent($(".mod-sitemap a", $obj), ".mod-sitemap-flyout");
+		
+		// All teaser but not 'Brennpunkte' teaser within flyout
+		BIT_ETRACKER.tracker.addEtEvent($(".mod-teaser a").not(".mod-teaserfocus .mod-teaser a", $obj), ".mod-teaser-flyout");
+		
+		// Teaser within flyout
+		BIT_ETRACKER.tracker.addEtEvent($(".mod-teaserlist .standardteaser a", $obj), ".mod-teaserlist-flyout");
+	} else if($obj.hasClass("mod-themes")) {
+		
+		// Download within themes
+		BIT_ETRACKER.tracker.addEtEvent($("ul.list-unstyled a[class~='icon']", $obj), "a-download-themes");
+		
+		// Link within themes
+		BIT_ETRACKER.tracker.addEtEvent($("ul.list-unstyled a", $obj).not("[class~='icon']"), "a-themes");
+	} else {
+		
+		// All teaser but not 'Brennpunkte' teaser
+		BIT_ETRACKER.tracker.addEtEvent($(".mod-teaser a").not(".mod-teaserfocus .mod-teaser a", $obj), ".mod-teaser");
+		
+		// Teaser within teaserlist
+		BIT_ETRACKER.tracker.addEtEvent($(".mod-teaserlist .standardteaser a", $obj), ".mod-teaserlist");
+	}
+
+	// 'Brennpunkte' teaser
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-teaserfocus .mod-teaser a", $obj), ".mod-teaserfocus");
+
+	// Social links inside footer
+	BIT_ETRACKER.tracker.addEtEvent($("footer nav.links-social a", $obj), ".links-social");
+
+	// Social share links inside content area
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-socialshare a", $obj), ".mod-socialshare");
+
+	// Downloads
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-download a", $obj), ".mod-download", BIT_ETRACKER.tracker.TYPE_DOWNLOAD);
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-downloadlist a", $obj), ".mod-downloadlist", BIT_ETRACKER.tracker.TYPE_DOWNLOAD);
+	
+	// Downloads of publications
+	BIT_ETRACKER.tracker.addEtEvent($obj.parent().find(".skin-layout-template-publications .download a"), "skin-layout-template-publications download", BIT_ETRACKER.tracker.TYPE_DOWNLOAD);
+
+	// Publications, add publication to shopping basket
+	BIT_ETRACKER.tracker.addEtEvent($obj.parent().find(".skin-layout-template-publications .mod-one-line-form input:submit"), "skin-layout-template-publications mod-one-line-form", BIT_ETRACKER.tracker.TYPE_SHOPPINGBASKET);
+	
+	// External Applications
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-external a", $obj), ".mod-external");
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-external form", $obj), ".mod-external", BIT_ETRACKER.tracker.TYPE_FORM);
+
+	// Webcode
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-form-webcode :submit", $obj), ".mod-form-webcode", BIT_ETRACKER.tracker.TYPE_FORM);
+
+	// Audio
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-audio audio", $obj), ".mod-audio", BIT_ETRACKER.tracker.TYPE_AUDIO);
+
+	// Image Gallery
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-imagegallery .thumbnail-wrapper img", $obj), ".mod-imagegallery", BIT_ETRACKER.tracker.TYPE_IMAGE);
+	
+	// Image Gallery
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-slideshow .carousel-inner .item a", $obj), ".mod-slideshow");
+	
+	// Topics A-Z Flyout
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-themes a.dropdown-toggle", $obj), ".mod-themes topics");
+	
+	// Keywords Tab
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-themes .dropdown-menu a[href='#mf_keywords_tab']", $obj), ".mod-themes keywords");
+	
+	// Glossary Tab
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-themes .dropdown-menu a[href='#mf_glossary_tab']", $obj), ".mod-themes glossary");
+	
+
+	// Richfooter
+	BIT_ETRACKER.tracker.addEtEvent($("#sitemap a"), "richfooter", $obj);
+
+	// NSB Abonnement
+	BIT_ETRACKER.tracker.addEtEvent($(".mod-form-subscribe :submit", $obj), ".mod-form-subscribe", BIT_ETRACKER.tracker.TYPE_FORM);
+	
+	// Twitter Stream
+	BIT_ETRACKER.tracker.addEtEvent($(".tweet a.url", $obj), ".mod-twitterstream");
+	
+	if(BIT_ETRACKER.formType && BIT_ETRACKER.formType.length) {
+		BIT_ETRACKER.tracker.trackForm(BIT_ETRACKER.dataSecureCode, BIT_ETRACKER.etAreas, BIT_ETRACKER.formType, BIT_ETRACKER.tracker.TYPEFORM_START);
+	}
+
+}
+
+BIT_ETRACKER.trackSearch = function($obj) {
+	
+	// Search (OnSite Campaign), default is 1 for search with result and 2 for search without result
+	BIT_ETRACKER.tracker.trackSearch(BIT_ETRACKER.dataSecureCode, BIT_ETRACKER.campaignIdForSearchWithResult, BIT_ETRACKER.campaignIdForSearchWithoutResult);
+	
+	BIT_ETRACKER.addEvents($obj);
+}
+
+
+// Forms
+BIT_ETRACKER.trackFormSubmit = function($obj) {
+	BIT_ETRACKER.tracker.trackForm(BIT_ETRACKER.dataSecureCode, BIT_ETRACKER.etAreas, BIT_ETRACKER.formType, BIT_ETRACKER.tracker.TYPEFORM_SUBMIT);
+}
+BIT_ETRACKER.trackFormError = function($obj) {
+	BIT_ETRACKER.tracker.trackForm(BIT_ETRACKER.dataSecureCode, BIT_ETRACKER.etAreas, BIT_ETRACKER.formType, BIT_ETRACKER.tracker.TYPEFORM_ERROR);
+}
+BIT_ETRACKER.trackFormSuccess = function($obj) {
+	BIT_ETRACKER.tracker.trackForm(BIT_ETRACKER.dataSecureCode, BIT_ETRACKER.etAreas, BIT_ETRACKER.formType, BIT_ETRACKER.tracker.TYPEFORM_SUCCESS);
+}
+
+
+
+
+
+// wait with initialising analytics until external javascript used for device detection
+// has been fully loaded
+//BIT_ETRACKER.waitWurfl = function(i) {
+//	setTimeout(function() {
+//		if(i == 6 || (window.WURFL && window.WURFL.form_factor)) {
+//			var $body = $("body");
+//			BIT_ETRACKER.initAnalytics();
+//			BIT_ETRACKER.addEvents($body);
+//		} else {
+//			BIT_ETRACKER.waitWurfl(++i);
+//		}
+//	}, 1);
+//}
+//BIT_ETRACKER.waitWurfl(0);
+
+BIT_ETRACKER.initAnalytics();
+BIT_ETRACKER.addEvents($("body"));
+
+Îg“ó.Ø      Xñ„;Xñ„;=gŒò       <    :https://www.admin.ch/etc/designs/core/frontend/analytics.js security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Date: Sun, 05 Feb 2017 09:33:00 GMT
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+Accept-Ranges: bytes
+Content-Length: 18280
+Content-Type: application/javascript
+ uncompressed-len 0   Gh

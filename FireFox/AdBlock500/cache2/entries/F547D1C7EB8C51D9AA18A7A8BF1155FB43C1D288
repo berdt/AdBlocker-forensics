@@ -1,0 +1,713 @@
+//############################################################# GENERIC	#############################################################//
+var contentLoaded = false;
+
+//var social_media_app_url = "http://jetdav20:8190/socialmedia";
+var social_media_app_url = "https://services28.ieee.org/socialmedia";
+
+//############################################################# FACEBOOK #############################################################//
+// default configuration options
+var fb_cfg = {
+	resultscount: 2,
+	url_text_limit: 55,
+	facebook_url: "http://www.facebook.com/"
+};
+
+function renderFaceBookUI(config) {
+	var contentsize = config.content.length;
+	if(contentsize > 0){
+		for(var i=0; i< contentsize; i++){
+			loadFacebookUserData(config.content[i]);
+		}
+	}
+}
+
+function loadFacebookUserData(config) {
+	var content_type = config.contenttype;
+	var content_id = config.contentid;
+	$.getJSON(social_media_app_url + "/facebook?id=" + content_id + "&fields="+content_type+"&rt=jsonp&callback=?", function(data) {renderFBDatadummy(data);});
+}
+
+function facebookCallback(obj){
+	//console.log(JSON.stringify(obj));
+	//hide the spinner
+	hideSpinner();
+
+	var parent = $("#facebook-media-content");
+	if(obj.error != undefined){
+		parent.append("<br>" + obj.error.message);
+	} else {
+		var header = $('<div class="media-title"><a href="https://www.facebook.com/pages/IEEE/176104589110851"><i class="fa fa-facebook"></i></a>Facebook</div>');
+		parent.append(header);
+		$.each(obj.posts.data, function(i,item){
+			var limit = parseInt(facebookconfig.limit);
+			if(i == limit){
+				return false;
+			}
+			var html = getFacebookItem(item);
+			parent.append(html);
+		});	
+	}
+}
+
+function fb_parseDate(d) {
+	var html = "";
+	var regHash = new RegExp(/(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d):\d\d\+\d\d\d\d/i);
+	var m = regHash.exec(d);
+	if (m != null && m.length > 0) {
+		var date = m[1];
+		var time = m[2];
+		var dateArr = date.split("-");
+		var time_pre = time.split(":")[0];
+		var time_post = time.split(":")[1];
+		if (time.split(":")[0] > 12) {
+			time = (time.split(":")[0]-12) + ':' + time.split(":")[1] + ' pm';
+		} else if (time.split(":")[0] == 12) {
+			time = '12:' + time.split(":")[1] + ' pm';
+		} else {
+			time += ' am';
+		}
+		//html = dateArr[1] + '-' + dateArr[2] + '-' + dateArr[0] + ' ' + time;
+		//html = dateArr[1] + "/" + dateArr[2] + "/" + dateArr[0];
+		html = dateArr[2] + " " + getShortMonthName(parseInt(dateArr[1])-1);
+	} else { 
+		html = 'no match'; 
+	}
+	return html;
+}
+	
+function getFacebookItem(item) {
+	var id = item.from.id;
+	var profile_name = item.from.name; 
+	var story = item.story;
+	var created_at = item.created_time;
+	var type = item.type;
+	var url = item.link;
+	var picture_url = "";
+	//console.log(story);
+	if (item.type == 'photo') { // don't include photo posts
+		picture_url = item.picture;
+	} else {
+		if(item.hasOwnProperty('picture')){
+			picture_url = item.picture;
+		}
+	}
+	var message = item.message;
+	if (item.message == undefined && item.description != "") {
+		message = item.description;
+	}
+
+	var html = '<div class="social-media-item">';
+	//not showing the thumbnail image now.
+	//html += '<div class="sm-thumb-image"><img src="https://graph.facebook.com/' + id + '/picture"></div>';
+	var text = tweakPostText(message);
+	
+	//html += '<div class="fb-item-content"><b>' + profile_name + '</b><br>';
+	/*if(profile_name == "IEEE"){
+		html += '<div class="sm-item-header"><b><a href="https://www.facebook.com/IEEE.org" target="_blank">' + profile_name + '</a></b></div>';
+	} else if(profile_name == "IEEE Xplore"){
+		html += '<div class="sm-item-header"><b><a href="https://www.facebook.com/pages/IEEE-Xplore/354397697217" target="_blank">' + profile_name + '</a></b></div>';
+	} else {
+		html += '<div class="sm-item-header"><b>' + profile_name + '</b></div>';	
+	}*/
+	html += '<div class="sm-item-date">'+ fb_parseDate(created_at) +'</div>';
+	html += '<div class="sm-item-content">'
+	if(text !=""){
+		html += '<div class="sm-item-content-text">' + text;
+	}
+	if (type != undefined && type == 'photo') {
+		html += '<div class="sm-item-content-image"><a href="' + url + '" target="_blank"><img src="'+ picture_url +'"/></a></div>';
+	} else if (picture_url != null && picture_url != undefined){
+		html += '<div class="sm-item-content-image"><a href="' + url + '" target="_blank"><img src="'+ picture_url +'"/></a></div>';
+	}
+
+	html += '</div></div>';
+	html += '<div class="clearit"></div>';
+	return html;
+}
+
+function createLink( url ) {
+	var text = '';
+	var cutoff = 46;
+	if ( url.length > cutoff) {
+		text = url.substring(0, cutoff);
+	}
+	return "<a href=\"" + url + "\" target=\"_blank\">" + (text != '' ? text+'...' : url) + "</a>";
+};
+
+function createHashLink( url ) {
+	var regHash = new RegExp(/([a-zA-Z0-9_-]+)([!,+=\(\)\s\.:#\$%\*&\|]?)/i);
+	var m = regHash.exec(h);
+	var html = "";
+	if (m != null && m.length > 0) {
+		h = m[1];
+	}
+	html += "<a href=\"http://twitter.com/#search?q=%23" + h + "\" target=\"_blank\">#" + h + "</a>";
+	if (m != null && m.length > 1) {
+		html += m[2];
+	}
+	return html;
+};
+
+//############################################################# TWITTER	#############################################################//
+function renderTwitterUI(config){
+	var contentsize = config.content.length;
+	if(contentsize > 0){
+		for(var i=0; i< contentsize; i++){
+			var cfg = config.content[i];
+			var contentid = cfg.contentid;
+			if(contentid == null || contentid == ""){
+				contentid = "IEEEorg";
+			}
+			$.getJSON(social_media_app_url + "/twitter?rt=jsonp&screenname="+contentid+"&callback=?", function(data) {renderTwitterData(data);});
+		}
+	}
+}
+
+function twitterCallback(data){
+	//console.log(JSON.stringify(data));
+	// hide the spinner
+	hideSpinner();
+	
+	var contentsize = data.length;
+	//console.log(contentsize);
+	var parent = $("#twitter-media-content");
+	var header = $('<div class="media-title"><a href="https://twitter.com/IEEEorg"><i class="fa fa-twitter"></i></a>Twitter</div>');
+	parent.append(header);
+	var limit = parseInt(twitterconfig.limit);
+	for(var i=0; i<limit; i++){
+		var item = data[i];
+		var tweet = item.text;
+		var tweetwithlinks = "";
+		var username = item.user.name;
+		var screenname = item.user.screen_name;
+		//console.log(tweet);
+		var datestr = "";
+		try{
+			var fulldatestr = new String(item.created_at);
+			var date_element = fulldatestr.split(" ");
+			var datems = new Date(Date.parse(date_element[1]+" "+date_element[2]+", "+date_element[5]+" "+date_element[3]+" UTC"));
+			var created_date = new Date(datems);
+			datestr = created_date.getDate() + " " + getShortMonthName(created_date.getMonth());
+		} catch(err) {
+			//console.log("Error: " + err);
+		}
+		var thumburl = item.user.profile_image_url_https;
+		var html = '<div class="social-media-item">';
+		// not showing the thumb image now.
+		//html = html + '<div class="sm-thumb-image"><img  src="' + thumburl + '"/></div>';
+		//html = html + '<div class="sm-item-header"><a href="https://www.twitter.com/'+screenname + '" target="_blank"><b>' + username + '</b></a>&nbsp;<a href="https://www.twitter.com/'+screenname + '" target="_blank">@'+ screenname +'</a></div>';
+		html = html + '<div class="sm-item-date">' + datestr + '</div>';
+		try {
+			var urlstartindex = tweet.indexOf("http");
+			if(urlstartindex >= 0) {
+				var tweetp1 = tweet.substring(0, urlstartindex);
+				var tweetp2 = tweet.substring(urlstartindex);
+				var urlendindex = tweetp2.indexOf(" ");
+				var tweeturl = "";
+				if(urlendindex >= 0){
+					tweeturl = tweetp2.substring(0, urlendindex);
+					var tweetp3 = tweetp2.substring(urlendindex);
+					var atstartindex = tweetp3.indexOf(" via ");
+					//console.log(tweetp2 + "::" + tweetp3 + "::" + atstartindex);
+					if(atstartindex >=0){
+						tweetp3 = tweetp3.substring(atstartindex + 6);
+						var atendIndex = tweetp3.indexOf(" ");
+						if(atendIndex >=0){
+							var tweetp4 = tweetp3.substring(0, atendIndex);
+							tweetwithlinks = tweetp1 + '<a href="'+tweeturl+'">' + tweeturl + '</a> via <a href="https://www.twitter.com/'+tweetp4+'">@'+ tweetp4 +'</a>';
+						} else {
+							tweetwithlinks = tweetp1 + '<a href="'+tweeturl+'">' + tweeturl + '</a> via <a href="https://www.twitter.com/'+tweetp3+'">@'+ tweetp3 +'</a>';
+						}
+					} else {
+						tweetwithlinks = tweetp1 + '<a href="'+tweeturl+'">' + tweeturl + '</a> ' + tweetp3;
+					}
+				} else {
+					tweeturl = tweetp2;
+					tweetwithlinks = tweetp1 + '<a href="'+tweeturl+'">' + tweeturl + '</a>';
+				}
+			} else {
+				tweetwithlinks = item.text;
+			}
+		} catch(err) {
+			tweetwithlinks = item.text;
+		}
+		html = html + '<div class="sm-item-content">' + tweetwithlinks + '</div>';
+		//append the html to the parent container.
+		parent.append(html);
+	}
+}
+
+function renderTwitterUIWidget(parent, s, id){
+	//remove the spinner
+	//parent.empty();
+	
+	var a = $('<a class="twitter-timeline" href="https://twitter.com/IEEEorg" data-widget-id="398153565694218240">Tweets by @IEEEorg</a>');
+	parent.append(a);
+	var d = document;
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if(!d.getElementById(id)) {
+		js = d.createElement(s);
+		js.id = id;
+		js.src = "https://platform.twitter.com/widgets.js";
+		parent.append(js);
+	}
+}
+
+//############################################################# LINKEDIN ############################################################//
+
+function renderLinkedInUI(config) {
+	var contentsize = config.content.length;
+	if(contentsize > 0){
+		for(var i=0; i< contentsize; i++){
+			var cfg = config.content[i];
+			var contentid = cfg.contentid;
+			if(contentid == null || contentid == ""){
+				contentid = "7034"; // for IEEE.org
+			}
+			$.getJSON(social_media_app_url + "/linkedin?rt=jsonp&companyid="+contentid+"&callback=?", function(data) {linkedInCallback(data);});
+		}
+	}
+}
+
+function linkedInCallback(data) {
+	//console.log(JSON.stringify(data));
+	//hide the spinner
+	hideSpinner();
+	
+	var parent = $("#linkedin-media-content");
+	var header = $('<div class="media-title"><a href="https://www.linkedin.com/company/ieee"><i class="fa fa-linkedin"></i></a>LinkedIn</div>');
+	parent.append(header);
+	var contentsize = data.values.length;
+	var limit = parseInt(linkedinconfig.limit);
+	for(var i=0; i<limit; i++){
+		var item = data.values[i];
+		//console.log(item);
+		var updateContent = item.updateContent;
+		//console.log(updateContent);
+		if (updateContent.companyStatusUpdate) {
+			// handle company status
+			handleCompanyStatus(updateContent, parent, item);
+		}
+		else {
+			//show only status update. Any other type of posts, skip
+			limit++;
+		}
+		//else if (updateContent.companyJobUpdate) {
+			// handle job posting
+			//handleJobPosting(updateContent, parent, item);
+		//}
+	}
+}
+
+function handleJobPosting(updateContent, parent, item){
+		var jobPost = updateContent.companyJobUpdate;
+		//console.log(jobPost);
+		
+		if(typeof jobPost != "undefined" && typeof jobPost.job != "undefined" ){
+			var company_name = updateContent.company.name;
+			var desc = jobPost.job.description;
+			//console.log('desc = ' + desc);
+			desc = tweakPostText(desc);
+
+
+			var thumburl = "";
+			var datestr = "";
+			try{
+				var created_date = new Date(item.timestamp);
+				//datestr = (created_date.getMonth()+1) +"/" + created_date.getDate() +"/" + created_date.getFullYear();
+				datestr = created_date.getDate() + " " + getShortMonthName(created_date.getMonth());
+			} catch(err) {
+				//console.log("Error: " + err);
+			}
+			var html = '<div class="social-media-item">';
+			if(thumburl != ""){
+				html += '<a rel="prettyPhoto" href="' + thumburl + '"></a>';
+			}
+			//html += '<div class="sm-item-header"><b><a href="https://www.linkedin.com/company/'+ company_name +'" target="_blank">' + company_name + '</a></b></div>';
+			html += '<div class="sm-item-date">' + datestr + '</div>';
+			html += '<div class="sm-item-content">'
+			html += '<div class="sm-item-content-text">' + desc + '</div>';
+			if(thumburl != ""){
+				html += '<div class="sm-item-content-image"><img  src="' + thumburl + '" class="yt-image"/></div>';
+			}	
+			html += '</div></div>';
+			
+			//append the html to the parent container.
+			parent.append(html);
+		}
+}
+
+function handleCompanyStatus(updateContent, parent, item){
+		var statusupdate = updateContent.companyStatusUpdate;
+		console.log(statusupdate);
+			
+		if(typeof statusupdate != "undefined"){
+			var company_name = updateContent.company.name;
+			var comment = statusupdate.share.comment;
+			comment = tweakPostText(comment);
+			var thumburl = "";
+			if(statusupdate.share.content != "undefined" && statusupdate.share.content != null){
+				thumburl = statusupdate.share.content.thumbnailUrl;
+			}
+			
+			var datestr = "";
+			try{
+				var created_date = new Date(item.timestamp);
+				//datestr = (created_date.getMonth()+1) +"/" + created_date.getDate() +"/" + created_date.getFullYear();
+				datestr = created_date.getDate() + " " + getShortMonthName(created_date.getMonth());
+			} catch(err) {
+				//console.log("Error: " + err);
+			}
+			var html = '<div class="social-media-item">';
+			if(thumburl != ""){
+				html += '<a rel="prettyPhoto" href="' + thumburl + '"></a>';
+			}
+			//html += '<div class="sm-item-header"><b><a href="https://www.linkedin.com/company/'+ company_name +'" target="_blank">' + company_name + '</a></b></div>';
+			html += '<div class="sm-item-date">' + datestr + '</div>';
+			html += '<div class="sm-item-content">'
+			html += '<div class="sm-item-content-text">' + comment + '</div>';
+			html += '<div class="sm-item-content-image"><img  src="' + thumburl + '" class="yt-image"/></div>';
+			html += '</div></div>';
+			
+			//append the html to the parent container.
+			parent.append(html);
+		}
+}
+
+function renderLinkedInData(parent, data) {
+	// dummy
+}
+
+//############################################################# GOOGLEPLUS #############################################################//
+// default configuration options
+var gp_cfg = {
+	
+};
+
+function renderGooglePlusUI(config) {
+	var contentsize = config.content.length;
+	if(contentsize > 0){
+		for(var i=0; i< contentsize; i++){
+			loadGooglePlusData(config.content[i]);
+		}
+	}
+}
+
+function loadGooglePlusData(config) {
+	var content_type = config.contenttype;
+	var content_id = config.contentid;
+	$.getJSON("https://www.googleapis.com/plus/v1/people/" + content_id + "/activities/public?key=AIzaSyA0LI7i8m_3kUx_OSxNlHdlm-2fx8C517k&callback=?", function(data){googleplusCallback(content_id, data);});
+}
+
+function googleplusCallback(content_id, obj){
+	hideSpinner();
+	var parent = $("#gplus-media-content");
+	if(obj.error != undefined){
+		parent.append("<br>" + obj.error.message);
+	} else {
+		//var sm_indv_cont = $('<div class="media-type"></div>');
+		var header = $('<div class="media-title"><a href="https://plus.google.com/110847308612303935604"><i class="fa fa-google-plus"></i></a>Google+</div>');
+		parent.append(header);
+		$.each(obj.items, function(i,item){
+			var limit = parseInt(gplusconfig.limit);
+			if(i == limit){
+				return false;
+			}
+			var html = getGooglePlusItem(content_id, item);
+			//sm_indv_cont.append(html);
+			parent.append(html);
+		});
+		//parent.append(sm_indv_cont);
+	}
+}
+	
+function getGooglePlusItem(content_id, item) {
+	var profile_name = item.actor.displayName;
+	var profile_icon = item.actor.image.url;
+	var content = item.object.content;
+	var imageurl = item.object.attachments[0].image.url;
+	if(imageurl == null || imageurl == "undefined"){
+		imageurl = item.object.attachments[0].url;
+	}
+	var published = item.published;
+	var type = item.kind;
+	var url = item.url;
+
+	var html = '<div class="social-media-item">';
+	//html += '<div class="sm-item-header"><b><a href="https://plus.google.com/'+content_id+'/posts" target="_blank">' + profile_name + '</a></b></div>';	
+	html += '<div class="sm-item-date">'+ gp_parseDate(published) +'</div>';
+	html += '<div class="sm-item-content">';
+	if(content !=""){
+		html += '<div class="sm-item-content-text">' + content;
+	}
+	if(imageurl != null || imageurl != "undefined"){
+		html += '<div class="sm-item-content-image"><img  src="' + imageurl + '" class="yt-image"/></div>';
+	}
+	
+	html += '</div></div>';
+	html += '<div class="clearit"></div>';
+	return html;
+}
+
+function gp_parseDate(d) {
+	var html = "";
+	var regHash = new RegExp(/(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d):\d\d\.\d\d\dZ/i);
+	var m = regHash.exec(d);
+	if (m != null && m.length > 0) {
+		var date = m[1];
+		var time = m[2];
+		var dateArr = date.split("-");
+		var time_pre = time.split(":")[0];
+		var time_post = time.split(":")[1];
+		if (time.split(":")[0] > 12) {
+			time = (time.split(":")[0]-12) + ':' + time.split(":")[1] + ' pm';
+		} else if (time.split(":")[0] == 12) {
+			time = '12:' + time.split(":")[1] + ' pm';
+		} else {
+			time += ' am';
+		}
+		//html = dateArr[1] + '-' + dateArr[2] + '-' + dateArr[0] + ' ' + time;
+		//html = dateArr[1] + "/" + dateArr[2] + "/" + dateArr[0];
+		html = dateArr[2] + " " + getShortMonthName(parseInt(dateArr[1])-1);
+	} else { 
+		html = d; 
+	}
+	return html;
+}
+
+//############################################################# YOUTUBE	#############################################################//
+// default configuration options
+var yt_cfg = {
+	resultscount: 2,
+	contentlength: 1000
+};
+
+function renderYouTubeUI(config){
+	var contentsize = config.content.length;
+	if(contentsize > 0){
+		for(var i=0; i< contentsize; i++){
+			var contenttype = config.content[i].contenttype;
+			var contentid = config.content[i].contentid;
+			if (contenttype == "recent") {
+				loadYoutubeRecentData(contentid);
+			} else if (contenttype == "playlist") {
+				loadYoutubePlaylistData(contentid);
+			} else if (contenttype == "channel") {
+				loadYoutubeChannelData(contentid);
+			}	
+		}
+	}
+}
+
+function loadYoutubeChannelData(id) {
+	$.getJSON('https://gdata.youtube.com/feeds/api/users/'+ id +'/favorites?max-results='+yt_cfg.resultscount+'&alt=json&orderby=published&callback=?', function(data) {renderYoutubeData('channel', data);});
+}
+function loadYoutubePlaylistData(id) {
+	$.getJSON('https://gdata.youtube.com/feeds/api/playlists/'+id+'?&orderby=published&alt=json&callback=?', function(data) {renderYoutubeData('playlist', data);});
+}
+function loadYoutubeRecentData(id) {
+	$.getJSON('https://gdata.youtube.com/feeds/api/videos?author='+id+'&&orderby=published&alt=json&callback=?', function(data) {renderYoutubeData('recent', data);});
+}
+
+function renderYoutubeData(datatype, data) {
+	// hide the spinner
+	hideSpinner();
+	
+	var playlist_updated_date = "";
+	// get the updated date for the playlist
+	if(datatype == "playlist"){
+		playlist_updated_date = data.feed.updated.$t;
+	}
+	var parent = $("#socialmedia-content");
+	var sm_indv_cont = $('<div class="media-type"></div>');
+	$.each(data.feed.entry, function(i, item) {
+		
+		var limit = parseInt(youtubeconfig.limit);
+		if(i == limit){
+			return false;
+		}
+		
+		var id = item.id.$t;
+		var published = "";
+		if(datatype == "playlist"){
+			//published = item.updated.$t;
+			published = playlist_updated_date;
+		} else {
+			published = item.published.$t;
+		}
+		//console.log(published);
+		var title = item.title.$t;
+		var content = (item.content != undefined ? item.content.$t : '');
+		var imageurl = (item.media$group.media$thumbnail != undefined ? item.media$group.media$thumbnail[0]['url'] : '' );
+		var link = "";
+		if(datatype == "recent"){
+			link = item.link[0]['href'];
+		} else {
+			link = (item.media$group.media$player != undefined ? item.media$group.media$player[0]['url'] : '' );
+		}
+		
+		var html = '<div class="social-media-item">';
+		if (imageurl != undefined) {
+			html += '<img  src="' + imageurl + '" class="yt-image"/>';
+		}
+		html += '<a rel="prettyPhoto" href="' + link + '">' + title + '</a>';
+		html += '<div class="yt-date"><span>'+ youtube_parseDate(published)+'</span></div>';
+		html += '<div class="yt-content">' + youtube_getContent(content) + '</div>';
+		//html += '<div class="yt-content">' + tweakPostText(content) + '</div>';
+		html += '</div>';
+		
+		// append the html to the parent container.
+		sm_indv_cont.append(html);
+	});
+	parent.append(sm_indv_cont);	
+}
+
+function youtube_parseId(url) {
+	var id = "";
+	var regHash = new RegExp(/[^\$]videos\/([^\&]+)/i);
+	var m = regHash.exec(url);
+	if (m != null && m.length > 0) {
+		id = m[1];
+	} 
+	return id;
+}
+
+function youtube_parseDate(d) {
+	var html = "";
+	var regHash = new RegExp(/(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d):\d\d\.[\da-zA-Z]+/i);
+	var m = regHash.exec(d);
+	if (m != null && m.length > 0) {
+		var date = m[1];
+		var time = m[2];
+		var dateArr = date.split("-");
+		var time_pre = time.split(":")[0];
+		var time_post = time.split(":")[1];
+		//html = dateArr[1] + '/' + dateArr[2] + '/' + dateArr[0];// + ' ' + time;	
+		html = dateArr[2] + " " + getShortMonthName(parseInt(dateArr[1])-1);	
+	} else { 
+		html = 'no match'; 
+	}
+	return html;
+}
+
+function youtube_getContent(c) {
+	var html = "";
+	if(c.length > yt_cfg.contentlength) {
+		html += c.substring(0,yt_cfg.contentlength);
+		while (html.charAt(html.length-1) != " ") {
+			html = html.substring(0,html.length-1); // remove any incomplete words
+		}
+		html += "...";
+	} else {
+		html += c;
+	}
+
+	return html;
+}
+
+//############################################################# GENERIC ############################################################//
+
+function tweakPostText(text) {
+	var myregexp = /\s/;
+	var arr = text.split(myregexp);
+	var html = "";
+	for(var i = 0; i < arr.length; i++){
+		var s = arr[i];
+		if (s.indexOf("http://") == 0 || s.indexOf("https://") == 0) {
+			s = createLink(s);
+		}
+		html += s + " ";
+	}
+	return html;
+}
+
+function getLoadingSpinner() {
+	return $('<div class="loading-spinner"><br><img  src="/ieee/groups/webassets/@ieee/@web/@org/documents/images/img_ieee_loading_spinner.gif"></div>');
+}
+
+// show the loading spinner
+function showSpinner(){
+	// empty the contents.
+	//var parent = $("#socialmedia-content");
+	//parent.empty();
+	//parent.append($('<div class="loading-spinner"><br><img  src="/ieee/groups/webassets/@ieee/@web/@org/documents/images/img_ieee_loading_spinner.gif"></div>'));
+}
+// hide the loading spinner
+function hideSpinner(){
+	//var parent = $("#socialmedia-content");
+	//if(!contentLoaded){
+		//contentLoaded = true;
+		//parent.empty(); // remove the spinner
+	//}
+}
+
+function getShortMonthName(monthnum){
+	var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+	return monthNames[monthnum];
+}
+
+function loadMediaContent(mediatype){
+	contentLoaded = false;
+
+	//select the tab
+	$(".socialmedia-navitem").removeClass("hilite");
+	$("#media-nav-" + mediatype).addClass("hilite");
+	
+	// load the content
+	loadMediaContentInternal(mediatype);
+}
+
+function loadMediaContentHome(mediatype){
+	contentLoaded = false;
+	
+	//select the tab
+	$(".socialmedia-tab").removeClass("active");
+	$(".sm-tab-divider").removeClass("selected-left");
+	$(".sm-tab-divider").removeClass("selected-right");
+	var selectedtab = $("#socialmedia-"+ mediatype);
+	selectedtab.addClass("active");
+	var leftDivider = selectedtab.prev();
+	var rightDivider = selectedtab.next();
+	if(leftDivider != null && typeof leftDivider != "undefined"){
+		leftDivider.addClass("selected-left");
+	}
+	if(rightDivider != null && typeof rightDivider != "undefined"){
+		rightDivider.addClass("selected-right");
+	}
+	
+	// load the content
+	loadMediaContentInternal(mediatype);	
+}
+
+function loadMediaContentInternal(mediatype){
+	var parent = $("#socialmedia-content");
+	//parent.empty();
+	if(mediatype == "facebook"){
+		showSpinner();
+		renderFaceBookUI(facebookconfig);
+	} else if(mediatype == "twitter"){
+		showSpinner();
+		renderTwitterUI(twitterconfig);
+		//renderTwitterUI(parent, "script", "twitter-wjs");
+	} else if(mediatype == "linkedin"){
+		showSpinner();
+		renderLinkedInUI(linkedinconfig);
+	} else if(mediatype == "youtube"){
+		showSpinner();
+		renderYouTubeUI(youtubeconfig);
+	} else if(mediatype == "googleplus"){
+		showSpinner();
+		renderGooglePlusUI(gplusconfig);
+	} 
+}
+~×:™      X–ádX–ád=gÍR       e    :http://www.ieee.org/ucm/groups/webassets/@ieee/@web/@org/documents/webassets/js_ieee_social_media.js request-method GET response-head HTTP/1.1 200 OK
+Pragma: no-cache
+Last-Modified: Tue, 10 Jan 2017 14:48:08 GMT
+Etag: "29895dcca-5fbf-545be92875a00"
+Accept-Ranges: bytes
+Content-Length: 24511
+Content-Type: application/x-javascript
+content-security-policy: frame-ancestors http://*.ieee.org https://*.ieee.org
+Cache-Control: no-cache
+Date: Sun, 05 Feb 2017 09:25:08 GMT
+ uncompressed-len 0   _¿

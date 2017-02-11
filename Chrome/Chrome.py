@@ -5,13 +5,13 @@ from selenium.webdriver.chrome.options import Options
 from time import time
 
 Control = False
-AdBlock = True
-Private = False
+AdBlock = False
+Private = True
 
 if Control:
 
     chrome_options = Options()
-    chrome_options.add_argument(r"user-data-dir=C:\Users\user\PycharmProjects\AdBlockerForensics\adbf\Chrome\Chrome_Control_Sample2")
+    chrome_options.add_argument(r"user-data-dir=C:\Users\user\PycharmProjects\AdBlockerForensics\adbf\Chrome\Chrome_Control_Sample")
     cd = webdriver.Chrome(chrome_options=chrome_options)
     print('Getting control sample')
     timestamps = open('Chrome_Control_Timestamps.txt', 'w')

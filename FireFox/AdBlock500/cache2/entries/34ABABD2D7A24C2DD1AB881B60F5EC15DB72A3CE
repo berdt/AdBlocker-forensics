@@ -1,0 +1,3158 @@
+/*!
+ * jCarousel - Riding carousels with jQuery
+ *   http://sorgalla.com/jcarousel/
+ *
+ * Copyright (c) 2006 Jan Sorgalla (http://sorgalla.com)
+ * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+ * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ *
+ * Built on top of the jQuery library
+ *   http://jquery.com
+ *
+ * Inspired by the "Carousel Component" by Bill Scott
+ *   http://billwscott.com/carousel/
+ */
+
+(function(g){var q={vertical:!1,rtl:!1,start:1,offset:1,size:null,scroll:3,visible:null,animation:"normal",easing:"swing",auto:0,wrap:null,initCallback:null,setupCallback:null,reloadCallback:null,itemLoadCallback:null,itemFirstInCallback:null,itemFirstOutCallback:null,itemLastInCallback:null,itemLastOutCallback:null,itemVisibleInCallback:null,itemVisibleOutCallback:null,animationStepCallback:null,buttonNextHTML:"<div></div>",buttonPrevHTML:"<div></div>",buttonNextEvent:"click",buttonPrevEvent:"click", buttonNextCallback:null,buttonPrevCallback:null,itemFallbackDimension:null},m=!1;g(window).bind("load.jcarousel",function(){m=!0});g.jcarousel=function(a,c){this.options=g.extend({},q,c||{});this.autoStopped=this.locked=!1;this.buttonPrevState=this.buttonNextState=this.buttonPrev=this.buttonNext=this.list=this.clip=this.container=null;if(!c||c.rtl===void 0)this.options.rtl=(g(a).attr("dir")||g("html").attr("dir")||"").toLowerCase()=="rtl";this.wh=!this.options.vertical?"width":"height";this.lt=!this.options.vertical? this.options.rtl?"right":"left":"top";for(var b="",d=a.className.split(" "),f=0;f<d.length;f++)if(d[f].indexOf("jcarousel-skin")!=-1){g(a).removeClass(d[f]);b=d[f];break}a.nodeName.toUpperCase()=="UL"||a.nodeName.toUpperCase()=="OL"?(this.list=g(a),this.clip=this.list.parents(".jcarousel-clip"),this.container=this.list.parents(".jcarousel-container")):(this.container=g(a),this.list=this.container.find("ul,ol").eq(0),this.clip=this.container.find(".jcarousel-clip"));if(this.clip.size()===0)this.clip= this.list.wrap("<div></div>").parent();if(this.container.size()===0)this.container=this.clip.wrap("<div></div>").parent();b!==""&&this.container.parent()[0].className.indexOf("jcarousel-skin")==-1&&this.container.wrap('<div class=" '+b+'"></div>');this.buttonPrev=g(".jcarousel-prev",this.container);if(this.buttonPrev.size()===0&&this.options.buttonPrevHTML!==null)this.buttonPrev=g(this.options.buttonPrevHTML).appendTo(this.container);this.buttonPrev.addClass(this.className("jcarousel-prev"));this.buttonNext= g(".jcarousel-next",this.container);if(this.buttonNext.size()===0&&this.options.buttonNextHTML!==null)this.buttonNext=g(this.options.buttonNextHTML).appendTo(this.container);this.buttonNext.addClass(this.className("jcarousel-next"));this.clip.addClass(this.className("jcarousel-clip")).css({position:"relative"});this.list.addClass(this.className("jcarousel-list")).css({overflow:"hidden",position:"relative",top:0,margin:0,padding:0}).css(this.options.rtl?"right":"left",0);this.container.addClass(this.className("jcarousel-container")).css({position:"relative"}); !this.options.vertical&&this.options.rtl&&this.container.addClass("jcarousel-direction-rtl").attr("dir","rtl");var j=this.options.visible!==null?Math.ceil(this.clipping()/this.options.visible):null,b=this.list.children("li"),e=this;if(b.size()>0){var h=0,i=this.options.offset;b.each(function(){e.format(this,i++);h+=e.dimension(this,j)});this.list.css(this.wh,h+100+"px");if(!c||c.size===void 0)this.options.size=b.size()}this.container.css("display","block");this.buttonNext.css("display","block");this.buttonPrev.css("display", "block");this.funcNext=function(){e.next()};this.funcPrev=function(){e.prev()};this.funcResize=function(){e.resizeTimer&&clearTimeout(e.resizeTimer);e.resizeTimer=setTimeout(function(){e.reload()},100)};this.options.initCallback!==null&&this.options.initCallback(this,"init");!m&&g.browser.safari?(this.buttons(!1,!1),g(window).bind("load.jcarousel",function(){e.setup()})):this.setup()};var f=g.jcarousel;f.fn=f.prototype={jcarousel:"0.2.8"};f.fn.extend=f.extend=g.extend;f.fn.extend({setup:function(){this.prevLast= this.prevFirst=this.last=this.first=null;this.animating=!1;this.tail=this.resizeTimer=this.timer=null;this.inTail=!1;if(!this.locked){this.list.css(this.lt,this.pos(this.options.offset)+"px");var a=this.pos(this.options.start,!0);this.prevFirst=this.prevLast=null;this.animate(a,!1);g(window).unbind("resize.jcarousel",this.funcResize).bind("resize.jcarousel",this.funcResize);this.options.setupCallback!==null&&this.options.setupCallback(this)}},reset:function(){this.list.empty();this.list.css(this.lt, "0px");this.list.css(this.wh,"10px");this.options.initCallback!==null&&this.options.initCallback(this,"reset");this.setup()},reload:function(){this.tail!==null&&this.inTail&&this.list.css(this.lt,f.intval(this.list.css(this.lt))+this.tail);this.tail=null;this.inTail=!1;this.options.reloadCallback!==null&&this.options.reloadCallback(this);if(this.options.visible!==null){var a=this,c=Math.ceil(this.clipping()/this.options.visible),b=0,d=0;this.list.children("li").each(function(f){b+=a.dimension(this, c);f+1<a.first&&(d=b)});this.list.css(this.wh,b+"px");this.list.css(this.lt,-d+"px")}this.scroll(this.first,!1)},lock:function(){this.locked=!0;this.buttons()},unlock:function(){this.locked=!1;this.buttons()},size:function(a){if(a!==void 0)this.options.size=a,this.locked||this.buttons();return this.options.size},has:function(a,c){if(c===void 0||!c)c=a;if(this.options.size!==null&&c>this.options.size)c=this.options.size;for(var b=a;b<=c;b++){var d=this.get(b);if(!d.length||d.hasClass("jcarousel-item-placeholder"))return!1}return!0}, get:function(a){return g(">.jcarousel-item-"+a,this.list)},add:function(a,c){var b=this.get(a),d=0,p=g(c);if(b.length===0)for(var j,e=f.intval(a),b=this.create(a);;){if(j=this.get(--e),e<=0||j.length){e<=0?this.list.prepend(b):j.after(b);break}}else d=this.dimension(b);p.get(0).nodeName.toUpperCase()=="LI"?(b.replaceWith(p),b=p):b.empty().append(c);this.format(b.removeClass(this.className("jcarousel-item-placeholder")),a);p=this.options.visible!==null?Math.ceil(this.clipping()/this.options.visible): null;d=this.dimension(b,p)-d;a>0&&a<this.first&&this.list.css(this.lt,f.intval(this.list.css(this.lt))-d+"px");this.list.css(this.wh,f.intval(this.list.css(this.wh))+d+"px");return b},remove:function(a){var c=this.get(a);if(c.length&&!(a>=this.first&&a<=this.last)){var b=this.dimension(c);a<this.first&&this.list.css(this.lt,f.intval(this.list.css(this.lt))+b+"px");c.remove();this.list.css(this.wh,f.intval(this.list.css(this.wh))-b+"px")}},next:function(){this.tail!==null&&!this.inTail?this.scrollTail(!1): this.scroll((this.options.wrap=="both"||this.options.wrap=="last")&&this.options.size!==null&&this.last==this.options.size?1:this.first+this.options.scroll)},prev:function(){this.tail!==null&&this.inTail?this.scrollTail(!0):this.scroll((this.options.wrap=="both"||this.options.wrap=="first")&&this.options.size!==null&&this.first==1?this.options.size:this.first-this.options.scroll)},scrollTail:function(a){if(!this.locked&&!this.animating&&this.tail){this.pauseAuto();var c=f.intval(this.list.css(this.lt)), c=!a?c-this.tail:c+this.tail;this.inTail=!a;this.prevFirst=this.first;this.prevLast=this.last;this.animate(c)}},scroll:function(a,c){!this.locked&&!this.animating&&(this.pauseAuto(),this.animate(this.pos(a),c))},pos:function(a,c){var b=f.intval(this.list.css(this.lt));if(this.locked||this.animating)return b;this.options.wrap!="circular"&&(a=a<1?1:this.options.size&&a>this.options.size?this.options.size:a);for(var d=this.first>a,g=this.options.wrap!="circular"&&this.first<=1?1:this.first,j=d?this.get(g): this.get(this.last),e=d?g:g-1,h=null,i=0,k=!1,l=0;d?--e>=a:++e<a;){h=this.get(e);k=!h.length;if(h.length===0&&(h=this.create(e).addClass(this.className("jcarousel-item-placeholder")),j[d?"before":"after"](h),this.first!==null&&this.options.wrap=="circular"&&this.options.size!==null&&(e<=0||e>this.options.size)))j=this.get(this.index(e)),j.length&&(h=this.add(e,j.clone(!0)));j=h;l=this.dimension(h);k&&(i+=l);if(this.first!==null&&(this.options.wrap=="circular"||e>=1&&(this.options.size===null||e<= this.options.size)))b=d?b+l:b-l}for(var g=this.clipping(),m=[],o=0,n=0,j=this.get(a-1),e=a;++o;){h=this.get(e);k=!h.length;if(h.length===0){h=this.create(e).addClass(this.className("jcarousel-item-placeholder"));if(j.length===0)this.list.prepend(h);else j[d?"before":"after"](h);if(this.first!==null&&this.options.wrap=="circular"&&this.options.size!==null&&(e<=0||e>this.options.size))j=this.get(this.index(e)),j.length&&(h=this.add(e,j.clone(!0)))}j=h;l=this.dimension(h);if(l===0)throw Error("jCarousel: No width/height set for items. This will cause an infinite loop. Aborting..."); this.options.wrap!="circular"&&this.options.size!==null&&e>this.options.size?m.push(h):k&&(i+=l);n+=l;if(n>=g)break;e++}for(h=0;h<m.length;h++)m[h].remove();i>0&&(this.list.css(this.wh,this.dimension(this.list)+i+"px"),d&&(b-=i,this.list.css(this.lt,f.intval(this.list.css(this.lt))-i+"px")));i=a+o-1;if(this.options.wrap!="circular"&&this.options.size&&i>this.options.size)i=this.options.size;if(e>i){o=0;e=i;for(n=0;++o;){h=this.get(e--);if(!h.length)break;n+=this.dimension(h);if(n>=g)break}}e=i-o+ 1;this.options.wrap!="circular"&&e<1&&(e=1);if(this.inTail&&d)b+=this.tail,this.inTail=!1;this.tail=null;if(this.options.wrap!="circular"&&i==this.options.size&&i-o+1>=1&&(d=f.intval(this.get(i).css(!this.options.vertical?"marginRight":"marginBottom")),n-d>g))this.tail=n-g-d;if(c&&a===this.options.size&&this.tail)b-=this.tail,this.inTail=!0;for(;a-- >e;)b+=this.dimension(this.get(a));this.prevFirst=this.first;this.prevLast=this.last;this.first=e;this.last=i;return b},animate:function(a,c){if(!this.locked&& !this.animating){this.animating=!0;var b=this,d=function(){b.animating=!1;a===0&&b.list.css(b.lt,0);!b.autoStopped&&(b.options.wrap=="circular"||b.options.wrap=="both"||b.options.wrap=="last"||b.options.size===null||b.last<b.options.size||b.last==b.options.size&&b.tail!==null&&!b.inTail)&&b.startAuto();b.buttons();b.notify("onAfterAnimation");if(b.options.wrap=="circular"&&b.options.size!==null)for(var c=b.prevFirst;c<=b.prevLast;c++)c!==null&&!(c>=b.first&&c<=b.last)&&(c<1||c>b.options.size)&&b.remove(c)}; this.notify("onBeforeAnimation");if(!this.options.animation||c===!1)this.list.css(this.lt,a+"px"),d();else{var f=!this.options.vertical?this.options.rtl?{right:a}:{left:a}:{top:a},d={duration:this.options.animation,easing:this.options.easing,complete:d};if(g.isFunction(this.options.animationStepCallback))d.step=this.options.animationStepCallback;this.list.animate(f,d)}}},startAuto:function(a){if(a!==void 0)this.options.auto=a;if(this.options.auto===0)return this.stopAuto();if(this.timer===null){this.autoStopped= !1;var c=this;this.timer=window.setTimeout(function(){c.next()},this.options.auto*1E3)}},stopAuto:function(){this.pauseAuto();this.autoStopped=!0},pauseAuto:function(){if(this.timer!==null)window.clearTimeout(this.timer),this.timer=null},buttons:function(a,c){if(a==null&&(a=!this.locked&&this.options.size!==0&&(this.options.wrap&&this.options.wrap!="first"||this.options.size===null||this.last<this.options.size),!this.locked&&(!this.options.wrap||this.options.wrap=="first")&&this.options.size!==null&& this.last>=this.options.size))a=this.tail!==null&&!this.inTail;if(c==null&&(c=!this.locked&&this.options.size!==0&&(this.options.wrap&&this.options.wrap!="last"||this.first>1),!this.locked&&(!this.options.wrap||this.options.wrap=="last")&&this.options.size!==null&&this.first==1))c=this.tail!==null&&this.inTail;var b=this;this.buttonNext.size()>0?(this.buttonNext.unbind(this.options.buttonNextEvent+".jcarousel",this.funcNext),a&&this.buttonNext.bind(this.options.buttonNextEvent+".jcarousel",this.funcNext), this.buttonNext[a?"removeClass":"addClass"](this.className("jcarousel-next-disabled")).attr("disabled",a?!1:!0),this.options.buttonNextCallback!==null&&this.buttonNext.data("jcarouselstate")!=a&&this.buttonNext.each(function(){b.options.buttonNextCallback(b,this,a)}).data("jcarouselstate",a)):this.options.buttonNextCallback!==null&&this.buttonNextState!=a&&this.options.buttonNextCallback(b,null,a);this.buttonPrev.size()>0?(this.buttonPrev.unbind(this.options.buttonPrevEvent+".jcarousel",this.funcPrev), c&&this.buttonPrev.bind(this.options.buttonPrevEvent+".jcarousel",this.funcPrev),this.buttonPrev[c?"removeClass":"addClass"](this.className("jcarousel-prev-disabled")).attr("disabled",c?!1:!0),this.options.buttonPrevCallback!==null&&this.buttonPrev.data("jcarouselstate")!=c&&this.buttonPrev.each(function(){b.options.buttonPrevCallback(b,this,c)}).data("jcarouselstate",c)):this.options.buttonPrevCallback!==null&&this.buttonPrevState!=c&&this.options.buttonPrevCallback(b,null,c);this.buttonNextState= a;this.buttonPrevState=c},notify:function(a){var c=this.prevFirst===null?"init":this.prevFirst<this.first?"next":"prev";this.callback("itemLoadCallback",a,c);this.prevFirst!==this.first&&(this.callback("itemFirstInCallback",a,c,this.first),this.callback("itemFirstOutCallback",a,c,this.prevFirst));this.prevLast!==this.last&&(this.callback("itemLastInCallback",a,c,this.last),this.callback("itemLastOutCallback",a,c,this.prevLast));this.callback("itemVisibleInCallback",a,c,this.first,this.last,this.prevFirst, this.prevLast);this.callback("itemVisibleOutCallback",a,c,this.prevFirst,this.prevLast,this.first,this.last)},callback:function(a,c,b,d,f,j,e){if(!(this.options[a]==null||typeof this.options[a]!="object"&&c!="onAfterAnimation")){var h=typeof this.options[a]=="object"?this.options[a][c]:this.options[a];if(g.isFunction(h)){var i=this;if(d===void 0)h(i,b,c);else if(f===void 0)this.get(d).each(function(){h(i,this,d,b,c)});else for(var a=function(a){i.get(a).each(function(){h(i,this,a,b,c)})},k=d;k<=f;k++)k!== null&&!(k>=j&&k<=e)&&a(k)}}},create:function(a){return this.format("<li></li>",a)},format:function(a,c){for(var a=g(a),b=a.get(0).className.split(" "),d=0;d<b.length;d++)b[d].indexOf("jcarousel-")!=-1&&a.removeClass(b[d]);a.addClass(this.className("jcarousel-item")).addClass(this.className("jcarousel-item-"+c)).css({"float":this.options.rtl?"right":"left","list-style":"none"}).attr("jcarouselindex",c);return a},className:function(a){return a+" "+a+(!this.options.vertical?"-horizontal":"-vertical")}, dimension:function(a,c){var b=g(a);if(c==null)return!this.options.vertical?b.outerWidth(!0)||f.intval(this.options.itemFallbackDimension):b.outerHeight(!0)||f.intval(this.options.itemFallbackDimension);else{var d=!this.options.vertical?c-f.intval(b.css("marginLeft"))-f.intval(b.css("marginRight")):c-f.intval(b.css("marginTop"))-f.intval(b.css("marginBottom"));g(b).css(this.wh,d+"px");return this.dimension(b)}},clipping:function(){return!this.options.vertical?this.clip[0].offsetWidth-f.intval(this.clip.css("borderLeftWidth"))- f.intval(this.clip.css("borderRightWidth")):this.clip[0].offsetHeight-f.intval(this.clip.css("borderTopWidth"))-f.intval(this.clip.css("borderBottomWidth"))},index:function(a,c){if(c==null)c=this.options.size;return Math.round(((a-1)/c-Math.floor((a-1)/c))*c)+1}});f.extend({defaults:function(a){return g.extend(q,a||{})},intval:function(a){a=parseInt(a,10);return isNaN(a)?0:a},windowLoaded:function(){m=!0}});g.fn.jcarousel=function(a){if(typeof a=="string"){var c=g(this).data("jcarousel"),b=Array.prototype.slice.call(arguments, 1);return c[a].apply(c,b)}else return this.each(function(){var b=g(this).data("jcarousel");b?(a&&g.extend(b.options,a),b.reload()):g(this).data("jcarousel",new f(this,a))})}})(jQuery);
+/*!
+ * jQuery Cycle Plugin (with Transition Definitions)
+ * Examples and documentation at: http://jquery.malsup.com/cycle/
+ * Copyright (c) 2007-2010 M. Alsup
+ * Version: 2.9999 (13-NOV-2011)
+ * Dual licensed under the MIT and GPL licenses.
+ * http://jquery.malsup.com/license.html
+ * Requires: jQuery v1.3.2 or later
+ */
+;(function($, undefined) {
+
+var ver = '2.9999';
+
+// if $.support is not defined (pre jQuery 1.3) add what I need
+if ($.support == undefined) {
+	$.support = {
+		opacity: !($.browser.msie)
+	};
+}
+
+function debug(s) {
+	$.fn.cycle.debug && log(s);
+}		
+function log() {
+	window.console && console.log && console.log('[cycle] ' + Array.prototype.join.call(arguments,' '));
+}
+$.expr[':'].paused = function(el) {
+	return el.cyclePause;
+}
+
+
+// the options arg can be...
+//   a number  - indicates an immediate transition should occur to the given slide index
+//   a string  - 'pause', 'resume', 'toggle', 'next', 'prev', 'stop', 'destroy' or the name of a transition effect (ie, 'fade', 'zoom', etc)
+//   an object - properties to control the slideshow
+//
+// the arg2 arg can be...
+//   the name of an fx (only used in conjunction with a numeric value for 'options')
+//   the value true (only used in first arg == 'resume') and indicates
+//	 that the resume should occur immediately (not wait for next timeout)
+
+$.fn.cycle = function(options, arg2) {
+	var o = { s: this.selector, c: this.context };
+
+	// in 1.3+ we can fix mistakes with the ready state
+	if (this.length === 0 && options != 'stop') {
+		if (!$.isReady && o.s) {
+			log('DOM not ready, queuing slideshow');
+			$(function() {
+				$(o.s,o.c).cycle(options,arg2);
+			});
+			return this;
+		}
+		// is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
+		log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
+		return this;
+	}
+
+	// iterate the matched nodeset
+	return this.each(function() {
+		var opts = handleArguments(this, options, arg2);
+		if (opts === false)
+			return;
+
+		opts.updateActivePagerLink = opts.updateActivePagerLink || $.fn.cycle.updateActivePagerLink;
+		
+		// stop existing slideshow for this container (if there is one)
+		if (this.cycleTimeout)
+			clearTimeout(this.cycleTimeout);
+		this.cycleTimeout = this.cyclePause = 0;
+
+		var $cont = $(this);
+		var $slides = opts.slideExpr ? $(opts.slideExpr, this) : $cont.children();
+		var els = $slides.get();
+
+		var opts2 = buildOptions($cont, $slides, els, opts, o);
+		if (opts2 === false)
+			return;
+
+		if (els.length < 2) {
+			log('terminating; too few slides: ' + els.length);
+			return;
+		}
+
+		var startTime = opts2.continuous ? 10 : getTimeout(els[opts2.currSlide], els[opts2.nextSlide], opts2, !opts2.backwards);
+
+		// if it's an auto slideshow, kick it off
+		if (startTime) {
+			startTime += (opts2.delay || 0);
+			if (startTime < 10)
+				startTime = 10;
+			debug('first timeout: ' + startTime);
+			this.cycleTimeout = setTimeout(function(){go(els,opts2,0,!opts.backwards)}, startTime);
+		}
+	});
+};
+
+function triggerPause(cont, byHover, onPager) {
+	var opts = $(cont).data('cycle.opts');
+	var paused = !!cont.cyclePause;
+	if (paused && opts.paused)
+		opts.paused(cont, opts, byHover, onPager);
+	else if (!paused && opts.resumed)
+		opts.resumed(cont, opts, byHover, onPager);
+}
+
+// process the args that were passed to the plugin fn
+function handleArguments(cont, options, arg2) {
+	if (cont.cycleStop == undefined)
+		cont.cycleStop = 0;
+	if (options === undefined || options === null)
+		options = {};
+	if (options.constructor == String) {
+		switch(options) {
+		case 'destroy':
+		case 'stop':
+			var opts = $(cont).data('cycle.opts');
+			if (!opts)
+				return false;
+			cont.cycleStop++; // callbacks look for change
+			if (cont.cycleTimeout)
+				clearTimeout(cont.cycleTimeout);
+			cont.cycleTimeout = 0;
+			opts.elements && $(opts.elements).stop();
+			$(cont).removeData('cycle.opts');
+			if (options == 'destroy')
+				destroy(opts);
+			return false;
+		case 'toggle':
+			cont.cyclePause = (cont.cyclePause === 1) ? 0 : 1;
+			checkInstantResume(cont.cyclePause, arg2, cont);
+			triggerPause(cont);
+			return false;
+		case 'pause':
+			cont.cyclePause = 1;
+			triggerPause(cont);
+			return false;
+		case 'resume':
+			cont.cyclePause = 0;
+			checkInstantResume(false, arg2, cont);
+			triggerPause(cont);
+			return false;
+		case 'prev':
+		case 'next':
+			var opts = $(cont).data('cycle.opts');
+			if (!opts) {
+				log('options not found, "prev/next" ignored');
+				return false;
+			}
+			$.fn.cycle[options](opts);
+			return false;
+		default:
+			options = { fx: options };
+		};
+		return options;
+	}
+	else if (options.constructor == Number) {
+		// go to the requested slide
+		var num = options;
+		options = $(cont).data('cycle.opts');
+		if (!options) {
+			log('options not found, can not advance slide');
+			return false;
+		}
+		if (num < 0 || num >= options.elements.length) {
+			log('invalid slide index: ' + num);
+			return false;
+		}
+		options.nextSlide = num;
+		if (cont.cycleTimeout) {
+			clearTimeout(cont.cycleTimeout);
+			cont.cycleTimeout = 0;
+		}
+		if (typeof arg2 == 'string')
+			options.oneTimeFx = arg2;
+		go(options.elements, options, 1, num >= options.currSlide);
+		return false;
+	}
+	return options;
+	
+	function checkInstantResume(isPaused, arg2, cont) {
+		if (!isPaused && arg2 === true) { // resume now!
+			var options = $(cont).data('cycle.opts');
+			if (!options) {
+				log('options not found, can not resume');
+				return false;
+			}
+			if (cont.cycleTimeout) {
+				clearTimeout(cont.cycleTimeout);
+				cont.cycleTimeout = 0;
+			}
+			go(options.elements, options, 1, !options.backwards);
+		}
+	}
+};
+
+function removeFilter(el, opts) {
+	if (!$.support.opacity && opts.cleartype && el.style.filter) {
+		try { el.style.removeAttribute('filter'); }
+		catch(smother) {} // handle old opera versions
+	}
+};
+
+// unbind event handlers
+function destroy(opts) {
+	if (opts.next)
+		$(opts.next).unbind(opts.prevNextEvent);
+	if (opts.prev)
+		$(opts.prev).unbind(opts.prevNextEvent);
+	
+	if (opts.pager || opts.pagerAnchorBuilder)
+		$.each(opts.pagerAnchors || [], function() {
+			this.unbind().remove();
+		});
+	opts.pagerAnchors = null;
+	if (opts.destroy) // callback
+		opts.destroy(opts);
+};
+
+// one-time initialization
+function buildOptions($cont, $slides, els, options, o) {
+	var startingSlideSpecified;
+	// support metadata plugin (v1.0 and v2.0)
+	var opts = $.extend({}, $.fn.cycle.defaults, options || {}, $.metadata ? $cont.metadata() : $.meta ? $cont.data() : {});
+	var meta = $.isFunction($cont.data) ? $cont.data(opts.metaAttr) : null;
+	if (meta)
+		opts = $.extend(opts, meta);
+	if (opts.autostop)
+		opts.countdown = opts.autostopCount || els.length;
+
+	var cont = $cont[0];
+	$cont.data('cycle.opts', opts);
+	opts.$cont = $cont;
+	opts.stopCount = cont.cycleStop;
+	opts.elements = els;
+	opts.before = opts.before ? [opts.before] : [];
+	opts.after = opts.after ? [opts.after] : [];
+
+	// push some after callbacks
+	if (!$.support.opacity && opts.cleartype)
+		opts.after.push(function() { removeFilter(this, opts); });
+	if (opts.continuous)
+		opts.after.push(function() { go(els,opts,0,!opts.backwards); });
+
+	saveOriginalOpts(opts);
+
+	// clearType corrections
+	if (!$.support.opacity && opts.cleartype && !opts.cleartypeNoBg)
+		clearTypeFix($slides);
+
+	// container requires non-static position so that slides can be position within
+	if ($cont.css('position') == 'static')
+		$cont.css('position', 'relative');
+	if (opts.width)
+		$cont.width(opts.width);
+	if (opts.height && opts.height != 'auto')
+		$cont.height(opts.height);
+
+	if (opts.startingSlide != undefined) {
+		opts.startingSlide = parseInt(opts.startingSlide,10);
+		if (opts.startingSlide >= els.length || opts.startSlide < 0)
+			opts.startingSlide = 0; // catch bogus input
+		else 
+			startingSlideSpecified = true;
+	}
+	else if (opts.backwards)
+		opts.startingSlide = els.length - 1;
+	else
+		opts.startingSlide = 0;
+
+	// if random, mix up the slide array
+	if (opts.random) {
+		opts.randomMap = [];
+		for (var i = 0; i < els.length; i++)
+			opts.randomMap.push(i);
+		opts.randomMap.sort(function(a,b) {return Math.random() - 0.5;});
+		if (startingSlideSpecified) {
+			// try to find the specified starting slide and if found set start slide index in the map accordingly
+			for ( var cnt = 0; cnt < els.length; cnt++ ) {
+				if ( opts.startingSlide == opts.randomMap[cnt] ) {
+					opts.randomIndex = cnt;
+				}
+			}
+		}
+		else {
+			opts.randomIndex = 1;
+			opts.startingSlide = opts.randomMap[1];
+		}
+	}
+	else if (opts.startingSlide >= els.length)
+		opts.startingSlide = 0; // catch bogus input
+	opts.currSlide = opts.startingSlide || 0;
+	var first = opts.startingSlide;
+
+	// set position and zIndex on all the slides
+	$slides.css({position: 'absolute', top:0, left:0}).hide().each(function(i) {
+		var z;
+		if (opts.backwards)
+			z = first ? i <= first ? els.length + (i-first) : first-i : els.length-i;
+		else
+			z = first ? i >= first ? els.length - (i-first) : first-i : els.length-i;
+		$(this).css('z-index', z)
+	});
+
+	// make sure first slide is visible
+	$(els[first]).css('opacity',1).show(); // opacity bit needed to handle restart use case
+	removeFilter(els[first], opts);
+
+	// stretch slides
+	if (opts.fit) {
+		if (!opts.aspect) {
+	        if (opts.width)
+	            $slides.width(opts.width);
+	        if (opts.height && opts.height != 'auto')
+	            $slides.height(opts.height);
+		} else {
+			$slides.each(function(){
+				var $slide = $(this);
+				var ratio = (opts.aspect === true) ? $slide.width()/$slide.height() : opts.aspect;
+				if( opts.width && $slide.width() != opts.width ) {
+					$slide.width( opts.width );
+					$slide.height( opts.width / ratio );
+				}
+
+				if( opts.height && $slide.height() < opts.height ) {
+					$slide.height( opts.height );
+					$slide.width( opts.height * ratio );
+				}
+			});
+		}
+	}
+
+	if (opts.center && ((!opts.fit) || opts.aspect)) {
+		$slides.each(function(){
+			var $slide = $(this);
+			$slide.css({
+				"margin-left": opts.width ?
+					((opts.width - $slide.width()) / 2) + "px" :
+					0,
+				"margin-top": opts.height ?
+					((opts.height - $slide.height()) / 2) + "px" :
+					0
+			});
+		});
+	}
+
+	if (opts.center && !opts.fit && !opts.slideResize) {
+	  	$slides.each(function(){
+	    	var $slide = $(this);
+	    	$slide.css({
+	      		"margin-left": opts.width ? ((opts.width - $slide.width()) / 2) + "px" : 0,
+	      		"margin-top": opts.height ? ((opts.height - $slide.height()) / 2) + "px" : 0
+	    	});
+	  	});
+	}
+		
+	// stretch container
+	var reshape = opts.containerResize && !$cont.innerHeight();
+	if (reshape) { // do this only if container has no size http://tinyurl.com/da2oa9
+		var maxw = 0, maxh = 0;
+		for(var j=0; j < els.length; j++) {
+			var $e = $(els[j]), e = $e[0], w = $e.outerWidth(), h = $e.outerHeight();
+			if (!w) w = e.offsetWidth || e.width || $e.attr('width');
+			if (!h) h = e.offsetHeight || e.height || $e.attr('height');
+			maxw = w > maxw ? w : maxw;
+			maxh = h > maxh ? h : maxh;
+		}
+		if (maxw > 0 && maxh > 0)
+			$cont.css({width:maxw+'px',height:maxh+'px'});
+	}
+
+	var pauseFlag = false;  // https://github.com/malsup/cycle/issues/44
+	if (opts.pause)
+		$cont.hover(
+			function(){
+				pauseFlag = true;
+				this.cyclePause++;
+				triggerPause(cont, true);
+			},
+			function(){
+				pauseFlag && this.cyclePause--;
+				triggerPause(cont, true);
+			}
+		);
+
+	if (supportMultiTransitions(opts) === false)
+		return false;
+
+	// apparently a lot of people use image slideshows without height/width attributes on the images.
+	// Cycle 2.50+ requires the sizing info for every slide; this block tries to deal with that.
+	var requeue = false;
+	options.requeueAttempts = options.requeueAttempts || 0;
+	$slides.each(function() {
+		// try to get height/width of each slide
+		var $el = $(this);
+		this.cycleH = (opts.fit && opts.height) ? opts.height : ($el.height() || this.offsetHeight || this.height || $el.attr('height') || 0);
+		this.cycleW = (opts.fit && opts.width) ? opts.width : ($el.width() || this.offsetWidth || this.width || $el.attr('width') || 0);
+
+		if ( $el.is('img') ) {
+			// sigh..  sniffing, hacking, shrugging...  this crappy hack tries to account for what browsers do when
+			// an image is being downloaded and the markup did not include sizing info (height/width attributes);
+			// there seems to be some "default" sizes used in this situation
+			var loadingIE	= ($.browser.msie  && this.cycleW == 28 && this.cycleH == 30 && !this.complete);
+			var loadingFF	= ($.browser.mozilla && this.cycleW == 34 && this.cycleH == 19 && !this.complete);
+			var loadingOp	= ($.browser.opera && ((this.cycleW == 42 && this.cycleH == 19) || (this.cycleW == 37 && this.cycleH == 17)) && !this.complete);
+			var loadingOther = (this.cycleH == 0 && this.cycleW == 0 && !this.complete);
+			// don't requeue for images that are still loading but have a valid size
+			if (loadingIE || loadingFF || loadingOp || loadingOther) {
+				if (o.s && opts.requeueOnImageNotLoaded && ++options.requeueAttempts < 100) { // track retry count so we don't loop forever
+					log(options.requeueAttempts,' - img slide not loaded, requeuing slideshow: ', this.src, this.cycleW, this.cycleH);
+					setTimeout(function() {$(o.s,o.c).cycle(options)}, opts.requeueTimeout);
+					requeue = true;
+					return false; // break each loop
+				}
+				else {
+					log('could not determine size of image: '+this.src, this.cycleW, this.cycleH);
+				}
+			}
+		}
+		return true;
+	});
+
+	if (requeue)
+		return false;
+
+	opts.cssBefore = opts.cssBefore || {};
+	opts.cssAfter = opts.cssAfter || {};
+	opts.cssFirst = opts.cssFirst || {};
+	opts.animIn = opts.animIn || {};
+	opts.animOut = opts.animOut || {};
+
+	$slides.not(':eq('+first+')').css(opts.cssBefore);
+	$($slides[first]).css(opts.cssFirst);
+
+	if (opts.timeout) {
+		opts.timeout = parseInt(opts.timeout,10);
+		// ensure that timeout and speed settings are sane
+		if (opts.speed.constructor == String)
+			opts.speed = $.fx.speeds[opts.speed] || parseInt(opts.speed,10);
+		if (!opts.sync)
+			opts.speed = opts.speed / 2;
+		
+		var buffer = opts.fx == 'none' ? 0 : opts.fx == 'shuffle' ? 500 : 250;
+		while((opts.timeout - opts.speed) < buffer) // sanitize timeout
+			opts.timeout += opts.speed;
+	}
+	if (opts.easing)
+		opts.easeIn = opts.easeOut = opts.easing;
+	if (!opts.speedIn)
+		opts.speedIn = opts.speed;
+	if (!opts.speedOut)
+		opts.speedOut = opts.speed;
+
+	opts.slideCount = els.length;
+	opts.currSlide = opts.lastSlide = first;
+	if (opts.random) {
+		if (++opts.randomIndex == els.length)
+			opts.randomIndex = 0;
+		opts.nextSlide = opts.randomMap[opts.randomIndex];
+	}
+	else if (opts.backwards)
+		opts.nextSlide = opts.startingSlide == 0 ? (els.length-1) : opts.startingSlide-1;
+	else
+		opts.nextSlide = opts.startingSlide >= (els.length-1) ? 0 : opts.startingSlide+1;
+
+	// run transition init fn
+	if (!opts.multiFx) {
+		var init = $.fn.cycle.transitions[opts.fx];
+		if ($.isFunction(init))
+			init($cont, $slides, opts);
+		else if (opts.fx != 'custom' && !opts.multiFx) {
+			log('unknown transition: ' + opts.fx,'; slideshow terminating');
+			return false;
+		}
+	}
+
+	// fire artificial events
+	var e0 = $slides[first];
+	if (!opts.skipInitializationCallbacks) {
+		if (opts.before.length)
+			opts.before[0].apply(e0, [e0, e0, opts, true]);
+		if (opts.after.length)
+			opts.after[0].apply(e0, [e0, e0, opts, true]);
+	}
+	if (opts.next)
+		$(opts.next).bind(opts.prevNextEvent,function(){return advance(opts,1)});
+	if (opts.prev)
+		$(opts.prev).bind(opts.prevNextEvent,function(){return advance(opts,0)});
+	if (opts.pager || opts.pagerAnchorBuilder)
+		buildPager(els,opts);
+
+	exposeAddSlide(opts, els);
+
+	return opts;
+};
+
+// save off original opts so we can restore after clearing state
+function saveOriginalOpts(opts) {
+	opts.original = { before: [], after: [] };
+	opts.original.cssBefore = $.extend({}, opts.cssBefore);
+	opts.original.cssAfter  = $.extend({}, opts.cssAfter);
+	opts.original.animIn	= $.extend({}, opts.animIn);
+	opts.original.animOut   = $.extend({}, opts.animOut);
+	$.each(opts.before, function() { opts.original.before.push(this); });
+	$.each(opts.after,  function() { opts.original.after.push(this); });
+};
+
+function supportMultiTransitions(opts) {
+	var i, tx, txs = $.fn.cycle.transitions;
+	// look for multiple effects
+	if (opts.fx.indexOf(',') > 0) {
+		opts.multiFx = true;
+		opts.fxs = opts.fx.replace(/\s*/g,'').split(',');
+		// discard any bogus effect names
+		for (i=0; i < opts.fxs.length; i++) {
+			var fx = opts.fxs[i];
+			tx = txs[fx];
+			if (!tx || !txs.hasOwnProperty(fx) || !$.isFunction(tx)) {
+				log('discarding unknown transition: ',fx);
+				opts.fxs.splice(i,1);
+				i--;
+			}
+		}
+		// if we have an empty list then we threw everything away!
+		if (!opts.fxs.length) {
+			log('No valid transitions named; slideshow terminating.');
+			return false;
+		}
+	}
+	else if (opts.fx == 'all') {  // auto-gen the list of transitions
+		opts.multiFx = true;
+		opts.fxs = [];
+		for (p in txs) {
+			tx = txs[p];
+			if (txs.hasOwnProperty(p) && $.isFunction(tx))
+				opts.fxs.push(p);
+		}
+	}
+	if (opts.multiFx && opts.randomizeEffects) {
+		// munge the fxs array to make effect selection random
+		var r1 = Math.floor(Math.random() * 20) + 30;
+		for (i = 0; i < r1; i++) {
+			var r2 = Math.floor(Math.random() * opts.fxs.length);
+			opts.fxs.push(opts.fxs.splice(r2,1)[0]);
+		}
+		debug('randomized fx sequence: ',opts.fxs);
+	}
+	return true;
+};
+
+// provide a mechanism for adding slides after the slideshow has started
+function exposeAddSlide(opts, els) {
+	opts.addSlide = function(newSlide, prepend) {
+		var $s = $(newSlide), s = $s[0];
+		if (!opts.autostopCount)
+			opts.countdown++;
+		els[prepend?'unshift':'push'](s);
+		if (opts.els)
+			opts.els[prepend?'unshift':'push'](s); // shuffle needs this
+		opts.slideCount = els.length;
+
+		// add the slide to the random map and resort
+		if (opts.random) {
+			opts.randomMap.push(opts.slideCount-1);
+			opts.randomMap.sort(function(a,b) {return Math.random() - 0.5;});
+		}
+
+		$s.css('position','absolute');
+		$s[prepend?'prependTo':'appendTo'](opts.$cont);
+
+		if (prepend) {
+			opts.currSlide++;
+			opts.nextSlide++;
+		}
+
+		if (!$.support.opacity && opts.cleartype && !opts.cleartypeNoBg)
+			clearTypeFix($s);
+
+		if (opts.fit && opts.width)
+			$s.width(opts.width);
+		if (opts.fit && opts.height && opts.height != 'auto')
+			$s.height(opts.height);
+		s.cycleH = (opts.fit && opts.height) ? opts.height : $s.height();
+		s.cycleW = (opts.fit && opts.width) ? opts.width : $s.width();
+
+		$s.css(opts.cssBefore);
+
+		if (opts.pager || opts.pagerAnchorBuilder)
+			$.fn.cycle.createPagerAnchor(els.length-1, s, $(opts.pager), els, opts);
+
+		if ($.isFunction(opts.onAddSlide))
+			opts.onAddSlide($s);
+		else
+			$s.hide(); // default behavior
+	};
+}
+
+// reset internal state; we do this on every pass in order to support multiple effects
+$.fn.cycle.resetState = function(opts, fx) {
+	fx = fx || opts.fx;
+	opts.before = []; opts.after = [];
+	opts.cssBefore = $.extend({}, opts.original.cssBefore);
+	opts.cssAfter  = $.extend({}, opts.original.cssAfter);
+	opts.animIn	= $.extend({}, opts.original.animIn);
+	opts.animOut   = $.extend({}, opts.original.animOut);
+	opts.fxFn = null;
+	$.each(opts.original.before, function() { opts.before.push(this); });
+	$.each(opts.original.after,  function() { opts.after.push(this); });
+
+	// re-init
+	var init = $.fn.cycle.transitions[fx];
+	if ($.isFunction(init))
+		init(opts.$cont, $(opts.elements), opts);
+};
+
+// this is the main engine fn, it handles the timeouts, callbacks and slide index mgmt
+function go(els, opts, manual, fwd) {
+	// opts.busy is true if we're in the middle of an animation
+	if (manual && opts.busy && opts.manualTrump) {
+		// let manual transitions requests trump active ones
+		debug('manualTrump in go(), stopping active transition');
+		$(els).stop(true,true);
+		opts.busy = 0;
+	}
+	// don't begin another timeout-based transition if there is one active
+	if (opts.busy) {
+		debug('transition active, ignoring new tx request');
+		return;
+	}
+
+	var p = opts.$cont[0], curr = els[opts.currSlide], next = els[opts.nextSlide];
+
+	// stop cycling if we have an outstanding stop request
+	if (p.cycleStop != opts.stopCount || p.cycleTimeout === 0 && !manual)
+		return;
+
+	// check to see if we should stop cycling based on autostop options
+	if (!manual && !p.cyclePause && !opts.bounce &&
+		((opts.autostop && (--opts.countdown <= 0)) ||
+		(opts.nowrap && !opts.random && opts.nextSlide < opts.currSlide))) {
+		if (opts.end)
+			opts.end(opts);
+		return;
+	}
+
+	// if slideshow is paused, only transition on a manual trigger
+	var changed = false;
+	if ((manual || !p.cyclePause) && (opts.nextSlide != opts.currSlide)) {
+		changed = true;
+		var fx = opts.fx;
+		// keep trying to get the slide size if we don't have it yet
+		curr.cycleH = curr.cycleH || $(curr).height();
+		curr.cycleW = curr.cycleW || $(curr).width();
+		next.cycleH = next.cycleH || $(next).height();
+		next.cycleW = next.cycleW || $(next).width();
+
+		// support multiple transition types
+		if (opts.multiFx) {
+			if (fwd && (opts.lastFx == undefined || ++opts.lastFx >= opts.fxs.length))
+				opts.lastFx = 0;
+			else if (!fwd && (opts.lastFx == undefined || --opts.lastFx < 0))
+				opts.lastFx = opts.fxs.length - 1;
+			fx = opts.fxs[opts.lastFx];
+		}
+
+		// one-time fx overrides apply to:  $('div').cycle(3,'zoom');
+		if (opts.oneTimeFx) {
+			fx = opts.oneTimeFx;
+			opts.oneTimeFx = null;
+		}
+
+		$.fn.cycle.resetState(opts, fx);
+
+		// run the before callbacks
+		if (opts.before.length)
+			$.each(opts.before, function(i,o) {
+				if (p.cycleStop != opts.stopCount) return;
+				o.apply(next, [curr, next, opts, fwd]);
+			});
+
+		// stage the after callacks
+		var after = function() {
+			opts.busy = 0;
+			$.each(opts.after, function(i,o) {
+				if (p.cycleStop != opts.stopCount) return;
+				o.apply(next, [curr, next, opts, fwd]);
+			});
+			if (!p.cycleStop) {
+				// queue next transition
+				queueNext();
+			}
+		};
+
+		debug('tx firing('+fx+'); currSlide: ' + opts.currSlide + '; nextSlide: ' + opts.nextSlide);
+		
+		// get ready to perform the transition
+		opts.busy = 1;
+		if (opts.fxFn) // fx function provided?
+			opts.fxFn(curr, next, opts, after, fwd, manual && opts.fastOnEvent);
+		else if ($.isFunction($.fn.cycle[opts.fx])) // fx plugin ?
+			$.fn.cycle[opts.fx](curr, next, opts, after, fwd, manual && opts.fastOnEvent);
+		else
+			$.fn.cycle.custom(curr, next, opts, after, fwd, manual && opts.fastOnEvent);
+	}
+	else {
+		queueNext();
+	}
+
+	if (changed || opts.nextSlide == opts.currSlide) {
+		// calculate the next slide
+		opts.lastSlide = opts.currSlide;
+		if (opts.random) {
+			opts.currSlide = opts.nextSlide;
+			if (++opts.randomIndex == els.length) {
+				opts.randomIndex = 0;
+				opts.randomMap.sort(function(a,b) {return Math.random() - 0.5;});
+			}
+			opts.nextSlide = opts.randomMap[opts.randomIndex];
+			if (opts.nextSlide == opts.currSlide)
+				opts.nextSlide = (opts.currSlide == opts.slideCount - 1) ? 0 : opts.currSlide + 1;
+		}
+		else if (opts.backwards) {
+			var roll = (opts.nextSlide - 1) < 0;
+			if (roll && opts.bounce) {
+				opts.backwards = !opts.backwards;
+				opts.nextSlide = 1;
+				opts.currSlide = 0;
+			}
+			else {
+				opts.nextSlide = roll ? (els.length-1) : opts.nextSlide-1;
+				opts.currSlide = roll ? 0 : opts.nextSlide+1;
+			}
+		}
+		else { // sequence
+			var roll = (opts.nextSlide + 1) == els.length;
+			if (roll && opts.bounce) {
+				opts.backwards = !opts.backwards;
+				opts.nextSlide = els.length-2;
+				opts.currSlide = els.length-1;
+			}
+			else {
+				opts.nextSlide = roll ? 0 : opts.nextSlide+1;
+				opts.currSlide = roll ? els.length-1 : opts.nextSlide-1;
+			}
+		}
+	}
+	if (changed && opts.pager)
+		opts.updateActivePagerLink(opts.pager, opts.currSlide, opts.activePagerClass);
+	
+	function queueNext() {
+		// stage the next transition
+		var ms = 0, timeout = opts.timeout;
+		if (opts.timeout && !opts.continuous) {
+			ms = getTimeout(els[opts.currSlide], els[opts.nextSlide], opts, fwd);
+         if (opts.fx == 'shuffle')
+            ms -= opts.speedOut;
+      }
+		else if (opts.continuous && p.cyclePause) // continuous shows work off an after callback, not this timer logic
+			ms = 10;
+		if (ms > 0)
+			p.cycleTimeout = setTimeout(function(){ go(els, opts, 0, !opts.backwards) }, ms);
+	}
+};
+
+// invoked after transition
+$.fn.cycle.updateActivePagerLink = function(pager, currSlide, clsName) {
+   $(pager).each(function() {
+       $(this).children().removeClass(clsName).eq(currSlide).addClass(clsName);
+   });
+};
+
+// calculate timeout value for current transition
+function getTimeout(curr, next, opts, fwd) {
+	if (opts.timeoutFn) {
+		// call user provided calc fn
+		var t = opts.timeoutFn.call(curr,curr,next,opts,fwd);
+		while (opts.fx != 'none' && (t - opts.speed) < 250) // sanitize timeout
+			t += opts.speed;
+		debug('calculated timeout: ' + t + '; speed: ' + opts.speed);
+		if (t !== false)
+			return t;
+	}
+	return opts.timeout;
+};
+
+// expose next/prev function, caller must pass in state
+$.fn.cycle.next = function(opts) { advance(opts,1); };
+$.fn.cycle.prev = function(opts) { advance(opts,0);};
+
+// advance slide forward or back
+function advance(opts, moveForward) {
+	var val = moveForward ? 1 : -1;
+	var els = opts.elements;
+	var p = opts.$cont[0], timeout = p.cycleTimeout;
+	if (timeout) {
+		clearTimeout(timeout);
+		p.cycleTimeout = 0;
+	}
+	if (opts.random && val < 0) {
+		// move back to the previously display slide
+		opts.randomIndex--;
+		if (--opts.randomIndex == -2)
+			opts.randomIndex = els.length-2;
+		else if (opts.randomIndex == -1)
+			opts.randomIndex = els.length-1;
+		opts.nextSlide = opts.randomMap[opts.randomIndex];
+	}
+	else if (opts.random) {
+		opts.nextSlide = opts.randomMap[opts.randomIndex];
+	}
+	else {
+		opts.nextSlide = opts.currSlide + val;
+		if (opts.nextSlide < 0) {
+			if (opts.nowrap) return false;
+			opts.nextSlide = els.length - 1;
+		}
+		else if (opts.nextSlide >= els.length) {
+			if (opts.nowrap) return false;
+			opts.nextSlide = 0;
+		}
+	}
+
+	var cb = opts.onPrevNextEvent || opts.prevNextClick; // prevNextClick is deprecated
+	if ($.isFunction(cb))
+		cb(val > 0, opts.nextSlide, els[opts.nextSlide]);
+	go(els, opts, 1, moveForward);
+	return false;
+};
+
+function buildPager(els, opts) {
+	var $p = $(opts.pager);
+	$.each(els, function(i,o) {
+		$.fn.cycle.createPagerAnchor(i,o,$p,els,opts);
+	});
+	opts.updateActivePagerLink(opts.pager, opts.startingSlide, opts.activePagerClass);
+};
+
+$.fn.cycle.createPagerAnchor = function(i, el, $p, els, opts) {
+	var a;
+	if ($.isFunction(opts.pagerAnchorBuilder)) {
+		a = opts.pagerAnchorBuilder(i,el);
+		debug('pagerAnchorBuilder('+i+', el) returned: ' + a);
+	}
+	else
+		a = '<a href="#">'+(i+1)+'</a>';
+		
+	if (!a)
+		return;
+	var $a = $(a);
+	// don't reparent if anchor is in the dom
+	if ($a.parents('body').length === 0) {
+		var arr = [];
+		if ($p.length > 1) {
+			$p.each(function() {
+				var $clone = $a.clone(true);
+				$(this).append($clone);
+				arr.push($clone[0]);
+			});
+			$a = $(arr);
+		}
+		else {
+			$a.appendTo($p);
+		}
+	}
+
+	opts.pagerAnchors =  opts.pagerAnchors || [];
+	opts.pagerAnchors.push($a);
+	
+	var pagerFn = function(e) {
+		e.preventDefault();
+		opts.nextSlide = i;
+		var p = opts.$cont[0], timeout = p.cycleTimeout;
+		if (timeout) {
+			clearTimeout(timeout);
+			p.cycleTimeout = 0;
+		}
+		var cb = opts.onPagerEvent || opts.pagerClick; // pagerClick is deprecated
+		if ($.isFunction(cb))
+			cb(opts.nextSlide, els[opts.nextSlide]);
+		go(els,opts,1,opts.currSlide < i); // trigger the trans
+//		return false; // <== allow bubble
+	}
+	
+	if ( /mouseenter|mouseover/i.test(opts.pagerEvent) ) {
+		$a.hover(pagerFn, function(){/* no-op */} );
+	}
+	else {
+		$a.bind(opts.pagerEvent, pagerFn);
+	}
+	
+	if ( ! /^click/.test(opts.pagerEvent) && !opts.allowPagerClickBubble)
+		$a.bind('click.cycle', function(){return false;}); // suppress click
+	
+	var cont = opts.$cont[0];
+	var pauseFlag = false; // https://github.com/malsup/cycle/issues/44
+	if (opts.pauseOnPagerHover) {
+		$a.hover(
+			function() { 
+				pauseFlag = true;
+				cont.cyclePause++; 
+				triggerPause(cont,true,true);
+			}, function() { 
+				pauseFlag && cont.cyclePause--; 
+				triggerPause(cont,true,true);
+			} 
+		);
+	}
+};
+
+// helper fn to calculate the number of slides between the current and the next
+$.fn.cycle.hopsFromLast = function(opts, fwd) {
+	var hops, l = opts.lastSlide, c = opts.currSlide;
+	if (fwd)
+		hops = c > l ? c - l : opts.slideCount - l;
+	else
+		hops = c < l ? l - c : l + opts.slideCount - c;
+	return hops;
+};
+
+// fix clearType problems in ie6 by setting an explicit bg color
+// (otherwise text slides look horrible during a fade transition)
+function clearTypeFix($slides) {
+	debug('applying clearType background-color hack');
+	function hex(s) {
+		s = parseInt(s,10).toString(16);
+		return s.length < 2 ? '0'+s : s;
+	};
+	function getBg(e) {
+		for ( ; e && e.nodeName.toLowerCase() != 'html'; e = e.parentNode) {
+			var v = $.css(e,'background-color');
+			if (v && v.indexOf('rgb') >= 0 ) {
+				var rgb = v.match(/\d+/g);
+				return '#'+ hex(rgb[0]) + hex(rgb[1]) + hex(rgb[2]);
+			}
+			if (v && v != 'transparent')
+				return v;
+		}
+		return '#ffffff';
+	};
+	$slides.each(function() { $(this).css('background-color', getBg(this)); });
+};
+
+// reset common props before the next transition
+$.fn.cycle.commonReset = function(curr,next,opts,w,h,rev) {
+	$(opts.elements).not(curr).hide();
+	if (typeof opts.cssBefore.opacity == 'undefined')
+		opts.cssBefore.opacity = 1;
+	opts.cssBefore.display = 'block';
+	if (opts.slideResize && w !== false && next.cycleW > 0)
+		opts.cssBefore.width = next.cycleW;
+	if (opts.slideResize && h !== false && next.cycleH > 0)
+		opts.cssBefore.height = next.cycleH;
+	opts.cssAfter = opts.cssAfter || {};
+	opts.cssAfter.display = 'none';
+	$(curr).css('zIndex',opts.slideCount + (rev === true ? 1 : 0));
+	$(next).css('zIndex',opts.slideCount + (rev === true ? 0 : 1));
+};
+
+// the actual fn for effecting a transition
+$.fn.cycle.custom = function(curr, next, opts, cb, fwd, speedOverride) {
+	var $l = $(curr), $n = $(next);
+	var speedIn = opts.speedIn, speedOut = opts.speedOut, easeIn = opts.easeIn, easeOut = opts.easeOut;
+	$n.css(opts.cssBefore);
+	if (speedOverride) {
+		if (typeof speedOverride == 'number')
+			speedIn = speedOut = speedOverride;
+		else
+			speedIn = speedOut = 1;
+		easeIn = easeOut = null;
+	}
+	var fn = function() {
+		$n.animate(opts.animIn, speedIn, easeIn, function() {
+			cb();
+		});
+	};
+	$l.animate(opts.animOut, speedOut, easeOut, function() {
+		$l.css(opts.cssAfter);
+		if (!opts.sync) 
+			fn();
+	});
+	if (opts.sync) fn();
+};
+
+// transition definitions - only fade is defined here, transition pack defines the rest
+$.fn.cycle.transitions = {
+	fade: function($cont, $slides, opts) {
+		$slides.not(':eq('+opts.currSlide+')').css('opacity',0);
+		opts.before.push(function(curr,next,opts) {
+			$.fn.cycle.commonReset(curr,next,opts);
+			opts.cssBefore.opacity = 0;
+		});
+		opts.animIn	   = { opacity: 1 };
+		opts.animOut   = { opacity: 0 };
+		opts.cssBefore = { top: 0, left: 0 };
+	}
+};
+
+$.fn.cycle.ver = function() { return ver; };
+
+// override these globally if you like (they are all optional)
+$.fn.cycle.defaults = {
+	activePagerClass: 'activeSlide', // class name used for the active pager link
+	after:		   null,  // transition callback (scope set to element that was shown):  function(currSlideElement, nextSlideElement, options, forwardFlag)
+	allowPagerClickBubble: false, // allows or prevents click event on pager anchors from bubbling
+	animIn:		   null,  // properties that define how the slide animates in
+	animOut:	   null,  // properties that define how the slide animates out
+	aspect:		   false,  // preserve aspect ratio during fit resizing, cropping if necessary (must be used with fit option)
+	autostop:	   0,	  // true to end slideshow after X transitions (where X == slide count)
+	autostopCount: 0,	  // number of transitions (optionally used with autostop to define X)
+	backwards:     false, // true to start slideshow at last slide and move backwards through the stack
+	before:		   null,  // transition callback (scope set to element to be shown):	 function(currSlideElement, nextSlideElement, options, forwardFlag)
+	center: 	   null,  // set to true to have cycle add top/left margin to each slide (use with width and height options)
+	cleartype:	   !$.support.opacity,  // true if clearType corrections should be applied (for IE)
+	cleartypeNoBg: false, // set to true to disable extra cleartype fixing (leave false to force background color setting on slides)
+	containerResize: 1,	  // resize container to fit largest slide
+	continuous:	   0,	  // true to start next transition immediately after current one completes
+	cssAfter:	   null,  // properties that defined the state of the slide after transitioning out
+	cssBefore:	   null,  // properties that define the initial state of the slide before transitioning in
+	delay:		   0,	  // additional delay (in ms) for first transition (hint: can be negative)
+	easeIn:		   null,  // easing for "in" transition
+	easeOut:	   null,  // easing for "out" transition
+	easing:		   null,  // easing method for both in and out transitions
+	end:		   null,  // callback invoked when the slideshow terminates (use with autostop or nowrap options): function(options)
+	fastOnEvent:   0,	  // force fast transitions when triggered manually (via pager or prev/next); value == time in ms
+	fit:		   0,	  // force slides to fit container
+	fx:			  'fade', // name of transition effect (or comma separated names, ex: 'fade,scrollUp,shuffle')
+	fxFn:		   null,  // function used to control the transition: function(currSlideElement, nextSlideElement, options, afterCalback, forwardFlag)
+	height:		  'auto', // container height (if the 'fit' option is true, the slides will be set to this height as well)
+	manualTrump:   true,  // causes manual transition to stop an active transition instead of being ignored
+	metaAttr:     'cycle',// data- attribute that holds the option data for the slideshow
+	next:		   null,  // element, jQuery object, or jQuery selector string for the element to use as event trigger for next slide
+	nowrap:		   0,	  // true to prevent slideshow from wrapping
+	onPagerEvent:  null,  // callback fn for pager events: function(zeroBasedSlideIndex, slideElement)
+	onPrevNextEvent: null,// callback fn for prev/next events: function(isNext, zeroBasedSlideIndex, slideElement)
+	pager:		   null,  // element, jQuery object, or jQuery selector string for the element to use as pager container
+	pagerAnchorBuilder: null, // callback fn for building anchor links:  function(index, DOMelement)
+	pagerEvent:	  'click.cycle', // name of event which drives the pager navigation
+	pause:		   0,	  // true to enable "pause on hover"
+	pauseOnPagerHover: 0, // true to pause when hovering over pager link
+	prev:		   null,  // element, jQuery object, or jQuery selector string for the element to use as event trigger for previous slide
+	prevNextEvent:'click.cycle',// event which drives the manual transition to the previous or next slide
+	random:		   0,	  // true for random, false for sequence (not applicable to shuffle fx)
+	randomizeEffects: 1,  // valid when multiple effects are used; true to make the effect sequence random
+	requeueOnImageNotLoaded: true, // requeue the slideshow if any image slides are not yet loaded
+	requeueTimeout: 250,  // ms delay for requeue
+	rev:		   0,	  // causes animations to transition in reverse (for effects that support it such as scrollHorz/scrollVert/shuffle)
+	shuffle:	   null,  // coords for shuffle animation, ex: { top:15, left: 200 }
+	skipInitializationCallbacks: false, // set to true to disable the first before/after callback that occurs prior to any transition
+	slideExpr:	   null,  // expression for selecting slides (if something other than all children is required)
+	slideResize:   1,     // force slide width/height to fixed size before every transition
+	speed:		   1000,  // speed of the transition (any valid fx speed value)
+	speedIn:	   null,  // speed of the 'in' transition
+	speedOut:	   null,  // speed of the 'out' transition
+	startingSlide: undefined,	  // zero-based index of the first slide to be displayed
+	sync:		   1,	  // true if in/out transitions should occur simultaneously
+	timeout:	   4000,  // milliseconds between slide transitions (0 to disable auto advance)
+	timeoutFn:     null,  // callback for determining per-slide timeout value:  function(currSlideElement, nextSlideElement, options, forwardFlag)
+	updateActivePagerLink: null, // callback fn invoked to update the active pager link (adds/removes activePagerClass style)
+	width:         null   // container width (if the 'fit' option is true, the slides will be set to this width as well)
+};
+
+})(jQuery);
+
+
+/*!
+ * jQuery Cycle Plugin Transition Definitions
+ * This script is a plugin for the jQuery Cycle Plugin
+ * Examples and documentation at: http://malsup.com/jquery/cycle/
+ * Copyright (c) 2007-2010 M. Alsup
+ * Version:	 2.73
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ */
+(function($) {
+
+//
+// These functions define slide initialization and properties for the named
+// transitions. To save file size feel free to remove any of these that you
+// don't need.
+//
+$.fn.cycle.transitions.none = function($cont, $slides, opts) {
+	opts.fxFn = function(curr,next,opts,after){
+		$(next).show();
+		$(curr).hide();
+		after();
+	};
+};
+
+// not a cross-fade, fadeout only fades out the top slide
+$.fn.cycle.transitions.fadeout = function($cont, $slides, opts) {
+	$slides.not(':eq('+opts.currSlide+')').css({ display: 'block', 'opacity': 1 });
+	opts.before.push(function(curr,next,opts,w,h,rev) {
+		$(curr).css('zIndex',opts.slideCount + (!rev === true ? 1 : 0));
+		$(next).css('zIndex',opts.slideCount + (!rev === true ? 0 : 1));
+	});
+	opts.animIn.opacity = 1;
+	opts.animOut.opacity = 0;
+	opts.cssBefore.opacity = 1;
+	opts.cssBefore.display = 'block';
+	opts.cssAfter.zIndex = 0;
+};
+
+// scrollUp/Down/Left/Right
+$.fn.cycle.transitions.scrollUp = function($cont, $slides, opts) {
+	$cont.css('overflow','hidden');
+	opts.before.push($.fn.cycle.commonReset);
+	var h = $cont.height();
+	opts.cssBefore.top = h;
+	opts.cssBefore.left = 0;
+	opts.cssFirst.top = 0;
+	opts.animIn.top = 0;
+	opts.animOut.top = -h;
+};
+$.fn.cycle.transitions.scrollDown = function($cont, $slides, opts) {
+	$cont.css('overflow','hidden');
+	opts.before.push($.fn.cycle.commonReset);
+	var h = $cont.height();
+	opts.cssFirst.top = 0;
+	opts.cssBefore.top = -h;
+	opts.cssBefore.left = 0;
+	opts.animIn.top = 0;
+	opts.animOut.top = h;
+};
+$.fn.cycle.transitions.scrollLeft = function($cont, $slides, opts) {
+	$cont.css('overflow','hidden');
+	opts.before.push($.fn.cycle.commonReset);
+	var w = $cont.width();
+	opts.cssFirst.left = 0;
+	opts.cssBefore.left = w;
+	opts.cssBefore.top = 0;
+	opts.animIn.left = 0;
+	opts.animOut.left = 0-w;
+};
+$.fn.cycle.transitions.scrollRight = function($cont, $slides, opts) {
+	$cont.css('overflow','hidden');
+	opts.before.push($.fn.cycle.commonReset);
+	var w = $cont.width();
+	opts.cssFirst.left = 0;
+	opts.cssBefore.left = -w;
+	opts.cssBefore.top = 0;
+	opts.animIn.left = 0;
+	opts.animOut.left = w;
+};
+$.fn.cycle.transitions.scrollHorz = function($cont, $slides, opts) {
+	$cont.css('overflow','hidden').width();
+	opts.before.push(function(curr, next, opts, fwd) {
+		if (opts.rev)
+			fwd = !fwd;
+		$.fn.cycle.commonReset(curr,next,opts);
+		opts.cssBefore.left = fwd ? (next.cycleW-1) : (1-next.cycleW);
+		opts.animOut.left = fwd ? -curr.cycleW : curr.cycleW;
+	});
+	opts.cssFirst.left = 0;
+	opts.cssBefore.top = 0;
+	opts.animIn.left = 0;
+	opts.animOut.top = 0;
+};
+$.fn.cycle.transitions.scrollVert = function($cont, $slides, opts) {
+	$cont.css('overflow','hidden');
+	opts.before.push(function(curr, next, opts, fwd) {
+		if (opts.rev)
+			fwd = !fwd;
+		$.fn.cycle.commonReset(curr,next,opts);
+		opts.cssBefore.top = fwd ? (1-next.cycleH) : (next.cycleH-1);
+		opts.animOut.top = fwd ? curr.cycleH : -curr.cycleH;
+	});
+	opts.cssFirst.top = 0;
+	opts.cssBefore.left = 0;
+	opts.animIn.top = 0;
+	opts.animOut.left = 0;
+};
+
+// slideX/slideY
+$.fn.cycle.transitions.slideX = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$(opts.elements).not(curr).hide();
+		$.fn.cycle.commonReset(curr,next,opts,false,true);
+		opts.animIn.width = next.cycleW;
+	});
+	opts.cssBefore.left = 0;
+	opts.cssBefore.top = 0;
+	opts.cssBefore.width = 0;
+	opts.animIn.width = 'show';
+	opts.animOut.width = 0;
+};
+$.fn.cycle.transitions.slideY = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$(opts.elements).not(curr).hide();
+		$.fn.cycle.commonReset(curr,next,opts,true,false);
+		opts.animIn.height = next.cycleH;
+	});
+	opts.cssBefore.left = 0;
+	opts.cssBefore.top = 0;
+	opts.cssBefore.height = 0;
+	opts.animIn.height = 'show';
+	opts.animOut.height = 0;
+};
+
+// shuffle
+$.fn.cycle.transitions.shuffle = function($cont, $slides, opts) {
+	var i, w = $cont.css('overflow', 'visible').width();
+	$slides.css({left: 0, top: 0});
+	opts.before.push(function(curr,next,opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,true,true);
+	});
+	// only adjust speed once!
+	if (!opts.speedAdjusted) {
+		opts.speed = opts.speed / 2; // shuffle has 2 transitions
+		opts.speedAdjusted = true;
+	}
+	opts.random = 0;
+	opts.shuffle = opts.shuffle || {left:-w, top:15};
+	opts.els = [];
+	for (i=0; i < $slides.length; i++)
+		opts.els.push($slides[i]);
+
+	for (i=0; i < opts.currSlide; i++)
+		opts.els.push(opts.els.shift());
+
+	// custom transition fn (hat tip to Benjamin Sterling for this bit of sweetness!)
+	opts.fxFn = function(curr, next, opts, cb, fwd) {
+		if (opts.rev)
+			fwd = !fwd;
+		var $el = fwd ? $(curr) : $(next);
+		$(next).css(opts.cssBefore);
+		var count = opts.slideCount;
+		$el.animate(opts.shuffle, opts.speedIn, opts.easeIn, function() {
+			var hops = $.fn.cycle.hopsFromLast(opts, fwd);
+			for (var k=0; k < hops; k++)
+				fwd ? opts.els.push(opts.els.shift()) : opts.els.unshift(opts.els.pop());
+			if (fwd) {
+				for (var i=0, len=opts.els.length; i < len; i++)
+					$(opts.els[i]).css('z-index', len-i+count);
+			}
+			else {
+				var z = $(curr).css('z-index');
+				$el.css('z-index', parseInt(z,10)+1+count);
+			}
+			$el.animate({left:0, top:0}, opts.speedOut, opts.easeOut, function() {
+				$(fwd ? this : curr).hide();
+				if (cb) cb();
+			});
+		});
+	};
+	$.extend(opts.cssBefore, { display: 'block', opacity: 1, top: 0, left: 0 });
+};
+
+// turnUp/Down/Left/Right
+$.fn.cycle.transitions.turnUp = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,false);
+		opts.cssBefore.top = next.cycleH;
+		opts.animIn.height = next.cycleH;
+		opts.animOut.width = next.cycleW;
+	});
+	opts.cssFirst.top = 0;
+	opts.cssBefore.left = 0;
+	opts.cssBefore.height = 0;
+	opts.animIn.top = 0;
+	opts.animOut.height = 0;
+};
+$.fn.cycle.transitions.turnDown = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,false);
+		opts.animIn.height = next.cycleH;
+		opts.animOut.top   = curr.cycleH;
+	});
+	opts.cssFirst.top = 0;
+	opts.cssBefore.left = 0;
+	opts.cssBefore.top = 0;
+	opts.cssBefore.height = 0;
+	opts.animOut.height = 0;
+};
+$.fn.cycle.transitions.turnLeft = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,false,true);
+		opts.cssBefore.left = next.cycleW;
+		opts.animIn.width = next.cycleW;
+	});
+	opts.cssBefore.top = 0;
+	opts.cssBefore.width = 0;
+	opts.animIn.left = 0;
+	opts.animOut.width = 0;
+};
+$.fn.cycle.transitions.turnRight = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,false,true);
+		opts.animIn.width = next.cycleW;
+		opts.animOut.left = curr.cycleW;
+	});
+	$.extend(opts.cssBefore, { top: 0, left: 0, width: 0 });
+	opts.animIn.left = 0;
+	opts.animOut.width = 0;
+};
+
+// zoom
+$.fn.cycle.transitions.zoom = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,false,false,true);
+		opts.cssBefore.top = next.cycleH/2;
+		opts.cssBefore.left = next.cycleW/2;
+		$.extend(opts.animIn, { top: 0, left: 0, width: next.cycleW, height: next.cycleH });
+		$.extend(opts.animOut, { width: 0, height: 0, top: curr.cycleH/2, left: curr.cycleW/2 });
+	});
+	opts.cssFirst.top = 0;
+	opts.cssFirst.left = 0;
+	opts.cssBefore.width = 0;
+	opts.cssBefore.height = 0;
+};
+
+// fadeZoom
+$.fn.cycle.transitions.fadeZoom = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,false,false);
+		opts.cssBefore.left = next.cycleW/2;
+		opts.cssBefore.top = next.cycleH/2;
+		$.extend(opts.animIn, { top: 0, left: 0, width: next.cycleW, height: next.cycleH });
+	});
+	opts.cssBefore.width = 0;
+	opts.cssBefore.height = 0;
+	opts.animOut.opacity = 0;
+};
+
+// blindX
+$.fn.cycle.transitions.blindX = function($cont, $slides, opts) {
+	var w = $cont.css('overflow','hidden').width();
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts);
+		opts.animIn.width = next.cycleW;
+		opts.animOut.left   = curr.cycleW;
+	});
+	opts.cssBefore.left = w;
+	opts.cssBefore.top = 0;
+	opts.animIn.left = 0;
+	opts.animOut.left = w;
+};
+// blindY
+$.fn.cycle.transitions.blindY = function($cont, $slides, opts) {
+	var h = $cont.css('overflow','hidden').height();
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts);
+		opts.animIn.height = next.cycleH;
+		opts.animOut.top   = curr.cycleH;
+	});
+	opts.cssBefore.top = h;
+	opts.cssBefore.left = 0;
+	opts.animIn.top = 0;
+	opts.animOut.top = h;
+};
+// blindZ
+$.fn.cycle.transitions.blindZ = function($cont, $slides, opts) {
+	var h = $cont.css('overflow','hidden').height();
+	var w = $cont.width();
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts);
+		opts.animIn.height = next.cycleH;
+		opts.animOut.top   = curr.cycleH;
+	});
+	opts.cssBefore.top = h;
+	opts.cssBefore.left = w;
+	opts.animIn.top = 0;
+	opts.animIn.left = 0;
+	opts.animOut.top = h;
+	opts.animOut.left = w;
+};
+
+// growX - grow horizontally from centered 0 width
+$.fn.cycle.transitions.growX = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,false,true);
+		opts.cssBefore.left = this.cycleW/2;
+		opts.animIn.left = 0;
+		opts.animIn.width = this.cycleW;
+		opts.animOut.left = 0;
+	});
+	opts.cssBefore.top = 0;
+	opts.cssBefore.width = 0;
+};
+// growY - grow vertically from centered 0 height
+$.fn.cycle.transitions.growY = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,false);
+		opts.cssBefore.top = this.cycleH/2;
+		opts.animIn.top = 0;
+		opts.animIn.height = this.cycleH;
+		opts.animOut.top = 0;
+	});
+	opts.cssBefore.height = 0;
+	opts.cssBefore.left = 0;
+};
+
+// curtainX - squeeze in both edges horizontally
+$.fn.cycle.transitions.curtainX = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,false,true,true);
+		opts.cssBefore.left = next.cycleW/2;
+		opts.animIn.left = 0;
+		opts.animIn.width = this.cycleW;
+		opts.animOut.left = curr.cycleW/2;
+		opts.animOut.width = 0;
+	});
+	opts.cssBefore.top = 0;
+	opts.cssBefore.width = 0;
+};
+// curtainY - squeeze in both edges vertically
+$.fn.cycle.transitions.curtainY = function($cont, $slides, opts) {
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,false,true);
+		opts.cssBefore.top = next.cycleH/2;
+		opts.animIn.top = 0;
+		opts.animIn.height = next.cycleH;
+		opts.animOut.top = curr.cycleH/2;
+		opts.animOut.height = 0;
+	});
+	opts.cssBefore.height = 0;
+	opts.cssBefore.left = 0;
+};
+
+// cover - curr slide covered by next slide
+$.fn.cycle.transitions.cover = function($cont, $slides, opts) {
+	var d = opts.direction || 'left';
+	var w = $cont.css('overflow','hidden').width();
+	var h = $cont.height();
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts);
+		if (d == 'right')
+			opts.cssBefore.left = -w;
+		else if (d == 'up')
+			opts.cssBefore.top = h;
+		else if (d == 'down')
+			opts.cssBefore.top = -h;
+		else
+			opts.cssBefore.left = w;
+	});
+	opts.animIn.left = 0;
+	opts.animIn.top = 0;
+	opts.cssBefore.top = 0;
+	opts.cssBefore.left = 0;
+};
+
+// uncover - curr slide moves off next slide
+$.fn.cycle.transitions.uncover = function($cont, $slides, opts) {
+	var d = opts.direction || 'left';
+	var w = $cont.css('overflow','hidden').width();
+	var h = $cont.height();
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,true,true);
+		if (d == 'right')
+			opts.animOut.left = w;
+		else if (d == 'up')
+			opts.animOut.top = -h;
+		else if (d == 'down')
+			opts.animOut.top = h;
+		else
+			opts.animOut.left = -w;
+	});
+	opts.animIn.left = 0;
+	opts.animIn.top = 0;
+	opts.cssBefore.top = 0;
+	opts.cssBefore.left = 0;
+};
+
+// toss - move top slide and fade away
+$.fn.cycle.transitions.toss = function($cont, $slides, opts) {
+	var w = $cont.css('overflow','visible').width();
+	var h = $cont.height();
+	opts.before.push(function(curr, next, opts) {
+		$.fn.cycle.commonReset(curr,next,opts,true,true,true);
+		// provide default toss settings if animOut not provided
+		if (!opts.animOut.left && !opts.animOut.top)
+			$.extend(opts.animOut, { left: w*2, top: -h/2, opacity: 0 });
+		else
+			opts.animOut.opacity = 0;
+	});
+	opts.cssBefore.left = 0;
+	opts.cssBefore.top = 0;
+	opts.animIn.left = 0;
+};
+
+// wipe - clip animation
+$.fn.cycle.transitions.wipe = function($cont, $slides, opts) {
+	var w = $cont.css('overflow','hidden').width();
+	var h = $cont.height();
+	opts.cssBefore = opts.cssBefore || {};
+	var clip;
+	if (opts.clip) {
+		if (/l2r/.test(opts.clip))
+			clip = 'rect(0px 0px '+h+'px 0px)';
+		else if (/r2l/.test(opts.clip))
+			clip = 'rect(0px '+w+'px '+h+'px '+w+'px)';
+		else if (/t2b/.test(opts.clip))
+			clip = 'rect(0px '+w+'px 0px 0px)';
+		else if (/b2t/.test(opts.clip))
+			clip = 'rect('+h+'px '+w+'px '+h+'px 0px)';
+		else if (/zoom/.test(opts.clip)) {
+			var top = parseInt(h/2,10);
+			var left = parseInt(w/2,10);
+			clip = 'rect('+top+'px '+left+'px '+top+'px '+left+'px)';
+		}
+	}
+
+	opts.cssBefore.clip = opts.cssBefore.clip || clip || 'rect(0px 0px 0px 0px)';
+
+	var d = opts.cssBefore.clip.match(/(\d+)/g);
+	var t = parseInt(d[0],10), r = parseInt(d[1],10), b = parseInt(d[2],10), l = parseInt(d[3],10);
+
+	opts.before.push(function(curr, next, opts) {
+		if (curr == next) return;
+		var $curr = $(curr), $next = $(next);
+		$.fn.cycle.commonReset(curr,next,opts,true,true,false);
+		opts.cssAfter.display = 'block';
+
+		var step = 1, count = parseInt((opts.speedIn / 13),10) - 1;
+		(function f() {
+			var tt = t ? t - parseInt(step * (t/count),10) : 0;
+			var ll = l ? l - parseInt(step * (l/count),10) : 0;
+			var bb = b < h ? b + parseInt(step * ((h-b)/count || 1),10) : h;
+			var rr = r < w ? r + parseInt(step * ((w-r)/count || 1),10) : w;
+			$next.css({ clip: 'rect('+tt+'px '+rr+'px '+bb+'px '+ll+'px)' });
+			(step++ <= count) ? setTimeout(f, 13) : $curr.css('display', 'none');
+		})();
+	});
+	$.extend(opts.cssBefore, { display: 'block', opacity: 1, top: 0, left: 0 });
+	opts.animIn	   = { left: 0 };
+	opts.animOut   = { left: 0 };
+};
+
+})(jQuery);
+ï»¿
+// This is a custom plugin written to be used for the expanding content blocks on the Keep Updated and Expert FAQ pages
+
+(function ($) {
+
+    var expandableMethods = {
+        init: function (options) {
+
+            var expandableSettings = $.extend({
+                controlClass: ".expand_control", // Applies to the control that triggers opening and closing the element
+                contentClass: ".expand_content", // Applies to each block of content
+                containerClass: ".expand_container", // Applies to the div around the content blocks, which changes height
+                loadOpenedClass: "load_opened", // Used to show an element in the opened rather than closed state on page load
+                alternateContent: false, // If true then there are two content blocks for the open and closed states, instead of just one for when open
+                linkedBlocks: false, // When one element expands, all others are closed
+                controlAction: { action: "fadeOut", addedClass: "" }, // Change to be made to the control when element is selected
+                heightAdjustment: 0, // Used where animating container block has vertical padding in addition to the height of the content
+                speed: 500 // Number of milliseconds that transitions will take
+            }, options);
+
+            var allBlocks = this;
+
+            return this.each(function () {
+
+                var container = this;
+
+                $(window).load(function () {
+
+                    var firstHeight = $(container).find(expandableSettings.contentClass).first().height();
+                    var lastHeight = $(container).find(expandableSettings.contentClass).last().height();
+
+                    var expandableData = {
+                        expanded: false,
+                        inProgress: false,
+                        settings: expandableSettings,
+                        firstHeight: firstHeight,
+                        lastHeight: lastHeight
+                    };
+
+                    $(container).data("expandable", expandableData);
+
+                    if (!$(container).hasClass(expandableData.settings.loadOpenedClass)) {
+                    
+                        $(container).find(expandableData.settings.contentClass).last().css("display", "none");
+
+                        if (expandableData.settings.alternateContent == true) {
+                            $(container).find(expandableData.settings.containerClass).first().height(expandableData.settings.heightAdjustment + firstHeight);
+                        } else {
+                            $(container).find(expandableData.settings.containerClass).first().height(expandableData.settings.heightAdjustment);
+                        }
+                    } else {
+
+                        $(container).data("expandable").expanded = true;
+                        $(container).find(expandableData.settings.containerClass).first().height(expandableData.settings.heightAdjustment + lastHeight);
+
+                        if (expandableData.settings.alternateContent == true) {
+                            $(container).find(expandableData.settings.contentClass).first().css("display", "none");
+                        }
+
+                        switch (expandableData.settings.controlAction.action) {
+                            case "fadeOut":
+                                $(container).find(expandableData.settings.controlClass).first().hide();
+                                break;
+                            case "addClass":
+                                $(container).find(expandableData.settings.controlClass).first().addClass(expandableData.settings.controlAction.addedClass);
+                                break;
+                        }
+                    }
+
+                    var selectedContainer = container;
+
+                    $(container).find($(container).data("expandable").settings.controlClass).click(function (event) {
+                        event.preventDefault();
+
+                        if ($(selectedContainer).data("expandable").expanded == false) {
+
+                            if ($(selectedContainer).data("expandable").settings.linkedBlocks == true) {
+
+                                for (var i = 0; i < allBlocks.length; i++) {
+                                    if (allBlocks.get(i) != selectedContainer) {
+                                        expandableMethods.close(allBlocks.get(i));
+                                    }
+                                }
+                            }
+
+                            expandableMethods.expand(selectedContainer);
+                        } else {
+                            expandableMethods.close(selectedContainer);
+                        }
+                    });
+
+                    $(container).find($(container).data("expandable").settings.controlClass).focusin(function () { $(this).click(); });
+                });
+            });
+        },
+
+        expand: function (container) {
+
+            if ($(container).data("expandable").inProgress == false) {
+                $(container).data("expandable").inProgress = true;
+            } else {
+                return;
+            }
+
+            var settings = $(container).data("expandable").settings;
+
+            function animateControl() {
+                switch (settings.controlAction.action) {
+                    case "fadeOut":
+                        $(container).find(settings.controlClass).first().fadeOut(settings.speed);
+                        break;
+                    case "addClass":
+                        $(container).find(settings.controlClass).first().addClass(settings.controlAction.addedClass);
+                        break;
+                }
+            }
+
+            function animateContainer(newHeight) {
+                $(container).find(settings.containerClass).first().animate({ height: newHeight }, settings.speed, function () {
+                    $(container).find(settings.contentClass).last().fadeIn(settings.speed, function () {
+                        $(container).data("expandable").expanded = true;
+                        $(container).data("expandable").inProgress = false;
+                    });
+                });
+            }
+
+            if ($(container).data("expandable").settings.alternateContent == true) {
+                $(container).find(settings.contentClass).first().fadeOut(settings.speed, function () {
+                    animateControl();
+                    animateContainer(settings.heightAdjustment + $(container).data("expandable").lastHeight);
+                });
+            } else {
+                animateControl();
+                animateContainer(settings.heightAdjustment + $(container).data("expandable").lastHeight);
+            }
+        },
+
+        close: function (container) {
+
+            if ($(container).data("expandable").inProgress == false) {
+                $(container).data("expandable").inProgress = true;
+            } else {
+                return;
+            }
+
+            var settings = $(container).data("expandable").settings;
+
+            function animateControl() {
+                switch (settings.controlAction.action) {
+                    case "fadeOut":
+                        $(container).find(settings.controlClass).first().fadeIn(settings.speed);
+                        break;
+                    case "addClass":
+                        $(container).find(settings.controlClass).first().removeClass(settings.controlAction.addedClass);
+                        break;
+                }
+            }
+
+            $(container).find(settings.contentClass).last().fadeOut(settings.speed, function () {
+                animateControl();
+
+                if ($(container).data("expandable").settings.alternateContent == true) {
+                    var newHeight = settings.heightAdjustment + $(container).data("expandable").firstHeight;
+
+                    $(container).find(settings.containerClass).first().animate({ height: newHeight }, settings.speed, function () {
+                        $(container).find(settings.contentClass).first().fadeIn(settings.speed, function () {
+                            $(container).data("expandable").expanded = false;
+                            $(container).data("expandable").inProgress = false;
+                        });
+                    });
+                } else {
+                    var newHeight = settings.heightAdjustment;
+
+                    $(container).find(settings.containerClass).first().animate({ height: newHeight }, settings.speed, function () {
+                        $(container).data("expandable").expanded = false;
+                        $(container).data("expandable").inProgress = false;
+                    });
+                }
+            });
+        }
+    };
+
+    $.fn.expandable = function (method) {
+
+        if (expandableMethods[method]) {
+            return expandableMethods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else {
+            if ((typeof method === "object") || !method) {
+                return expandableMethods.init.apply(this, arguments);
+            } else {
+                $.error("Method " + method + " does not exist on jQuery.expandable");
+            }
+        }
+    };
+
+})(jQuery);ï»¿// jQuery for interactive elements used on all pages
+
+function documentReady($) {
+
+    var userAgentString = navigator.userAgent.toLowerCase();
+
+    if (userAgentString.indexOf("msie 6") != -1) {
+
+        // Classes for attaching restated input styles
+        $("input:text").addClass("type_text");
+        $("input:radio").addClass("type_radio");
+        $("input:checkbox").addClass("type_checkbox");
+        $("input:submit").addClass("type_submit");
+
+        // Submit button hover states
+        $("input.type_submit").mouseover(function () { $(this).addClass("input_hover"); });
+        $("input.type_submit").mouseout(function () { $(this).removeClass("input_hover"); });
+
+        // Product details template sidebar modal window hover state
+        $(".product_sidebar .product_available_modal, .product_sidebar .product_help_modal").mouseover(function () { $(this).addClass("modal_hover"); });
+        $(".product_sidebar .product_available_modal, .product_sidebar .product_help_modal").mouseout(function () { $(this).removeClass("modal_hover"); });
+
+        // Substitute rules for :first-child selectors
+        $(".content_left .content_block").addClass("first_child");
+        $(".content_left .content_block h3:first-child").addClass("first_child");
+
+        $("table.block_columns tr:first-child").addClass("first_child");
+        $("table.block_columns td p:first-child").addClass("first_child");
+
+        $("ul.question_answer_list span:first-child").addClass("first_child");
+
+        $(".expanding_content_container p:first-child").addClass("first_child");
+
+        $(".expandable_block .expand_container p:first-child").addClass("first_child");
+
+        $(".equal_height_row .content_block:first-child").addClass("first_content_block_child");
+
+        $("table.information_table th:first-child, table.information_table td:first-child").addClass("first_child");
+
+        $(".shopping_cart_table th:first-child, .shopping_cart_table td:first-child").addClass("first_child");
+
+        $("table.contact_grid td:first-child").addClass("first_child");
+
+        // Substitute rules for adjacent sibling selectors
+        $(".search_options + .content_block .reduced_heading").addClass("adjacent");
+        $(".content_right + .content_centre_single.wide_right .content_block:first-child h2.section_heading:first-child").addClass("right_adjacent_section_heading");
+
+        $("h2.block_heading + table.block_columns").addClass("adjacent");
+
+        $("div.message_list_container + div.labelled_checkbox").addClass("adjacent_labelled_checkbox");
+
+        $("table.information_table + h4").addClass("adjacent");
+
+        $("div.content_block > p + div.clearer").addClass("adjacent_clearer");
+
+        $("h3 + .floated_content_left, h3 + .floated_content_right").addClass("adjacent_floated_content_h3");
+
+        $("h3 + ul.news_feed").addClass("adjacent_news_feed");
+
+        var adjacentFloatedSelectors = ["h1.removed_bottom_margin",
+                                        "h2.removed_bottom_margin",
+                                        "h3.removed_bottom_margin",
+                                        "h4.removed_bottom_margin"];
+
+        for (var i = 0; i < adjacentFloatedSelectors.length; i++) {
+            $(adjacentFloatedSelectors[i] + " + .floated_content_left").addClass("adjacent_floated_content_removed_margin");
+            $(adjacentFloatedSelectors[i] + " + .floated_content_right").addClass("adjacent_floated_content_removed_margin");
+        }
+
+        // Substitute classes to work around chained class selector bug
+        $("table.block_columns td.single_column.adjusted_divider").removeClass("adjusted_divider").addClass("single_column_adjusted");
+        $("table.block_columns td.half_column.adjusted_divider").removeClass("adjusted_divider").addClass("half_column_adjusted");
+
+        $(".ecommerce_nav li.selected.step_one").addClass("ecommerce_nav_one_selected");
+        $(".ecommerce_nav li.selected.step_two").addClass("ecommerce_nav_two_selected");
+        $(".ecommerce_nav li.selected.step_three").addClass("ecommerce_nav_three_selected");
+        $(".ecommerce_nav li.selected.step_four").addClass("ecommerce_nav_four_selected");
+
+        // Replacement classes for combinations of promo block background colours and wide 'banner' variant (needed due to chained selector bug)
+        $(".content_block.gradient_bg_red:not(.banner_promo)").addClass("gradient_promo_red");
+        $(".content_block.gradient_bg_lilac:not(.banner_promo)").addClass("gradient_promo_lilac");
+        $(".content_block.gradient_bg_dark_grey:not(.banner_promo)").addClass("gradient_promo_dark_grey");
+        $(".content_block.gradient_bg_mid_blue:not(.banner_promo)").addClass("gradient_promo_mid_blue");
+        $(".content_block.gradient_bg_dark_blue:not(.banner_promo)").addClass("gradient_promo_dark_blue");
+        $(".content_block.gradient_bg_gold:not(.banner_promo)").addClass("gradient_promo_gold");
+        $(".content_block.gradient_bg_orange:not(.banner_promo)").addClass("gradient_promo_orange");
+
+        // For unknown reasons adding a class using jQuery fixes a bug where inset images in horizontal layouts appear behind the other text spans
+        // There is no CSS associated with this class, and adding it as an inline style in the HTML does not seem to work
+        $(".content_block .link_container > span").addClass("hidden_image_fix");
+    }
+    
+    if ((userAgentString.indexOf("msie 6") != -1) || (userAgentString.indexOf("msie 7") != -1) || (userAgentString.indexOf("msie 8") != -1)) {
+
+        // Substitute rules for :last-child selectors, which are not supported in IE8 and below
+        $("#primary_nav ul ul li").each(function () { $(this).find("ul").last().addClass("last_child"); });
+
+        $(".content_centre_single .content_block:last-child").not("[class*='gradient']").addClass("last_content_block_child");
+        $(".content_centre_single .equal_height_row:last-child").addClass("last_equal_height_child");
+
+        $("h1#content:last-child, h1.inspire_promo_title:last-child").addClass("last_child");
+
+        $("table.block_columns tr:last-child").addClass("last_child");
+        $("table.block_columns td p:last-child").addClass("last_child");
+        $("table.block_columns td.half_column:last-child").addClass("last_child");
+
+        $("table.block_columns.featured_titles td .text").each(function () {
+            $(this).find("p").last().addClass("last_of_type");
+        });
+
+        $("table.information_table th:last-child, table.information_table td:last-child").addClass("last_child");
+
+        $("table.customer_service_table tr:last-child").addClass("last_child");
+
+        $(".shopping_cart_table th:last-child, .shopping_cart_table td:last-child").addClass("last_child");
+
+        $("table.contact_grid td:last-child").addClass("last_child");
+
+        $("table.contact_grid tr:last-child").addClass("last_child");
+
+        $(".expanding_content_container .additional_content p:last-child").addClass("last_child");
+
+        $(".expandable_block .expand_container p:last-child").addClass("last_child");
+
+        $(".search_result_list table tr:last-child").addClass("last_child");
+
+        $("#product_details_nav li:last-child").addClass("last_child");
+
+        $(".content_block .content_container ul.blog_feed:last-child").addClass("last_child");
+        $(".content_block .content_container ul.blog_feed li:last-child").addClass("last_child");
+        $(".content_block .content_container a.explore_link:last-child").addClass("last_child");
+        $(".content_block .twitter_feed_container ul li:last-child").addClass("last_child");
+        $("ul.question_answer_list ul:last-child").addClass("last_child");
+        $("ul.question_answer_list li:last-child").addClass("last_child");
+        $("ul.question_answer_list span:last-child").addClass("last_child");
+        $("ul.exhibit_list li:last-child").addClass("last_child");
+        $("ul.events_feed li:last-child").addClass("last_child");
+
+        $(".content_block .link_container").each(function () {
+            $(this).children("span:not(.inset_image_wrapper)").last().addClass("last_child");
+        });
+        
+        $("#footer #column_centre ul li:last-child").addClass("last_child");
+        $("#footer #column_centre ul ul:last-child").addClass("last_child");
+
+        // Substitute rules for :last-of-type selectors, which are not supported in IE8 and below
+        $(".home_resources a.resource_link_container").last().addClass("last_of_type");
+
+        // Classes for attaching restated input styles
+        $("input:submit").addClass("type_submit");
+        $("input:disabled").addClass("disabled");
+
+        // Fix to give modal overlay full-page height
+        if ($("#modal_overlay").length > 0) {
+            $("body").css("height", "100%");
+        }
+    }
+
+    // Language selector hover state
+    $("#change_language").mouseover(function () { $(this).addClass("menu_hover"); });
+    $("#change_language").mouseout(function () { $(this).removeClass("menu_hover"); });
+
+    // Remove the vertical divider from after the last link in the first tier of the primary navigation
+    $("#primary_nav #tier_layout_container > ul > li:last-child").children("a").css("background-image", "none");
+
+    // Remove and replace the default CSS fallback for showing primary navigation drop-downs
+    // Two separate classes are required so that the jquery version can be used with a time delay, without the fallback interfering
+    $("#primary_nav ul").first().children().removeClass("menu_default").addClass("menu_jquery");
+
+    var primaryNavOpenTimeout = null;
+    var primaryNavCloseTimeout = null;
+
+    var touchDetected = false;
+
+    // Replace the fallback with jQuery which triggers after a time delay
+    $("#primary_nav ul").first().children().hover(
+        function (event) {
+            if (touchDetected == true) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+
+            if ($("#primary_nav .menu_open").length <= 0) {
+
+                if (primaryNavCloseTimeout != null) {
+                    window.clearTimeout(primaryNavCloseTimeout);
+                    primaryNavCloseTimeout = null;
+                }
+
+                $("#primary_nav ul").first().children().removeClass("menu_hover menu_open");
+                $(this).addClass("menu_hover");
+
+                var listElement = $(this);
+                primaryNavOpenTimeout = window.setTimeout(function () { $(listElement).addClass("menu_open"); }, 500);
+            } else {
+                $(this).addClass("menu_hover");
+
+                if ($(this).hasClass("menu_open")) {
+                    if (primaryNavCloseTimeout != null) {
+                        window.clearTimeout(primaryNavCloseTimeout);
+                        primaryNavCloseTimeout = null;
+                    }
+                }
+            }
+        },
+        function () {
+            if (primaryNavOpenTimeout != null) {
+                window.clearTimeout(primaryNavOpenTimeout);
+                primaryNavOpenTimeout = null;
+            }
+
+            if ($(this).hasClass("menu_open")) {
+                var listElement = $(this);
+
+                primaryNavCloseTimeout = window.setTimeout(function () {
+                    $(listElement).removeClass("menu_hover menu_open");
+                    $("#primary_nav .menu_hover").not(listElement).first().addClass("menu_open");
+                }, 500);
+            } else {
+                $(this).removeClass("menu_hover");
+            }
+        }
+    );
+
+    $("#primary_nav > div > ul > li > a").click(function (event) {
+        if (touchDetected == true) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+    });
+
+    $("#primary_nav > div > ul > li > a").bind("touchstart", function (event) {
+        touchDetected = true;
+
+        if (!$(this).hasClass("first_touch")) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            $("#primary_nav > div > ul > li > a").removeClass("first_touch");
+            $(this).addClass("first_touch");
+
+            $("#primary_nav > div > ul > li").removeClass("menu_hover menu_open");
+            $(this).parent().addClass("menu_hover menu_open");
+        } else {
+            window.location = $(this).attr("href");
+        }
+    });
+
+    if ($("#primary_nav #tier_layout_container > ul > li").length > 0) {
+        // If primary navigation wraps onto multiple lines, adjust the top position of the wrapping sections' drop-downs
+        var primaryNavTop = $("#primary_nav #tier_layout_container > ul > li").first().offset().top;
+
+        $("#primary_nav #tier_layout_container > ul > li").each(function () {
+            if ($(this).offset().top > primaryNavTop) {
+                $(this).find("div").first().css("top", ($(this).offset().top - primaryNavTop + 36) + "px");
+            }
+        });
+    }
+
+    // Opens drop-downs when tabbing through primary navigation
+    $("#primary_nav #tier_layout_container > ul > li").each(function () {
+
+        var resetTimeout = null;
+        var listElement = this;
+
+        function resetDropDown() {
+
+            $(listElement).removeClass("menu_tab_focus");
+
+            window.clearTimeout(resetTimeout);
+            resetTimeout = null;
+
+            $(this).find("a").first().focus();
+        }
+
+        $(this).find("a").focusin(function () {
+            if ($(this).parents("li").last().hasClass("menu_tab_focus") == false) {
+                $(this).parents("li").last().addClass("menu_tab_focus");
+            }
+
+            if (resetTimeout != null) {
+                window.clearTimeout(resetTimeout);
+            }
+            resetTimeout = window.setTimeout(resetDropDown, 5000);
+        });
+
+        $(this).find("a").last().focusout(function () {
+
+            $(this).parents("li").last().removeClass("menu_tab_focus");
+
+            window.clearTimeout(resetTimeout);
+            resetTimeout = null;
+        });
+    });
+
+    $("a.refresh_page_link").click(function (event) {
+        event.preventDefault();
+        window.location.reload();
+    });
+
+    $("a.refresh_page_link").bind("touchend", function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        $(this).parents("li").removeClass("menu_hover menu_open");
+    });
+
+    // Open change language drop-down when tabbing through site
+    var languageResetTimeout = null;
+
+    function resetChangeLanguage() {
+        $("#header #right_column #change_language").removeClass("menu_hover");
+
+        if (languageResetTimeout != null) {
+            window.clearTimeout(languageResetTimeout);
+        }
+
+        languageResetTimeout = null;
+        $("#header_promo_text").focus();
+    }
+
+    $("#header #right_column #change_language #language_options a").focusin(function () {
+        if (languageResetTimeout != null) {
+            window.clearTimeout(languageResetTimeout);
+        }
+
+        languageResetTimeout = window.setTimeout(resetChangeLanguage, 5000);
+    });
+
+    // The trigger for opening the drop-down while tabbing is the last header navigation link losing focus
+    $("#header #right_column #header_nav a").last().focusout(function () {
+        $("#header #right_column #change_language").addClass("menu_hover");
+        $("#header #right_column #change_language #language_options a").first().focus();
+    });
+
+    $("#header #right_column #change_language #language_options a").last().focusout(function () {
+        resetChangeLanguage();
+    });
+
+
+    // Remove the default CSS fallback for showing product modal windows
+    $(".product_sidebar .modal_default").removeClass("modal_default");
+
+    // Replace fallback with jQuery
+    $(".product_available_modal, .product_help_modal").hover(
+        function (event) {
+            if (touchDetected == true) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+
+            if (!$(this).hasClass("modal_hover")) {
+                $(".product_available_modal, .product_help_modal").removeClass("modal_hover");
+                $(this).addClass("modal_hover");
+            }
+        },
+        function (event) {
+            if ($(this).hasClass("modal_hover")) {
+                $(this).removeClass("modal_hover");
+            }
+        }
+    );
+
+    $(".product_available_modal > p > a, .product_help_modal > p > a").click(function (event) {
+        if (touchDetected == true) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+    });
+
+    $(".product_available_modal > p > a, .product_help_modal > p > a").bind("touchstart", function (event) {
+        touchDetected = true;
+
+        if (!$(this).hasClass("first_touch")) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            $(".product_available_modal > p > a, .product_help_modal > p > a").removeClass("first_touch");
+            $(this).addClass("first_touch");
+
+            $(".product_available_modal, .product_help_modal").removeClass("modal_hover");
+            $(this).parents(".product_available_modal, .product_help_modal").addClass("modal_hover");
+        } else {
+            window.location = $(this).attr("href");
+        }
+    });
+
+    $(".product_available_modal > p > span, .product_help_modal > p > span").bind("touchstart", function (event) {
+        touchDetected = true;
+
+        if (!$(this).parents(".product_available_modal, .product_help_modal").first().hasClass("modal_hover")) {
+            $(".product_available_modal > p > a, .product_help_modal > p > a").removeClass("first_touch");
+            $(".product_available_modal, .product_help_modal").removeClass("modal_hover");
+            $(this).parents(".product_available_modal, .product_help_modal").addClass("modal_hover");
+        }
+    });
+
+
+    // Show and hide default text in data entry text boxes e.g. when searching
+    $("input.default_text, textarea.default_text").each(function () {
+        var initialVal = $(this).val();
+
+        $(this).click(function () {
+            if ($(this).val() == initialVal) {
+                $(this).val("");
+            }
+        });
+
+        $(this).focusout(function () {
+            if ($(this).val() == "") {
+                $(this).val(initialVal);
+            }
+        });
+    });
+
+    // Hitting the enter key on one of the two header text inputs will trigger the appropriate submit button
+    // Uncomment this code if this functionality is required as jQuery, otherwise it can be safely removed
+    /*$("input#header_promo_text").bind("keypress", function (event) {
+        if (event.which == 13) {
+            $("input#header_promo_submit").click();
+        }
+    });*/
+
+    /*$("input#simple_search_text").bind("keypress", function (event) {
+        if (event.which == 13) {
+            $("input#simple_search_submit").click();
+        }
+    });*/
+
+    // Product Image Carousels on Product Details template
+    if ($("#product_details_image_carousel ul li").length <= 1) {
+        var showProductCarousels = false;
+    } else {
+        var showProductCarousels = true;
+    }
+
+    if ($("#product_details_image_carousel ul li").length < 3) {
+        var spacerItems = 3 - $("#product_details_image_carousel ul li").length;
+
+        for (var i = 0; i < spacerItems; i++) {
+            $("#product_details_image_carousel ul").append("<li>&nbsp;</li>");
+        }
+    }
+
+    $("#product_details_image_carousel ul li").each(function () {
+        $(this).find(".medium").first().clone().appendTo("#product_details_image_selected");
+
+        if ($(this).find(".thumbnail").length > 0) {
+            $(this).find(".thumbnail").first().clone().removeClass("thumbnail").appendTo("#product_details_image_modal_carousel ul").wrap("<li>");
+        } else {
+            $("#product_details_image_modal_carousel ul").append("<li>&nbsp;</li>");
+        }
+
+        var currentIndex = $("#product_details_image_carousel ul li").index($(this));
+
+        $($("#product_details_image_modal_carousel ul li").get(currentIndex)).append("<span class='index'>" + currentIndex + "</span>");
+        $(this).append("<span class='index'>" + currentIndex + "</span>");
+    });
+
+    if ($("#product_details_image_modal_carousel ul li").length < 5) {
+        var spacerItems = 5 - $("#product_details_image_modal_carousel ul li").length;
+
+        for (var i = 0; i < spacerItems; i++) {
+            $("#product_details_image_modal_carousel ul").append("<li>&nbsp;</li>");
+        }
+    }
+
+    if (showProductCarousels == true) {
+        $("#product_details_image_carousel ul li a.thumbnail").click(function (event) {
+            event.preventDefault();
+
+            $("#product_details_image_carousel ul li").removeClass("selected");
+            $(this).parent().addClass("selected");
+
+            $("#product_details_image_selected a").removeClass("selected");
+            $($("#product_details_image_selected a").get($(this).parent().find("span.index").first().html())).addClass("selected");
+        });
+
+        $("#product_details_image_carousel ul").jcarousel({
+            scroll: 3,
+            buttonPrevHTML: "<div class='previous product_details_image_carousel_previous'></div>",
+            buttonNextHTML: "<div class='next product_details_image_carousel_next'></div>",
+            wrap: "circular"
+        });
+
+        $("#product_details_image_modal_carousel ul").jcarousel({
+            scroll: 5,
+            buttonPrevHTML: "<div class='previous carousel_previous'></div>",
+            buttonNextHTML: "<div class='next carousel_next'></div>",
+            itemFallbackDimension: 97,
+            wrap: "circular"
+        });
+
+        $("#product_details_image_carousel ul li").first().addClass("selected");
+    } else {
+        $("#product_details_image_carousel, #product_details_image_modal_carousel").hide();
+    }
+
+    $("#product_details_image_selected a").first().addClass("selected");
+
+    $("#product_details_image_modal").parent().css("position", "relative");
+
+    $("#product_details_image_selected a").click(function (event) {
+        event.preventDefault();
+
+        var selectedIndex = $("#product_details_image_selected a").index($(this));
+
+        if ($("#product_details_image_modal_selected > div").length <= 0) {
+
+            $("#product_details_image_carousel ul li").each(function () {
+                $("#product_details_image_modal_selected").append("<div><img src='" + $(this).find(".enlarged_src").first().html() + "' alt='' /></div>");
+            });
+
+            if (showProductCarousels == true) {
+
+                $("#product_details_image_modal_carousel ul li a").click(function (event) {
+                    event.preventDefault();
+
+                    $("#product_details_image_modal_carousel ul li").removeClass("selected");
+                    $(this).parent().addClass("selected");
+
+                    $("#product_details_image_modal_selected div").removeClass("selected");
+                    $($("#product_details_image_modal_selected div").get($(this).parent().find("span.index").first().html())).addClass("selected");
+                });
+            }
+        }
+
+        if (showProductCarousels == true) {
+
+            $("#product_details_image_modal_carousel li").removeClass("selected");
+            $("#product_details_image_modal_carousel li[jcarouselindex='" + (selectedIndex + 1) + "']").addClass("selected");
+
+            if ($("#product_details_image_selected a").length > 5) {
+                $("#product_details_image_modal_carousel ul").data("jcarousel").scroll((selectedIndex + 1), false);
+            }
+        }
+
+        $("#product_details_image_modal_selected div").removeClass("selected");
+
+        $($("#product_details_image_modal_selected div").get(selectedIndex)).addClass("selected");
+
+        $("#product_details_image_modal").fadeIn(100);
+    });
+
+    $("#product_details_image_modal a.close").click(function (event) {
+        event.preventDefault();
+
+        $("#product_details_image_modal").fadeOut(100);
+    });
+
+    // General purpose carousel
+    function createCarousel(container, pageSize, orientation) {
+
+        if (orientation == "vertical") {
+            $(container).find("ul").removeClass("default_state");
+        }
+
+        var maxHeight = 0;
+
+        $(container).find("ul li").each(function () {
+            if ($(this).height() > maxHeight) {
+                maxHeight = $(this).height();
+            }
+        });
+
+        // Makes all product carousel text blocks the same height (to align product action buttons at bottom)
+        if ($(container).find("input.product_action").length > 0) {
+            if (userAgentString.indexOf("msie 6") != -1) {
+                maxHeight += 42;
+            }
+
+            maxHeight += 12;
+        }
+
+        if (($(container).find("input.product_action").length > 0) || (orientation == "vertical")) {
+            $(container).find("ul li").height(maxHeight);
+        }
+
+        var totalItems = $(container).find("ul li").length;
+        $(container).find("ul").removeClass("default_state");
+        
+        if(totalItems > pageSize) {
+	        $(container).append("<div class='carousel_pager'></div>");
+	
+	        var currentItem = 1;
+	
+	        while (currentItem <= totalItems) {
+	            $(container).find(".carousel_pager").first().append("<a href='#'><span>" + currentItem + "</span></a>");
+	            currentItem += pageSize;
+	        }
+	
+	        if ((orientation == "vertical") && ($(container).find(".carousel_pager").first().height() < 180)) {
+	            $(container).find(".carousel_pager").css("top", (Math.floor(((180 - $(container).find(".carousel_pager").first().height()) / 2) + 0.5) + 23) + "px");
+	        }
+	
+	        currentItem = totalItems;
+	
+	        while (currentItem > pageSize) {
+	            currentItem -= pageSize;
+	        }
+	
+	        var spacerItems = pageSize - currentItem;
+	        totalItems += spacerItems;
+	
+	        for (var i = 0; i < spacerItems; i++) {
+	            $(container).find("ul").first().append("<li>&nbsp;</li>");
+	        }
+	
+	        var parentBlock = container;
+	
+	        if (orientation == "horizontal") {
+	            var prevHTML = "<div class='previous carousel_previous'></div>";
+	            var nextHTML = "<div class='next carousel_next'></div>";
+        } else {
+	            var prevHTML = "<div class='previous carousel_previous_vertical'></div>";
+	            var nextHTML = "<div class='next carousel_next_vertical'></div>";
+	        }
+	
+	        $(container).find("ul").first().jcarousel({
+	            scroll: pageSize,
+	            vertical: (orientation == "vertical"),
+	            buttonPrevHTML: prevHTML,
+	            buttonNextHTML: nextHTML,
+	            initCallback: function (carousel) {
+	                $(parentBlock).find(".jcarousel-clip-vertical").height(maxHeight);
+	
+	                $(parentBlock).find(".carousel_pager a").bind("click", function (event) {
+	                    event.preventDefault();
+	                    carousel.scroll($.jcarousel.intval($(this).find("span").first().html()));
+	                });
+	            },
+	            itemLastInCallback: function (carousel, item, index, state) {
+	                $(parentBlock).find(".carousel_pager a").removeClass("selected");
+	
+	                var selectedFound = false;
+	                var adjustedIndex = index;
+	                
+	                if(orientation == "horizontal") {
+	                	adjustedIndex = index-1;
+	                }
+	                
+	                while (adjustedIndex <= 0) {
+	                    adjustedIndex += totalItems;
+	                }
+	
+	                while (adjustedIndex > totalItems) {
+	                    adjustedIndex -= totalItems;
+	                }
+	
+	                $($(parentBlock).find(".carousel_pager a").get().reverse()).each(function (event) {
+	                    if (selectedFound == false) {
+	
+	                        if (parseInt($(this).find("span").first().html()) <= adjustedIndex) {
+	                            $(this).addClass("selected");
+	                            selectedFound = true;
+	                        }
+	                    }
+	                });
+	            },
+	            wrap: "circular"
+	        });
+        }
+    }
+
+    $(".image_text_carousel").each(function () {
+        var pageSize = 1;
+        var orientation = "horizontal";
+
+        if ($(this).parents(".content_centre_single").length > 0) {
+            pageSize = 3;
+
+            if ($(this).parents(".wide_left, .wide_right").length > 0) {
+                pageSize = 4;
+            }
+        } else {
+            if ($(this).parents(".content_centre_triple, .content_left, .content_right").length > 0) {
+                orientation = "vertical";
+            }
+        }
+
+        createCarousel(this, pageSize, orientation);
+    });
+
+    // Video Carousels
+    $(".video_carousel").each(function () {
+
+        var videoEmbeds = [];
+
+        $(this).removeClass("video_carousel_default");
+
+        $(this).find("ul.video_carousel_content li").each(function () {
+            videoEmbeds.push($(this).find(".slide_block .embed span.code").first().html());
+            $(this).find(".slide_block .embed").first().html("");
+
+            $(this).find(".slide_block").first().clone().appendTo($(this).parents(".video_carousel").first().find(".slide_container").first());
+            $(this).find(".slide_block").first().remove();
+
+            $(this).append("<span class='slide_index'>" + $(this).parent().find("li").index($(this)) + "</span>");
+        });
+
+        var carouselParent;
+        var carouselContainer = $(this).find("ul.video_carousel_content").first();
+        var slideContainer = $(this).find(".slide_container").first();
+
+        var totalItems = $(carouselContainer).find("li").length;
+        var currentItem = 0;
+
+        setSelectedItems();
+
+        if (totalItems > 3) {
+            $(carouselContainer).addClass("show_numbers");
+
+            $(carouselContainer).find("li").each(function () {
+                $(this).append("<span class='slide_number'>" + ($(this).parent().find("li").index($(this)) + 1) + " of " + totalItems + "</span>");
+            });
+        }
+
+        function videoCarouselInitCallback(carousel) {
+            carouselParent = $(carouselContainer).parents(".jcarousel-container").first();
+
+            if (totalItems <= 3) {
+                $(carouselParent).find(".previous, .next").css("display", "none");
+            }
+
+            $(slideContainer).cycle({
+                speed: 500,
+                timeout: 0
+            });
+
+            $(carouselContainer).find("li a").click(function (event) {
+                event.preventDefault();
+
+                currentItem = parseInt($(this).parents("li").first().find("span.slide_index").first().html());
+
+                $(slideContainer).find("a.cover").show();
+                $(slideContainer).find(".embed").html("");
+
+                setSelectedItems();
+
+                if (totalItems > 3) {
+                    carousel.scroll(parseInt($(this).parents("li").first().attr("jcarouselindex")), true);
+                }
+
+                $(slideContainer).cycle(currentItem);
+            });
+
+            $(slideContainer).find("a.cover").click(function (event) {
+                event.preventDefault();
+                var parentSlide = $(this).parents(".slide_block").first();
+
+                $(this).hide();
+                $(parentSlide).find(".embed").html(generateEmbedCode(videoEmbeds[$(slideContainer).find(".slide_block").index(parentSlide)]));
+            });
+        }
+
+        function generateEmbedCode(code) {
+            return "<iframe width='568' height='321' src='http://www.youtube.com/embed/" + code + "?autoplay=1&rel=0' frameborder='0'></iframe>";
+        }
+
+        function setSelectedItems() {
+            $(carouselContainer).find("li").each(function () {
+                if (parseInt($(this).find("span.slide_index").first().html()) != currentItem) {
+                    $(this).removeClass("selected");
+                } else {
+                    $(this).addClass("selected");
+                }
+            });
+        }
+
+        $(carouselContainer).jcarousel({
+            buttonPrevHTML: "<div class='previous video_carousel_previous'></div>",
+            buttonNextHTML: "<div class='next video_carousel_next'></div>",
+            scroll: 1,
+            wrap: "circular",
+            initCallback: videoCarouselInitCallback
+        });
+    });
+
+    // Hero Panels
+    $(".hero_panel").each(function () {
+        $(this).find("ul.hero_panel_content li").each(function () {
+            $(this).find(".slide_block").first().clone().appendTo($(this).parents(".hero_panel").first().find(".slide_container").first());
+            $(this).find(".slide_block").first().remove();
+            $(this).append("<span style='display: none;'>" + $(this).parent().find("li").index($(this)) + "</span>");
+        });
+
+        $(this).removeClass("default_state");
+
+        var carouselParent;
+        var carouselContainer = $(this).find("ul.hero_panel_content").first();
+        var slideContainer = $(this).find(".slide_container").first();
+
+        var totalItems = $(carouselContainer).find("li").length;
+        var oldIndex = []; 
+
+        function heroCarouselInitCallback(carousel) {
+            carouselParent = $(carouselContainer).parents(".jcarousel-container").first();
+            $(carouselParent).append("<span class='slide_number'>1 of " + totalItems + "</span>");
+
+            $(carouselContainer).parents(".hero_panel").first().hover(function () {
+                carousel.stopAuto();
+            },
+            function () {
+                carousel.startAuto();
+            });
+
+            $(carouselContainer).find("li").click(function (event) {
+                event.preventDefault();
+
+                var selectedIndex = parseInt($(this).attr("jcarouselindex"));
+                carousel.scroll(selectedIndex, true);
+            });
+
+            $(slideContainer).cycle({
+                speed: 500,
+                timeout: 0
+            });
+
+            if ((totalItems * 91) <= $(carouselParent).find(".jcarousel-clip-vertical").first().height()) {
+                $(carouselParent).find(".jcarousel-clip-vertical").first().css("height", (totalItems * 91) + "px");
+            }
+
+            // Allows tabbing through slides
+            $(slideContainer).find(".slide_block").each(function () {
+                var slideIndex = $(slideContainer).find(".slide_block").index($(this));
+
+                $(this).find("a").last().focusout(function (event) {
+                    if (slideIndex < (totalItems - 1)) {
+
+                        $(carouselContainer).find("li span").each(function () {
+                            if (parseInt($(this).html()) == (slideIndex + 1)) {
+                                $(this).parent().find("a.thumbnail").first().click();
+                                $($(slideContainer).find(".slide_block").get(slideIndex + 1)).find("a").first().focus();
+                            }
+                        });
+                    } else {
+                        event.preventDefault();
+
+                        var endIndex = $("a").index($(this).parents(".hero_panel").first().find("a").last());
+                        $("a:eq(" + (endIndex + 1) + ")").focus();
+                    }
+                });
+            });
+        }
+
+        function heroCarouselSwitchSlide(slideIndex) {
+            $(slideContainer).cycle(slideIndex);
+        }
+
+        $(carouselContainer).jcarousel({
+            vertical: true,
+            buttonPrevHTML: null,
+            buttonNextHTML: null,
+            scroll: 1,
+            auto: 10,
+            wrap: "circular",
+            initCallback: heroCarouselInitCallback,
+            itemFirstInCallback: {
+                onBeforeAnimation: function (carousel, item, index, state) {
+                    $(item).addClass("activeSlide");
+                    $(item).find("a.thumbnail").first().animate({ opacity: 1 }, 200);
+
+                    heroCarouselSwitchSlide(parseInt($(item).find("span").last().html()));
+                },
+                onAfterAnimation: function (carousel, item, index, state) {
+                    var slideNumber = parseInt($(item).find("span").last().html()) + 1;
+                    $(carouselParent).find("span.slide_number").first().html(slideNumber + " of " + totalItems);
+                    $(carouselParent).find("span.slide_number").first().fadeIn(100);
+                    if(oldIndex.join(",").indexOf(slideNumber) < 0){
+                    	oldIndex.push(slideNumber);
+                    	if(slideNumber == 2){
+                    		dcsMultiTrack('WT.dl','99' ,'WT.ti', $('#pageName').val(), 'WT.z_hbn' ,$($(slideContainer).find(".slide_block").get(slideNumber-2)).attr('id'), 'WT.z_hbn_v', '1');
+                    	}
+                    	dcsMultiTrack('WT.dl','99' ,'WT.ti', $('#pageName').val(), 'WT.z_hbn' ,$($(slideContainer).find(".slide_block").get(slideNumber-1)).attr('id'), 'WT.z_hbn_v', '1');
+                    }
+                }
+            },
+            itemFirstOutCallback: {
+                onBeforeAnimation: function (carousel, item, index, state) {
+                    $(item).removeClass("activeSlide");
+                    $(carouselParent).find("span.slide_number").first().fadeOut(100);
+                    $(item).find("a.thumbnail").first().animate({ opacity: 0.5 }, 200);
+                }
+            },
+            itemLoadCallback: {
+                onBeforeAnimation: function (carousel, state) {
+                    $(carouselContainer).find("li").each(function () {
+                        if ($(this).hasClass("activeSlide") == false) {
+                            $(this).find("a.thumbnail").removeAttr("style");
+                        }
+                    });
+                }
+            },
+            itemVisibleInCallback: {
+                onBeforeAnimation: function (carousel, item, index, state) {
+                    if (state != "init") {
+                        $(item).removeClass("activeSlide");
+                        $(item).find("a.thumbnail").removeAttr("style");
+                    }
+                }
+            }
+        });
+    });
+
+    // Expandable blocks with topic list checkboxes, on generic form template
+    var subjectAreaClosedHeight = 13;
+
+    $("ul.subject_area").each(function () {
+
+        var initialHeight = $(this).height();
+
+        $(this).css("overflow", "hidden").height(subjectAreaClosedHeight);
+
+        $(this).find("li").not($(this).children("li:first-child, li:last-child")).css("display", "none");
+
+        $(this).find(".expand_link").click(function (event) {
+            event.preventDefault();
+
+            var subjectAreaContainer = $(this).parents("ul").first();
+
+            if ($(subjectAreaContainer).height() <= subjectAreaClosedHeight) {
+                $(subjectAreaContainer).addClass("expanded_area").animate({ height: initialHeight }, 200, function () {
+                    $(subjectAreaContainer).find("li").not($(subjectAreaContainer).children("li:first-child, li:last-child")).fadeIn(200);
+                });
+            } else {
+                $(subjectAreaContainer).find("li").not($(subjectAreaContainer).children("li:first-child, li:last-child")).fadeOut(200, function () {
+                    $(subjectAreaContainer).removeClass("expanded_area").animate({ height: subjectAreaClosedHeight }, 200);
+                });
+            }
+        });
+
+        // When final checkbox is selected ('Select all'), also select all others in that block
+        $(this).find("input:checkbox").last().click(function () {
+            if ($(this).is(":checked") == true) {
+                $(this).parents("ul.subject_area").first().find("input:checkbox").attr("checked", true);
+            }
+        });
+
+        // Unchecks the relevant 'Select all' checkbox when any of the items in that block are no longer selected
+        $(this).find("input:checkbox").not($(this).find("input:checkbox").last()).click(function () {
+            if ($(this).is(":checked") == false) {
+                $(this).parents("ul.subject_area").first().find("input:checkbox").last().attr("checked", false);
+            }
+        });
+
+        // Open and close subject areas when tabbing through page
+        $(this).find("input:checkbox").first().focusin(function () {
+            $(this).parents("ul.subject_area").first().find(".expand_link").first().click();
+        });
+
+        $(this).find("input:checkbox").last().focusout(function () {
+            $(this).parents("ul.subject_area").first().find(".expand_link").first().click();
+        });
+    });
+
+    // General purpose expandable blocks
+//    $(".expanding_content_container").each(function () {
+//
+//        var expandedHeight = $(this).height();
+//        var additionalContentHeight = $(this).find(".additional_content").first().height();
+//        var collapsedHeight = expandedHeight - additionalContentHeight;
+//
+//        $(this).css("overflow", "hidden").height(collapsedHeight);
+//
+//        $(this).find(".additional_content").first().css("display", "none");
+//
+//        $(this).find(".expand_link").click(function (event) {
+//            event.preventDefault();
+//
+//            if ($(this).parent().height() <= collapsedHeight) {
+//                $(this).html("Show less");
+//
+//                $(this).parent().animate({ height: expandedHeight }, 200, function () {
+//                    $(this).find(".additional_content").first().fadeIn(200);
+//                });
+//            } else {
+//                $(this).html("Show more");
+//
+//                $(this).parent().find(".additional_content").first().fadeOut(200, function () {
+//                    $(this).parent().animate({ height: collapsedHeight }, 200);
+//                })
+//            }
+//        });
+//    });
+
+    // Expandable individual content blocks
+    $(".expandable_block").expandable({
+        speed: 300,
+        controlAction: { action: "addClass", addedClass: "selected" }
+    });
+
+    // Adjust expandable block h2 border colour if block contains a contact information table
+    $(".expandable_block").each(function () {
+        if ($(this).find("table.contact_information_table").length > 0) {
+            $(this).find("h2.block_heading").addClass("border_colour_dark_blue");
+        }
+    });
+
+    // Add anchor divs to allow fixing featured titles table buttons and prices to bottom of table cells
+    $("table.block_columns.featured_titles tr").each(function () {
+        $(this).find("td").each(function () {
+            $(this).find("div.image, div.text").wrapAll("<div class='position_wrapper' />");
+            $(this).find(".position_wrapper").append("<div class='clearer'></div>");
+        });
+
+        var rowHeight = 125;
+
+        $(this).find("td").each(function () {
+            if ($(this).find("div.text").first().height() > rowHeight) {
+                rowHeight = $(this).find("div.text").first().height();
+            }
+        });
+
+        $(this).find(".position_wrapper").css("height", rowHeight + "px");
+    });
+
+    // Add anchor divs to allow fixing search results grid view table buttons to bottom of table cells
+    $(".search_result_list table.block_columns tr").each(function () {
+        var rowHeight = 0;
+
+        $(this).find("td").each(function () {
+            if ($(this).height() > rowHeight) {
+                rowHeight = $(this).height();
+            }
+
+            $(this).find("div.result_image, div.result_biblio, div.result_add").wrapAll("<div class='position_wrapper' />");
+            $(this).find(".position_wrapper").append("<div class='clearer'></div>");
+        });
+
+        $(this).find(".position_wrapper").css("height", rowHeight + "px");
+    });
+
+    // Simple function for Non-US modal window close button
+    $("#modal_container #modal_inner .close_modal_link").click(function (event) {
+        event.preventDefault();
+
+        $("#modal_container").fadeOut(200);
+        $("#modal_overlay").fadeOut(200);
+    });
+
+    // Add To Google button on RSS template
+    var addToGoogleBaseURL = "http://fusion.google.com/add?source=atgs&feedurl=";
+
+    $("#add_to_google_feed").change(function (event) {
+        if ($(this).val() == "#") {
+            $("#add_to_google_button").attr("href", "#");
+        } else {
+            $("#add_to_google_button").attr("href", addToGoogleBaseURL + $(this).val());
+        }
+    });
+
+    $("#add_to_google_button").click(function (event) {
+        if ($(this).attr("href") == "#") {
+            event.preventDefault();
+        }
+    });
+}
+
+function windowLoaded($) {
+
+    var imageSelector = ".image_text_carousel ul li .image img, table.block_columns.featured_titles td .image img, .search_result_list table.block_columns td .result_image img";
+
+    // Aligns short carousel and block column images vertically within their container
+    (function positionProductImages() {
+
+        $(imageSelector).each(function () {
+            var fullHeight = $(this).parents(".image, .result_image").first().height();
+
+            if ($(this).height() < fullHeight) {
+                var addedMargin = Math.floor(((fullHeight - $(this).height()) / 2) + 0.5);
+                $(this).css("margin-top", addedMargin + "px");
+            }
+        });
+    })();
+
+    // Ensures that promo blocks in a row always appear at the height of the tallest
+    // Can also serve as a general-purpose way of making content blocks the same height
+    $(".equal_height_row").each(function () {
+        var maxHeight = 0;
+
+        $(this).find(".content_block").each(function () {
+            if ($(this).height() > maxHeight) {
+                maxHeight = $(this).height();
+            }
+        });
+
+        $(this).find(".content_block").each(function () {
+            if ($(this).height() < maxHeight) {
+                if ($(this).find(".link_container > span").length > 0) {
+                    var currentPadding = parseInt($(this).find(".link_container > span:not(.inset_image_wrapper)").last().css("padding-bottom").replace("px", ""));
+                    currentPadding += (maxHeight - $(this).height());
+                    $(this).find(".link_container > span:not(.inset_image_wrapper)").last().css("padding-bottom", currentPadding + "px");
+                } else {
+                    $(this).height(maxHeight);
+                }
+            }
+        });
+    });
+
+    // Ensures that column layout link containers always appear with a minimum height equal to that of the image
+    $(".content_block .link_container.column_layout").each(function () {
+        if ($(this).find("img").length > 0) {
+            var containerHeight = $(this).height();
+            var imageHeight = $(this).find("img").first().height();
+            
+            if (containerHeight < imageHeight) {
+                var currentPadding = parseInt($(this).children("span:not(.inset_image_wrapper)").last().css("padding-bottom").replace("px", ""));
+                currentPadding += (imageHeight - containerHeight);
+
+                $(this).children("span:not(.inset_image_wrapper)").last().css("padding-bottom", currentPadding + "px");
+            }
+        }
+    });
+}ï»¿// jQuery for interactive elements used on all pages
+
+	function switchUNField (elementId, formId, defaultValue) {
+		var $elem = $('#'+formId).find('#'+elementId);		
+		if(defaultValue) {			
+			if($elem.val() == defaultValue) {
+				$elem.val("");
+			}
+		} else {
+			$elem.val("");		
+		}
+	}
+	
+	function submitForm ( formId ) {
+		$('#'+formId).submit();
+	}
+
+	function getSugestion( userData ) {			
+		var region = getParameterByName("region");		
+		$.ajax({
+		  type: "GET",
+		  url: "/suggestions.view",
+		  data: { search: userData, region: region }
+		}).done(function( msg ) {
+			var innerData = "<ul>";
+			myData = JSON.parse(msg, function (key, value) {				
+				if(key && value) {
+					if(key != "suggestions") {
+							
+							innerData = innerData + "<li>" + value + "</li>";
+					}
+				}
+			});
+			innerData = innerData + "<ul>";		
+		    $("#suggestion").html(innerData);
+		    $("#suggestion").removeClass("hidesuggestion");
+		    $("#suggestion").addClass("diplaysuggestion");
+		});
+	}
+	
+	function getParameterByName(name) {		
+		var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+		return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+	}
+	
+	function resetAdvancedSearchForm(){
+		location.href = "/advanced_search?cc=us&lang=en";
+		return false;
+	}
+	$(document).ready(function() { 
+		$('.showHiddenHelpItems').click(function() {
+			$('.hiddenHelpItems_'+this.id).show();
+			$(this).hide();
+		}); 
+	});
+	
+	$(document).ready(function() { 
+		$(".expand_link").click(function(event) {
+			event.preventDefault();
+			var psTotalHeight = $('.expanding_content_container_inner_narrow').height();
+			
+			if ($(this).text() == 'Show more') {
+				$('#expanding_content_container').css("display", "block").css("height", psTotalHeight);
+				$('#expanding_content_container_outer').css("display", "block").animate({height:psTotalHeight},50);
+				$('#psGradient').css("display", "none");
+				
+				$(this).html("Show less");
+			} else {
+				$('#psGradient').css("display", "block");
+				$('#expanding_content_container').css("display", "block").css("height", 150);
+				$('#expanding_content_container_outer').css("display", "block").animate({height:150},50);	
+				$(this).html("Show more");
+				
+			}
+
+		});
+	});
+	
+	
+	$(document).ready(function() { 
+		$(".expand_link_wide").click(function(event) {
+			event.preventDefault();
+			var psTotalHeight = $('.expanding_content_container_inner_wide').height();
+			
+			if ($(this).text() == 'Show more') {
+				$('#expanding_content_container_wide').css("display", "block").css("height", psTotalHeight+10);
+				$('#expanding_content_container_outer_wide').css("display", "block").animate({height:psTotalHeight+10},50);
+				$('#psGradient_wide').css("display", "none");
+				
+				$(this).html("Show less");
+			} else {
+				$('#psGradient_wide').css("display", "block");
+				$('#expanding_content_container_wide').css("display", "block").css("height", 105);
+				$('#expanding_content_container_outer_wide').css("display", "block").animate({height:105},50);
+				
+				$(this).html("Show more");
+				
+			}
+
+		});
+	});
+	
+		
+	$(document).ready(function() {
+		var psTotalHeight = $('.expanding_content_container_inner_narrow').height();
+		if (psTotalHeight > 150) {
+			$('#expanding_content_container').css("display", "block").css("height", 150);
+			$('#expanding_content_container_outer').css("display", "block").css("height", 150);		
+			$('#psGradient').css("display", "block");
+		} else {
+			$('#expanding_content_container').css("height", "auto");
+			$('#psGradient').hide();	
+			$('#expand_link').css("display","none");
+		}}
+	
+	);
+	
+	$(document).ready(function() {
+		var psTotalHeightwide = $('.expanding_content_container_inner_wide').height();
+		if (psTotalHeightwide > 105) {
+			$('#expanding_content_container_wide').css("display", "block").css("height", 105);
+			$('#expanding_content_container_outer_wide').css("display", "block").css("height", 105);
+			$('#psGradient_wide_wide').css("display", "block");
+		
+		} else {
+			$('#expanding_content_container_wide').css("height", "auto");
+			$('#psGradient_wide').hide();	
+			$('#expand_link_wide').css("display","none");
+		}}
+	
+	);
+	
+	$(document).ready(function() {
+		$('#contactLink').click(function(){
+			$('#contactForm').show();
+		});
+	});
+	
+	//Contact us form validations
+	$(document).ready(function() {	
+		$('#submit').click(function(){
+			var result = true;
+				if($('#name').val()=='') {
+					$('#genericerrortable').show();
+					$('#genericerror').show();
+					$('#error_name').show();
+					$('#field_error_Name').show();
+					$('label[for='+$('#name').attr('id')+']').addClass('alert_orange');
+					result = false;
+				}
+								
+				if(($('#email_id').val() == "") || ($('#email_id').val().indexOf('\@') == -1) || ($('#email_id').val().indexOf('.') == -1)) {
+					$('#genericerrortable').show();
+					$('#genericerror').show();
+					$('#error_email_id').show();
+					$('#field_error_email_id').show();
+					$('label[for='+$('#email_id').attr('id')+']').addClass('alert_orange');
+					result = false;
+				}
+				
+				if($('#message').val()=='') {
+					$('#genericerrortable').show();
+					$('#genericerror').show();
+					$('#error_message').show();
+					$('#field_error_message').show();
+					$('label[for='+$('#message').attr('id')+']').addClass('alert_orange');
+					result = false;
+				}
+				
+			return result;
+		});		
+	});
+	
+	
+	//PDP page
+	$(document).ready(function() {	
+		
+		if(getURLParamTab() != null) {
+			showThisTab(getURLParamTab());
+		}
+		
+		$('.pdplhn').click(function() {
+			showThisTab($(this).attr('id'));
+		});
+
+	});
+	
+	function showThisTab(tabName) {
+		hideAllTabs();
+		$('#'+tabName).addClass('selected');
+		$('#'+tabName+'_tab').show();
+		if(tabName == 'overview') {
+			$('#overview_tab_image').show();
+		} else {
+			$('#other_tab_image').show();
+		}
+		var psTotalHeight = $('.expanding_content_container_inner_narrow').height();
+		if (psTotalHeight > 150) {
+			$('#expanding_content_container').css("display", "block").css("height", 150);
+			$('#expanding_content_container_outer').css("display", "block").css("height", 150);		
+			$('#psGradient').css("display", "block");
+			$('#expand_link').css("display","block");
+		} else {
+			$('#expanding_content_container').css("height", "auto");
+			$('#psGradient').hide();	
+			$('#expand_link').css("display","none");
+		}
+	}
+	
+	function hideAllTabs() {
+		$('.pdptab').hide();
+		$('.pdplhn').removeClass('selected');
+		$('#other_tab_image').hide();
+		$('#overview_tab_image').hide();
+	}
+	
+	//The below lines of code is to populate the URL params in the form fields
+	function getURLParamTab() {
+		var urlTab = null;
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			if(hash[0] == 'tab') {
+				urlTab = unescape(hash[1]);
+			}
+		}
+		return urlTab;
+	}
+	
+	// This is for webtrends
+	//Heropanels
+	function trackOutboundHP(link, ti, hbn) {
+		try { 
+			dcsMultiTrack('WT.dl', '99', 'WT.ti', ti, 'WT.z_hbn', hbn, 'WT.z_hbn_c', '1');
+		} catch(err){}
+		
+		setTimeout(function() {
+			document.location.href = link.href;
+			}, 100);
+	}
+	//Facets
+	function trackOutboundFacet(link, faName, faVal) {
+		try { 
+			dcsMultiTrack('WT.z_facet', faName, 'WT.z_facet_value' ,faVal);
+		} catch(err){}
+		
+		setTimeout(function() {
+			document.location.href = link.href;
+			}, 100);
+	}
+	//Standard Right Promo
+	function trackOutboundSRP(link, ti, prn) {
+		try { 
+			dcsMultiTrack('WT.dl', '99', 'WT.ti', ti,'WT.z_prrn', prn, 'WT.z_prrn_c', '1');
+		} catch(err){}
+		
+		setTimeout(function() {
+			document.location.href = link.href;
+			}, 100);
+	}
+	//Explore more Right Promo
+	function trackOutboundXMRP(link, ti, bt) {
+		try { 
+			dcsMultiTrack('WT.dl', '99', 'WT.ti', ti,'WT.z_prxm', bt, 'WT.z_prxm_c', '1');
+		} catch(err){}
+		
+		setTimeout(function() {
+			document.location.href = link.href;
+			}, 100);
+	}
+	//Product carousel manual
+	function trackOutboundPCM(link, ti, sku) {
+		try { 
+			dcsMultiTrack('WT.dl', '99', 'WT.ti', ti,'WT.z_pcm', sku, 'WT.z_pcm_c', '1');
+		} catch(err){}
+		
+		setTimeout(function() {
+			document.location.href = link.href;
+			}, 100);
+	}
+	//PDP page carousels (Also of interest)
+	function trackOutboundPDP(link, ti, sku) {
+		try { 
+			dcsMultiTrack('WT.dl', '99', 'WT.ti', ti,'WT.z_pdpc', sku, 'WT.z_pdpc_c', '1');
+		} catch(err){}
+		
+		setTimeout(function() {
+			document.location.href = link.href;
+			}, 100);
+	}
+Íýr~      X–ßŸX–ßŸ=gÌY!†Æ   b    :http://oxfordjournals.org/media/system/js/jquery.jcarousel,cycle,expandable,oup-extras-scripts.js request-method GET response-head HTTP/1.1 200 OK
+Date: Sun, 05 Feb 2017 09:17:35 GMT
+Server: Apache/2.2.15 (Red Hat)
+Last-Modified: Fri, 21 Mar 2014 16:17:39 GMT
+Etag: "6807c2-209d2-4f5203983d7ef"
+Accept-Ranges: bytes
+Content-Length: 133586
+Content-Type: text/javascript
+ uncompressed-len 0  	Ò

@@ -26,7 +26,9 @@ elif AdBlock:
 
 elif Private:
     mode = 'Private'
-
+    print('Getting AdBlock sample, install the adblocker, sleeping for 120')
+    edge.get('https://getadblock.com/')
+    sleep(120)
     print('Getting incognito AdBlock sample')
     timestamps = open('Edge_Private_Sample.txt', 'w')
 

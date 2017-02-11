@@ -1,13 +1,10 @@
-2017/01/29-12:40:56.223 6968 Reusing MANIFEST C:\Users\user\PycharmProjects\AdBlockerForensics\adbf\Chrome\Chrome_Adblock_Sample\Default\Local Extension Settings\gighmmpiobklfepjocnamgkkbiglidom/MANIFEST-000001
-2017/01/29-12:40:59.717 6180 Level-0 table #5: started
-2017/01/29-12:40:59.757 6180 Level-0 table #5: 2318110 bytes OK
-2017/01/29-12:40:59.759 6180 Delete type=0 #3
-2017/01/29-12:41:06.312 6180 Level-0 table #7: started
-2017/01/29-12:41:06.353 6180 Level-0 table #7: 2302925 bytes OK
-2017/01/29-12:41:06.355 6180 Delete type=0 #4
-2017/01/29-12:41:57.682 6180 Level-0 table #9: started
-2017/01/29-12:41:57.722 6180 Level-0 table #9: 2303598 bytes OK
-2017/01/29-12:41:57.725 6180 Delete type=0 #6
-2017/01/29-12:42:01.826 6180 Level-0 table #11: started
-2017/01/29-12:42:01.875 6180 Level-0 table #11: 2303162 bytes OK
-2017/01/29-12:42:01.883 6180 Delete type=0 #8
+2017/02/02-13:36:41.784 6344 Reusing MANIFEST C:\Users\user\PycharmProjects\AdBlockerForensics\adbf\Chrome\Chrome_Adblock_Sample\Default\Local Extension Settings\gighmmpiobklfepjocnamgkkbiglidom/MANIFEST-000001
+2017/02/02-13:36:51.857 8000 Level-0 table #5: started
+2017/02/02-13:36:51.912 8000 Level-0 table #5: 3253089 bytes OK
+2017/02/02-13:36:51.916 8000 Delete type=0 #3
+2017/02/02-13:37:43.293 8000 Level-0 table #7: started
+2017/02/02-13:37:43.331 8000 Level-0 table #7: 2307298 bytes OK
+2017/02/02-13:37:43.333 8000 Delete type=0 #4
+2017/02/02-13:37:48.796 8000 Level-0 table #9: started
+2017/02/02-13:37:48.841 8000 Level-0 table #9: 2306874 bytes OK
+2017/02/02-13:37:48.844 8000 Delete type=0 #6

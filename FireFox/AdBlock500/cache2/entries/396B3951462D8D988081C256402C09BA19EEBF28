@@ -1,0 +1,478 @@
+/*
+Welcome to Custom CSS!
+
+CSS (Cascading Style Sheets) is a kind of code that tells the browser how
+to render a web page. You may delete these comments and get started with
+your customizations.
+
+By default, your stylesheet will be loaded after the theme stylesheets,
+which means that your rules can take precedence and override the theme CSS
+rules. Just write here what you want to change, you don't need to copy all
+your theme's stylesheet content.
+*/
+.widget-title i {
+	margin-right: 10px;
+	color: #3BC492;
+}
+
+#main .widget-title {
+	font-size: 21px;
+}
+
+/* Plugins */
+#bbpress-forums ul.bbp-lead-topic, #bbpress-forums ul.bbp-topics, #bbpress-forums ul.bbp-forums, #bbpress-forums ul.bbp-replies, #bbpress-forums ul.bbp-search-results {
+	font-size: 14px;
+}
+
+.bbp-reply-ip {
+	display: none;
+}
+
+.woocommerce .col2-set .col-1 {
+	float: left;
+	width: 48%;
+}
+
+.woocommerce .col2-set .col-2 {
+	float: right;
+	width: 48%;
+}
+
+.woocommerce-checkout .woocommerce .col2-set .col-1, .woocommerce-checkout .woocommerce-page .col2-set .col-1 {
+	width: 100%;
+}
+
+.woocommerce-info:before {
+	background-color: #9C2A00;
+}
+
+.woocommerce-info {
+	border-top: 3px solid #9C2A00;
+}
+
+.create-account {
+	float: left;
+}
+
+#bbpress-forums div.bbp-search-form {
+	float: none;
+	margin-bottom: 35px;
+}
+
+#bbpress-forums #bbp-search-form #bbp_search {
+	display: inline-block;
+	width: 83%;
+	padding: 15px 10px;
+	font-size: 16px;
+	border: 2px solid #DDDDDD;
+}
+
+#bbp_search_submit {
+	font-size: 16px;
+	margin-left: 10px;
+	padding: 15px 38px;
+	color: #FFFFFF;
+	background: #228B9B;
+	box-shadow: none;
+	border-radius: 5px;
+	text-shadow: none;
+}
+
+#bbp-search-form input:focus {
+	border-color: #228B9B !important;
+}
+
+.bbp-breadcrumb {
+	display: none;
+}
+
+.themegrill-forum-intro {
+	margin-bottom: 20px;
+}
+
+p.themegrill-forum-intro {
+	border-radius: 4px;
+	padding: 10px 20px;
+	background: none repeat scroll 0 0 #D9EDF7;
+	border: 1px solid #BCE8F1;
+}
+
+.themegrill-forum-title {
+	padding-top: 20px;
+}
+
+.themegrill-forum-title h1 {
+	padding-bottom: 0;
+}
+
+#bbpress-forums div.bbp-search-form {
+	float: none;
+}
+
+.origin-widget-call-to-action {
+	padding: 10px 15px !important;
+}
+
+div.sharedaddy div.sd-block {
+	border-top: medium none;
+	padding: 0 0 15px;
+}
+
+div.sharedaddy .sd-content {
+	width: 32%;
+	margin: 0 auto;
+}
+
+#pg-396-6 .panel-grid-cell,#pg-427-7 .panel-grid-cell, #pg-4902-4 .panel-grid-cell, #pg-7393-6 .panel-grid-cell {
+	padding: 0;
+}
+
+.gpp-sc-pricing-table .gpp-sc-pricing-content ul li {
+	font-size: 18px;
+}
+
+.gpp-sc-button {
+	border-radius: 3px;
+	font-size: 20px;
+	padding: 12px 50px;
+}
+
+.subscription-price {
+	display: none;
+}
+
+.woo-notice {
+	background-color: #D9EDF7;
+	border-radius: 4px;
+	color: #31708F;
+	margin: 10px 0;
+	padding: 15px 15px 1px;
+}
+
+.woo-notice p {
+	font-size: 15px;
+}
+
+#single-theme-image img {
+	float: right;
+	height: 305px;
+}
+
+.ui-accordion-content > ul {
+	list-style: disc outside none;
+	margin-left: 10px;
+}
+
+.gpp-sc-accordion h3.gpp-sc-accordion-trigger {
+	padding: 8px;
+}
+
+/* Make sure embeds and iframes fit their containers */
+embed,
+iframe,
+object {
+	max-width: 100%;
+}
+
+#main .panel-grid .textwidget img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#main .panel-grid .textwidget .widget-title {
+	color: #666666;
+	padding-bottom: 10px;
+}
+
+#main .panel-grid .textwidget p {
+	font-size: 15px;
+	line-height: 24px;
+}
+
+.woocommerce-page table.my_account_orders .order-actions .button.invoice {
+	display: none;
+}
+
+#content .bbp-reply-content p {
+	font-size: 14px;
+	line-height: 2;
+}
+
+#bbpress-forums div.reply {
+	width: 1200px;
+}
+
+.user-id-3, .user-id-2394, .user-id-4496, .user-id-5160, .user-id-4677, .user-id-10156, .user-id-14820, .user-id-16812, .user-id-20403, .user-id-20491, .user-id-25342, .user-id-17314 {
+	background-image: url("https://themegrill.com/wp-content/themes/themegrill/images/themegrill-support-team.png");
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+/* Contact Page */
+.page-id-75 .entry-title {
+	display: none;
+}
+
+#main .panel-grid .textwidget .wpcf7 p {
+	text-align: left;
+}
+
+/* FAQ Page */
+.page-id-46517 #main .widget-title {
+	line-height: 1.5;
+	padding-bottom: 10px;
+}
+
+/* Pricing Page */
+.page-template-plan-php #main .panel-grid .widget_text,
+.page-template-pricing #main .panel-grid .widget_text {
+	text-align: left;
+}
+
+.woo-notice {
+	display: none;
+}
+
+/* Support */
+.page-id-54523 .entry-title {
+	display: none;
+}
+
+.support-button-wrap {
+	margin-top: 25px;
+}
+
+.support-button-wrap a {
+	display: inline-block;
+}
+
+.widget_themes_highlighter {
+	margin-bottom: 0;
+}
+
+#themegrill_testimonial_widget-2 {
+	margin-bottom: 40px;
+}
+
+#subscription-toggle {
+	display: none;
+}
+
+/* unsubscribe */
+.entry-content ul,
+.page-child #content ul,
+.entry-content ol,
+.page-child #content ol {
+	list-style: outside none disc;
+	margin-bottom: 30px;
+	padding: 0 0 0 35px;
+}
+
+.entry-content li,
+.page-child #content li {
+	line-height: 1.8;
+}
+
+.page-id-2908 i {
+	margin-right: 10px;
+}
+
+.subscription-actions a.button.cancel {
+	display: none;
+}
+
+/* About Page */
+.member-image {
+	width: 100%;
+	text-align: center;
+	padding-bottom: 10px;
+}
+
+.member-image h3 {
+	padding-bottom: 0;
+}
+
+.member-image img {
+	margin-bottom: 10px;
+	border-radius: 2px;
+	max-height: 298px;
+}
+
+.member-details {
+	text-align: center;
+}
+
+.member-details p {
+}
+
+.member-details i {
+	font-size: 25px;
+	line-height: 2;
+	padding-right: 15px;
+}
+
+.page-id-1189517 #content {
+	text-align: center;
+}
+
+/*refund box */
+.gpp-sc-box {
+	padding: 2% 5%;
+}
+
+.woocommerce-account label[for="tab3"],
+.woocommerce-account label[for="tab4"],
+.woocommerce-account #tab-content3, 
+.woocommerce-account #tab-content4 {
+	display: none;
+}
+
+.recurring-totals, .recurring-total {
+	display: none;
+}
+
+/*Hiding cancel button in view subscription page */
+a.button.cancel {
+	display: none;
+}
+
+/*.post-type-archive-plugins .tg-one-half:nth-child(5) {
+	display: none;
+}*/
+.postid-1222583 p.price {
+	display: none;
+}
+
+.bundle_button {
+	margin-top: 30px;
+}
+
+.bundle_table_item .product-total {
+	display: none;
+}
+
+.woocommerce table.shop_table {
+	border-collapse: collapse;
+}
+
+.woocommerce table.shop_table th {
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.shop_table.cart .product-price,
+.shop_table.cart .product-subtotal {
+	display: none;
+}
+
+.woocommerce-checkout .woocommerce-message {
+	display: none;
+}
+
+.post-type-archive-plugins .pro-ribbon {
+	right: 42px;
+	top: -1px;
+}
+
+/* New Theme */
+.postid-1244522 .page-header,
+.postid-1245109 .page-header,
+.postid-1245120 .page-header,
+.postid-1249524 .page-header, 
+.postid-1249348 .page-header,
+.postid-1249971 .page-header, 
+.postid-1250359 .page-header,
+.postid-1250770 .page-header,
+.postid-1250996 .page-header,
+.postid-1251195 .page-header,
+.postid-1253000 .page-header, 
+.postid-1253981 .page-header,
+.postid-1260164 .page-header,
+.postid-1260587 .page-header,
+.postid-1260366 .page-header,
+.postid-1261464 .page-header {
+	background: none;
+	border-bottom: 1px solid #f2f2f2;
+	box-shadow: 0 0 30px rgba(0,0,0,0.05) inset;
+}
+
+.woocommerce-MyAccount-navigation-link--my-api-downloads, .woocommerce-MyAccount-navigation-link--subscriptions {
+	display: none;
+}
+
+.woocommerce-view-order .shop_table.order_details tfoot tr:first-child {
+	display: none;
+}
+
+.admin-bar .top-notification {
+	display: none;
+}
+
+/* Checkout Page */
+#billing_email_field {
+	float: right;
+}
+
+#billing_postcode_field {
+	float: left;
+}
+
+.zopim {
+	display: none;
+}
+
+.woocommerce-checkout .zopim {
+	display: block;
+}
+
+/* Order Again button removed which was causing issue of single unlimited plan purchase */
+.woocommerce-account .order-again {
+	display: none;
+}
+
+/* Coupon code test highlighting */
+.showcoupon {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+/* Demo file page */
+.demo-box {
+	box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+	padding: 20px;
+}
+.bbpress #primary {
+    width: 75%;
+}
+.bbpress #secondary {
+    width: 22%;
+    margin-top: 60px;
+}
+#bbpress-forums div.reply {
+    width: auto;
+}
+
+.vd-button {
+    background-color: #24b37e;
+    border: 1px solid #24b37e;
+    border-radius: 2px;
+    color: #ffffff !important;
+    display: inline-block;
+    margin-top: 15px;
+    padding: 2px 10px;
+    text-decoration: none !important;
+}
+.vd-button:hover {
+	color: #24b37e !important;
+	background-color: #ffffff;
+}un58m      X–à>X–à?=gÌ†ZxÙ   .    :https://themegrill.com/?custom-css=b20a11f5d2 security-info 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 request-method GET response-head HTTP/2.0 200 OK
+Server: nginx
+Date: Sun, 05 Feb 2017 09:20:15 GMT
+Content-Type: text/css;charset=UTF-8
+X-Powered-By: PHP/5.6.30
+x-cache-enabled: True
+Expires: Mon, 05 Feb 2018 09:07:54 GMT
+host-header: 192fc2e7e50945beb8231a492d6a8024
+x-proxy-cache: HIT
+X-Firefox-Spdy: h2
+ uncompressed-len 0    

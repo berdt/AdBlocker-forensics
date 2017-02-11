@@ -19,14 +19,16 @@ if Control:
 
 elif AdBlock:
     mode = 'AdBlock'
-    print('Getting AdBlock sample, install the adblocker, sleeping for 120')
+    print('Getting Adblock Plus, install the adblocker, sleeping for 120')
     ie.get('https://adblockplus.org/nl/')
     sleep(120)
     timestamps = open('IE_AdBlockPlus_Sample.txt', 'w')
 
 elif Private:
     mode = 'Private'
-
+    print('Getting Adblock Plus Private sample, install the adblocker, sleeping for 120')
+    ie.get('https://adblockplus.org/nl/')
+    sleep(120)
     print('Getting incognito AdBlock sample')
     timestamps = open('IE_Private_Sample.txt', 'w')
 
@@ -36,6 +38,7 @@ for site in main.top100sites:
     timestamps.write(f'{site} {str(time())}\n')
     sleep(5)
 
+timestamps.close()
 print('done make a snapshot etc')
 
 

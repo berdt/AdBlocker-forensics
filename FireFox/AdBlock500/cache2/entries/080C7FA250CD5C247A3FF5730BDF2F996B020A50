@@ -1,0 +1,499 @@
+(function () {
+  "use-strict";
+
+  window.WCPopupModal = function () {
+    // Create global element references
+    this.closeButton = null;
+    this.modal = null;
+    this.overlay = null;
+    this.wrapper = null;
+    this.submitButton = null;
+    this.extraCss = null;
+    // Determine proper browser prefix
+    this.transitionEnd = transitionSelect();
+    this.isMobile = /iphone|ipod|ipad|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec/i.test(navigator.userAgent.toLowerCase());
+
+    // Define option defaults
+    var defaults = {
+      autoOpen: false,
+      className: 'wcpopupmodal-custom',
+      closeButton: true,
+      content: "",
+      overlay: true,
+      timerSeconds: false,
+      triggerButton: false,
+      cookie: false,
+      confirmationMessage: '<h2>Thanks for subscribing!</h2>',
+      baseUrl: 'https://secure.whatcounts.com'
+    }
+
+
+    // Create options by extending defaults with the passed in arugments
+    if (arguments[0] && typeof arguments[0] === "object") {
+      this.options = extendDefaults(defaults, arguments[0]);
+    }
+    // auto open
+    if (this.options.autoOpen === true) {
+      if (this.options.cookie) {
+        var cookie = readCookie('whatCountsModalPopup');
+        if (cookie === "valid") {
+          return;
+        } else {
+          this.open();
+        }
+      } else {
+        this.open();
+      }
+    }
+    //  seconds (#s) will be true
+    if (this.options.timerSeconds) {
+      var milliseconds = this.options.timerSeconds * 1000;
+      if (this.options.cookie) {
+        var cookie = readCookie('whatCountsModalPopup');
+        if (cookie === "valid") {
+          return;
+        } else {
+          // b/c we're using a setTimeout callback function we need to hard bind the context
+          setTimeout(this.open.bind(this), milliseconds);
+        }
+      } else {
+        setTimeout(this.open.bind(this), milliseconds);
+      }
+    }
+
+    if (this.options.triggerButton) {
+      var buttonId = this.options.triggerButton;
+      // ref to modal object
+      var _ = this;
+      document.getElementById(buttonId).addEventListener("click", function () {
+        _.open();
+      });
+    }
+
+    loadCss();
+    this.extraCss = createCss(this.options);
+    addExtraCss(document, this.extraCss);
+
+
+  }
+
+  // Public Methods
+
+  WCPopupModal.prototype.close = function () {
+    var _ = this;
+
+    this.modal.className = this.modal.className.replace(" wcpopupmodal-open", "");
+    this.overlay.className = this.overlay.className.replace(" wcpopupmodal-open", "");
+    // remove all the stuff after close transition is over
+    this.modal.addEventListener(this.transitionEnd, function () {
+      _.modal.parentNode.removeChild(_.modal);
+    });
+    this.overlay.addEventListener(this.transitionEnd, function () {
+      if (_.overlay.parentNode) _.overlay.parentNode.removeChild(_.overlay);
+    });
+    // if ('WebkitAppearance' in document.documentElement.style && !this.isMobile) { 
+    //   // don't run on not webkit browsers
+    //   window.removeEventListener('resize', unBlurResize);
+    // }
+    
+  }
+
+  WCPopupModal.prototype.open = function () {
+    buildOut.call(this);
+    initializeEvents.call(this);
+    popuplateDateOfSubmission();
+    window.getComputedStyle(this.modal).height;
+    this.modal.className = this.modal.className +
+      (this.modal.offsetHeight > window.innerHeight ?
+        " wcpopupmodal-open wcpopupmodal-anchored" : " wcpopupmodal-open");
+    this.overlay.className = this.overlay.className + " wcpopupmodal-open";
+    this.wrapper.className = this.wrapper.className + " wcpopupmodal-wrapper-open"; 
+
+    // if ('WebkitAppearance' in document.documentElement.style && !this.isMobile) {
+    //   this.modal.addEventListener(this.transitionEnd,  runUnblurCode);
+    // }
+    // set cookie
+    if (this.options.cookie) {
+      createCookie('whatCountsModalPopup', 'valid', this.options.cookie);
+    }
+  }
+  WCPopupModal.prototype.submit = function (event) {
+    var dataToSend;
+    var form = document.getElementById('wcpopupmodal-form');
+    var hptCap = document.getElementById('dxzuiouwFormmodal');
+    if (hptCap && hptCap.value) {
+      return;
+    }
+    event.preventDefault();
+    clearErrorMessages();
+
+    if (validateForm(form)) {
+      // prevent default here to does validation
+      var serializedFormData = serialize(form);
+      if (this.options.multi) {
+        dataToSend = 'cmd=subscribe&multiadd=1&' + serializedFormData;
+      } else {
+        dataToSend = 'cmd=subscribe&' + serializedFormData;
+      }
+
+      ajaxData(dataToSend, this.options.baseUrl);
+      displayThankYouMessage(this.options.confirmationMessage);
+      setTimeout(this.close.bind(this), 4000);
+    }
+  }
+  // Private Methods
+  function buildOut() {
+
+        var content, contentHolder, docFrag;
+
+    /*
+     * If content is an HTML string, append the HTML string.
+     * If content is a domNode, append its content.
+     */
+    if (typeof this.options.content === "string") {
+      content = this.options.content;
+    } else {
+      content = this.options.content.innerHTML;
+    }
+
+    // Create a DocumentFragment to build with
+    docFrag = document.createDocumentFragment();
+
+    // Create modal element
+    this.modal = document.createElement("div");
+    this.modal.className = "wcpopupmodal-modal " + this.options.className;
+    // give it an ID
+    this.modal.setAttribute("id", "wcpopupmodal");
+
+    // If closeButton option is true, add a close button
+    if (this.options.closeButton === true) {
+      this.closeButton = document.createElement("button");
+      this.closeButton.className = "wcpopupmodal-close";
+      this.closeButton.innerHTML = "&times;";
+      this.modal.appendChild(this.closeButton);
+    }
+    // If overlay is true, add one
+    if (this.options.overlay === true) {
+      this.overlay = document.createElement("div");
+      this.overlay.className = "wcpopupmodal-overlay " + this.options.className;
+      docFrag.appendChild(this.overlay);
+    }
+    // lets wrap to center it
+    this.wrapper = document.createElement('div');
+    this.wrapper.className = 'wcpopupmodal-wrapper ' + this.options.className;
+    docFrag.appendChild(this.wrapper);
+
+    // Create content area and append to modal
+    contentHolder = document.createElement("div");
+    contentHolder.className = "wcpopupmodal-content";
+    contentHolder.innerHTML = content;
+    this.modal.appendChild(contentHolder);
+    // Append modal to DocumentFragment
+
+    this.wrapper.appendChild(this.modal);
+
+    // Append DocumentFragment to body
+    document.body.appendChild(docFrag);
+
+  }
+
+  function extendDefaults(source, properties) {
+    var property;
+    for (property in properties) {
+      if (properties.hasOwnProperty(property)) {
+        source[property] = properties[property];
+      }
+    }
+    return source;
+  }
+
+  function initializeEvents() {
+
+    // binds close func to close button and overlay
+    if (this.closeButton) {
+      this.closeButton.addEventListener('click', this.close.bind(this));
+    }
+
+    if (this.overlay) {
+      this.overlay.addEventListener('click', this.close.bind(this));
+    }
+    //bind submit handler
+    //this.submitButton.addEventListener('click', this.submit.bind(this));
+    document.getElementById('wcpopupmodal-button').addEventListener('click', this.submit.bind(this));
+
+  }
+  // browser hackery!!
+  function transitionSelect() {
+    var el = document.createElement("div");
+    if (el.style.WebkitTransition) return "webkitTransitionEnd";
+    if (el.style.OTransition) return "oTransitionEnd";
+    return 'transitionend';
+  }
+  function detectmob() {
+   if(window.innerWidth <= 700 && window.innerHeight <= 600) {
+     return true;
+   } else {
+     return false;
+   }
+}
+
+  function serialize(form) {
+    var field, s = [];
+    if (typeof form === 'object' && form.nodeName === "FORM") {
+      var len = form.elements.length;
+      for (var i = 0; i < len; i++) {
+        field = form.elements[i];
+        if (field.name && !field.disabled && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+          if (field.type === 'select-multiple') {
+            for (j = form.elements[i].options.length - 1; j >= 0; j--) {
+              if (field.options[j].selected)
+                s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[j].value);
+            }
+          } else if (field.type === 'text') {
+
+            s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value);
+
+          } else if (field.type === 'checkbox') {
+            if (field.checked === true) {
+              // for multi list forms
+              // if the name has slid then do slid=<slidnumber> b/c that's
+              // the correct format. for mutli add the name attributes will be slid_1 (and so on)
+              var value = field.value ? encodeURIComponent(field.value) : encodeURIComponent("on");
+              s[s.length] = field.name + "=" + value;
+            } else {
+              s[s.length] = encodeURIComponent(field.name) + "=off";
+            }
+          } else if (field.type === 'radio') {
+            if (field.checked) {
+              s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value)
+            }
+          } else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+            s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value);
+          }
+        }
+      }
+    }
+    return s.join('&').replace(/%20/g, '+');;
+  }
+  function ajaxData(data, baseUrl) {
+    var destinationDomain = baseUrl + "/bin/listctrl";
+    // ie hack
+    var request;
+    if (window.XMLHttpRequest) {
+      request = new XMLHttpRequest();
+    } else {
+      request = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    request.open('POST', destinationDomain, true);
+    request.setRequestHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    request.send(data);
+  }
+  // Cookie stuff
+  function createCookie(name, value, days) {
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      var expires = "; expires=" + date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name + "=" + value + expires + "; path=/";
+  }
+
+  function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
+
+  function eraseCookie(name) {
+    createCookie(name, "", -1);
+  }
+
+  function loadCss() {
+    var elem = document.createElement('link');
+    var url = 'https://d6qd4sq6tn74w.cloudfront.net/externalPopupStylesV2.css';
+    elem.setAttribute('rel', 'stylesheet')
+    elem.setAttribute('type', 'text/css')
+    elem.setAttribute('href', url)
+    document.getElementsByTagName("head")[0].appendChild(elem);
+  }
+  function displayThankYouMessage(message) {
+    document.getElementsByClassName('wcpopupmodal-content')[0].innerHTML = '<div class="center-thanks-message"><h1>' + message + '</h1></div>';
+  }
+
+  function addExtraCss(doc, cssText) {
+    var styleEl = doc.createElement("style");
+    doc.getElementsByTagName("head")[0].appendChild(styleEl);
+    if (styleEl.styleSheet) {
+      if (!styleEl.styleSheet.disabled) {
+        styleEl.styleSheet.cssText = cssText;
+      }
+    } else {
+      try {
+        styleEl.innerHTML = cssText;
+      } catch (ignore) {
+        styleEl.innerText = cssText;
+      }
+    }
+  }
+  function createCss(params) {
+    var cssString = '';
+    if (params.formBackgroundColor) {
+      cssString += "div#wcpopupmodal.wcpopupmodal-modal{background-color:" + params.formBackgroundColor + ";}";
+    }
+    if (params.formFont) {
+      cssString += "form#wcpopupmodal-form *, div.center-thanks-message * {font-family:" + params.formFont + ";}";
+    }
+    if (params.textColor) {
+      cssString += "form#wcpopupmodal-form *:not(a), div.center-thanks-message * {color:" + params.textColor + ";}";
+    }
+    return cssString
+  }
+  // form validation stuff (thx to safari)
+  function validateForm(form) {
+    var isFormValid = true;
+    var formErrsArr = [];
+    var reqCheckboxGroups = document.querySelectorAll('.required-checkbox-group');
+    var reqRadioGroups = document.querySelectorAll('.required-radio-group');
+    var reqText = document.querySelectorAll('.required-text-wc');
+    var emailInput = document.getElementById('wc-modal-req-email');
+    if ((emailInput && !emailInput.value) || (emailInput && !isEmailValid(emailInput.value))) {
+      insertAfter(createErrorNode('Please enter a valid email address'), emailInput);
+      formErrsArr.push('err');
+
+    }
+
+    if (reqText.length) {
+          Array.prototype.forEach.call(reqText, function (input) {
+            if (!input.value) {
+              insertAfter(createErrorNode('Please fill out this field'), input);
+              formErrsArr.push('err')
+            }
+          });
+      
+      // reqText.forEach(function (input) {
+      //   if (!input.value) {
+      //     insertAfter(createErrorNode('Please fill out this field'), input);
+      //     // isFormValid = false;
+      //     formErrsArr.push('err')
+      //   }
+      // })
+    }
+    if (reqCheckboxGroups.length) {
+      Array.prototype.forEach.call(reqCheckboxGroups, function (group) {
+        var validGroup = reqGroupValidate('checkbox', group);
+        if (!validGroup) {
+          group.appendChild(createErrorNode('Please select at least one option'))
+          formErrsArr.push('err')
+        }
+      })
+      // reqCheckboxGroups.forEach(function (group) {
+      //   var validGroup = reqGroupValidate('checkbox', group);
+      //   if (!validGroup) {
+      //     group.appendChild(createErrorNode('Please select at least one option'))
+      //     formErrsArr.push('err')
+      //   }
+      // })
+    }
+    if (reqRadioGroups.length) {
+      Array.prototype.forEach.call(reqRadioGroups, function (group) {
+        var validGroup = reqGroupValidate('radio', group);
+        if (!validGroup) {
+          group.appendChild(createErrorNode('Please select at least one option'))
+          formErrsArr.push('err')
+        }
+      })
+      // reqRadioGroups.forEach(function (group) {
+      //   var validGroup = reqGroupValidate('radio', group);
+      //   if (!validGroup) {
+      //     group.appendChild(createErrorNode('Please select at least one option'))
+      //     formErrsArr.push('err')
+      //   }
+      // })
+    }
+    return formErrsArr.length ? false : true;
+  }
+  function reqGroupValidate(inputType, group) {
+    var validity = true;
+    var childNodes = group.querySelectorAll('input[type=' + inputType + ']');
+    var checkedInputs = [];
+    Array.prototype.forEach.call(childNodes, function (input) {
+      if (input.checked) {
+        checkedInputs.push(input)
+      }
+    })
+    // childNodes.forEach(function (input) {
+    //   if (input.checked) {
+    //     checkedInputs.push(input)
+    //   }
+    // })
+    if (checkedInputs.length === 0) {
+      validity = false;
+    }
+
+    return validity;
+  }
+
+
+
+  function clearErrorMessages() {
+    var messages = document.querySelectorAll('.wc-validation-message');
+    if (messages.length) {
+      Array.prototype.forEach.call(messages, function (msg) {
+        msg.parentNode.removeChild(msg)
+      }); 
+      // messages.forEach(function (msg) {
+      //   msg.parentNode.removeChild(msg)
+      // })
+    }
+  }
+
+  function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  }
+
+  function createErrorNode(message) {
+    var errorMessage = document.createElement('div');
+    errorMessage.className = 'wc-validation-message';
+    errorMessage.innerHTML = '<p>' + message + '</p>';
+    return errorMessage;
+  }
+  function isEmailValid(email) {
+    var filter = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+    return filter.test(email);
+  }
+
+
+
+  function popuplateDateOfSubmission() {
+    var elements = document.querySelectorAll('.wc-popupmodal-current-date');
+    if(elements.length) {
+      var date = new Date();
+      var month = date.getMonth() + 1;
+      var currentDate =  month + '/' + date.getDate() + '/' + date.getFullYear();
+      Array.prototype.forEach.call(elements, function(item) {
+        item.value = currentDate;
+      }); 
+      
+    }
+  }
+  
+} ());
+(function(){var configObject = {"content":"<form id=\"wcpopupmodal-form\" novalidate autocomplete=\"on\"><div class='fb_formElemWrap'> <h1 class='html-for-popup' style='color: rgb(245, 133, 70); text-align: left;'>Join our Mailing List</h1> </div><div class='fb_formElemWrap'> <p class='html-for-popup wc-editor-result'><h4 id='_abcaa-sub-title' style='margin-top: 0px; margin-bottom: 24px; padding: 0px; color: rgb(51, 51, 51); font-family: proxima-nova, sans-serif; font-size: 18px; letter-spacing: normal;'>Sign up to receive updates and special promotions.</h4></p> </div><div class='fb_formElemWrap html-for-popup'> <div class='col col_3 labelCol width100'> <label for='first' class='html-for-popup header-label '> First Name </label> </div> <div class='col col_7 inputCol width100'> <input name='first' type='text' class='html-for-popup required-text-wc' ='!data.defaultEmail' ='' -max='}' -step='}' placeholder=''> <br> </div> <div class='clearBoth'></div> </div><div class='fb_formElemWrap html-for-popup'> <div class='col col_3 labelCol width100'> <label for='email' class='html-for-popup header-label '> Email </label> </div> <div class='col col_7 inputCol width100'> <input name='email' placeholder='' id='wc-modal-req-email' ='data.defaultEmail' type='email' class=''> <br> </div> <div class='clearBoth'></div> </div><div class='fb_formElemWrap html-for-popup'> <input type='text' class='dxzuiouwForm' value='' id='dxzuiouwFormmodal'> <div class='clearBoth'></div> </div><div class='fb_formElemWrap html-for-popup'> <input class='html-for-popup' name='custom_lead_gen_source' type='hidden' value='footer signup'> <div class='clearBoth'></div> </div><div class='fb_formElemWrap html-for-popup'> <input class='html-for-popup' name='custom_zf_country' type='hidden' value='eu'> <div class='clearBoth'></div> </div><div class='fb_formElemWrap' ='' style='text-align: right;'> <button id='wcpopupmodal-button' class='wcpopupmodal-button btn btn-primary html-for-popup' style='background-color: rgb(245, 133, 70); color: rgb(255, 255, 255); font-size: 16px;'> Subscribe </button> </div><input type=\"hidden\" class=\"html-for-popup\" name=\"slid\" value=\"6B5869DC547D3D4639D7C039A58EB911\" /></form>","formBackgroundColor":"#FFFFFF","formFont":"\"Helvetica Neue\",Helvetica,Arial,sans-serif","triggerButton":"USEmailSignup","baseUrl":"http://whatcounts.com","className":"none","confirmationMessage":"Thanks for subscribing!","textColor":"#51646b"};window.onload = function(){var wcPopup = new WCPopupModal(configObject)}}());.2ÛVÅä      Xñ·íXñ·í=gÕrXô˛ÿ   u    :https://whatcounts_saas.s3.amazonaws.com/RLM-4df8f4cd-ed9f-4f6f-8dd3-7cc5901cdc41/custom_forms/EU_CMS_Form_3975_7.js security-info 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 request-method GET response-head HTTP/1.1 200 OK
+x-amz-id-2: ztF0DMJOWOQn/Ep0yV3aMUTV2ucs87gXaP7jHGFz0YPzpo7Bo3SA0ANXRBKw6Poe
+x-amz-request-id: CCD9D2B46292240A
+Date: Sun, 05 Feb 2017 09:25:55 GMT
+Last-Modified: Thu, 12 Jan 2017 18:28:46 GMT
+Etag: "730f9ca10e9d09d21ecb4a0e8ff9044f"
+x-amz-meta-md5-hash: 730f9ca10e9d09d21ecb4a0e8ff9044f
+Accept-Ranges: bytes
+Content-Type: application/x-javascript
+Content-Length: 19216
+Server: AmazonS3
+ uncompressed-len 0   K

@@ -1,0 +1,532 @@
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td {
+	margin: 0; padding: 0;
+}
+
+@font-face {
+  font-family: 'Cabin';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Cabin'), url('/static/fonts/Cabin-Regular.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Cabin';
+  font-style: normal;
+  font-weight: bold;
+  src: local('Cabin'), url('/static/fonts/Cabin-SemiBold.otf') format('opentype');
+}
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('OpenSans'), url('/static/fonts/OpenSans-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  font-weight: bold;
+  src: local('OpenSans'), url('/static/fonts/OpenSans-Bold.ttf') format('truetype');
+}
+
+html, body {
+	font-family: OpenSans, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #5f5f5f;
+	line-height: 1.5;
+	background-color: #2C2F33;
+}
+.page_width {
+	margin: 0 auto;
+	width: 960px;
+	padding: 0 10px;
+}
+.one_row:after {
+   content: " ";
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+.one_half {
+	width: 460px;
+	margin-right: 40px;
+	float: left;
+}
+.one_third {
+	width: 290px;
+	margin-right: 45px;
+	float: left;
+}
+.two_thirds {
+	width: 625px;
+	margin-right: 45px;
+	float: left;
+}
+.one_quarter {
+	width: 210px;
+	margin-right: 40px;
+	float: left;
+}
+.three_quarters {
+	width: 710px;
+	margin-right: 40px;
+	float: left;
+}
+.one_half:last-child, .one_third:last-child, .two_thirds:last-child, .one_quarter:last-child, .three_quarters:last-child {
+	margin-right: 0;
+}
+#header {
+	background: url('/static/images/concord/bg_header.jpg') no-repeat scroll center bottom #0a2f55;
+	background-size: 100%;
+	height: 100px;
+	position: relative;
+}
+#header .texture {
+	height: 100px;
+    background: url("/static/images/tex_crosshatch.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#header h1 {
+    margin: 0;
+    padding: 0;
+    height: 80px;
+    top: 12px;
+    overflow: hidden;
+    position: relative;
+    text-align: left;
+}
+#header h1 a {
+    background: url("/static/images/eweb_logo.png") no-repeat scroll left top transparent;
+    height: 0;
+    padding-top: 80px;
+    position: absolute;
+    width: 216px;
+	text-decoration: none;
+}
+
+#header .portal {
+	position: absolute; 
+	right: 0; 
+	top: 0;
+	background-color: rgba(88, 200, 48 ,0.15);
+	padding: 8px 5px 5px 5px;
+	border-radius: 0 0 8px 8px;
+	
+}
+#header .portal a {
+	color: #58c830;
+	margin: 0 8px;
+	padding: 3px;
+	font-size: 13px;
+	text-transform: uppercase;
+	text-decoration: none;
+	background: transparent url('/static/images/ico_customer.png') no-repeat top left;
+	padding-left: 20px;
+
+}
+
+#header .portal a:hover {
+	color: #6af23a;
+}
+
+#nav {
+	float: right;
+	position: relative;
+	height: 34px;
+	margin-top: -18px;
+}
+#nav a {
+	padding: 2px 18px;
+	color: #d3d3d3;
+	font-family: Cabin, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+#nav a:hover {
+	color: #fff;
+}
+#magic_nav { 
+	list-style: none; 
+}
+#magic_nav li { 
+	display: inline-block;	
+}
+#magic_nav a { 
+	float: left;
+}
+#magic_nav a:hover { 
+	color: #fff; 
+}
+#magic_nav .current_magic_item a {
+	color: #fff;
+}
+#magic-line { 
+	position: absolute;
+	bottom: 3px; 
+	left: 0; 
+	width: 100px; 
+	height: 4px; 
+	background: #b73a24;
+}
+
+#splash {
+	padding: 24px 0;
+	background: rgb(232,244,255);
+}
+#splash h2 {
+	color: #3a3a3a;
+	font-size: 30px;
+    margin: 0;
+}
+#splash h3 {
+	color: #666;
+	font-size: 16px;
+	font-weight: normal;
+    padding: 0 0 10px;
+    margin: 0;
+}
+
+#page {
+	background-color: #fff;
+}
+
+#content {
+}
+#content_i {
+	padding: 20px 0 80px;
+}
+
+#footer {
+	clear: both;
+	font-family: Cabin, Arial, sans-serif;
+	font-size: 12px;
+    background: url("/static/images/concord/bg_footer.jpg") no-repeat scroll center top #0D4254;
+   	background-size: 100%;
+   	border-top: 5px solid #373b3f;
+   	
+}
+#footer_i {
+	padding: 25px 30px 80px;
+	color: #ccc;
+    background: url("/static/images/tex_crosshatch.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+#footer .footer_copyright {
+	float: left;
+}
+#footer .footer_links {
+	float: right;
+	border-right: 1px solid rgba(0, 0, 0, .2);
+}
+#footer .footer_links a {
+	display: block;
+	text-transform: uppercase;
+	padding: 5px 25px;
+	color: #4790b6
+}
+#footer .footer_links.first {
+	border-left: 1px solid rgba(0, 0, 0, .2);
+}
+
+br {
+	clear: both;
+}
+br.space {
+	clear: both;
+	margin: 25px 0;
+}
+hr {
+	clear: both;
+	border: 0;
+	height: 1px;
+	background: #333;
+	background-image: -webkit-linear-gradient(left, #ddd, #aaa, #ddd);
+	background-image: -moz-linear-gradient(left, #ddd, #aaa, #ddd);
+	background-image: -ms-linear-gradient(left, #ddd, #aaa, #ddd);
+	background-image: -o-linear-gradient(left, #ddd, #aaa, #ddd);
+	margin: 50px 0;
+}
+hr.narrow {
+	margin: 25px 0;
+}
+a {
+	color: #2EA3F2;
+	text-decoration: none;
+	transition: .5s;
+}
+a:hover {
+	color: #53b1d4;
+}
+
+h2 {
+	color: #333;
+	margin: 0 0 12px;
+	font-weight: normal;
+	font-size: 30px;
+}
+h3 {
+	color: #333;
+	font-size: 28px;
+	font-weight: normal;
+	margin-bottom: 18px;
+}
+h4 {
+	color: #333;
+	font-size: 20px;
+	font-weight: normal;
+	margin-bottom: 4px;
+}
+
+textarea:focus::-webkit-input-placeholder { color:transparent; }
+textarea:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+textarea:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+textarea:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+input:focus::-webkit-input-placeholder { color:transparent; }
+input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+.blurb {
+	padding-left: 50px;
+	margin-bottom: 25px;
+	background: url(/static/images/ico_mousepointer.gif) top left no-repeat;
+}
+.blurb h4 {
+}
+.blurb ul {
+	 list-style-type: disc;
+	 padding: 4px 0 0 16px;
+	 line-height: 24px;
+}
+
+/* Alerts */
+.alert {
+	position: relative;
+	padding: 20px 50px 20px 80px;
+	margin: 0 0 25px 0;
+	border-radius: 3px;
+}
+.alert .icon {
+	position: absolute;
+	top: 16px;
+	left: 24px;
+	font-size: 36px;
+}
+.alert.green {
+	background-color: rgba(218, 244, 215, 0.8);
+}
+.alert.green .icon {
+	color: #75D863;
+}
+.alert.green p {
+	color: #666;
+	font-size: 110%;
+	margin-bottom: 15px;
+}
+
+/* form validation errors */
+.validation_errors {
+    border-radius: 3px;
+    color: #d44848;
+    padding: 12px 24px;
+    margin: 24px 0;
+    background-color: #fcefef;
+}
+.validation_errors p {
+	margin-bottom: 5px;
+	font-size: 120%
+}
+
+form.nice fieldset {
+	border: none;
+}
+form.nice legend {
+    border-bottom: 1px solid #e5e5e5;
+    color: #333;
+    display: block;
+    margin-bottom: 0.3em;
+    padding: 0.3em 0;
+    width: 100%;
+}
+form.nice label {
+    display: block;
+    font-size: 15px;
+	color: #114e8b;
+	margin: 6px 0;
+}
+form.nice label.for {
+	display: inline;
+	margin-right: 25px;
+	color: #333;
+}
+form.nice input[type="text"], form.nice input[type="submit"], form.nice select, form.nice textarea {
+    margin: 0 0 4px 0;
+    padding: 4px 8px;
+    font-size: 15px;
+    width: 400px;
+    border: 1px solid #b2b0a8;
+    border-radius: 3px;
+    background-color: #FCFAF4;
+}
+form.nice select {
+	width: auto;
+}
+form.nice textarea {
+    height: 200px;
+}
+form.nice input:focus, form.nice textarea:focus {
+    background-color: #fff;
+}
+form.nice input[type="submit"], form.nice button {
+	width: auto;
+	background-color: #0078e7;
+	border-radius: 2px;
+	color: #fff;
+	border: none;
+	padding: 8px 16px;
+	margin: 6px 0;
+}
+
+form.nice input[type="submit"]:hover, form.nice button:hover {
+    border-color: #be3728;
+    background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+    cursor: pointer;
+}
+form.nice button{
+	font-size: 15px;
+}
+form.nice sup {
+    color: #d64125;
+}
+form.nice label.error {
+    color: #ba3f3f;
+}
+form.nice input.error, form.nice textarea.error, form.nice select.error{
+    border-color: #ba3f3f;
+}
+form.nice .small {
+    display: none;
+    height: 0;
+}
+
+form.aligned label {
+	float: left;
+	width: 150px;
+	text-align: right;
+	padding: 4px 8px;
+	margin: 6px 0;
+}
+form.aligned span {
+	display: block;
+	padding: 4px;
+	margin: 6px 0;
+    font-size: 15px;
+	width: 150px;
+	float: left;
+}
+form.aligned input[type="text"], form.aligned select, form.aligned textarea {
+	padding: 4px;
+	margin: 8px 0;
+}
+form.aligned input[type="text"], form.aligned textarea {
+	width: 250px;
+}
+form.aligned input {
+	float: left;
+}
+form.aligned br {
+	clear: both;
+}
+
+/* Use the following css settings when sub menu is used*/
+/*
+#nav {
+	float: right;
+	position: relative;
+	height: 40px;
+	margin-top: -22px;	
+	padding: auto 0;
+}
+
+#nav li {
+	line-height: 40px;
+}
+#nav a {	
+	padding: 2px 18px;
+	color: #d3d3d3;
+	font-family: Cabin, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: normal;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+#nav a:hover {
+	color: #fff;
+}
+
+#nav ul {
+	margin: 0;
+	padding:0;
+	list-style-type:none;
+}
+
+ul#magic_nav {
+	float:left;
+}
+
+ul#magic_nav li {
+	float:left;
+}
+
+ul#magic_nav li:hover{
+	cursor: pointer;
+}
+
+#magic_nav .current_magic_item a {
+	color: white;
+}
+
+#magic_nav li.dropdown {
+	border: 1px solid transparent;
+}                                                                   
+#nav #magic_nav .sub_nav {
+	border-top: 4px solid #B93426;
+	clear: both;
+	z-index: +1;
+	position: fixed;
+	top: 100px;
+	padding: 5px 15px 10px 15px;
+	display: none;
+	 -moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    background-color:#0a2f55;
+}
+
+#nav #magic_nav .sub_nav ul{
+	float: left;
+}
+#nav #magic_nav .sub_nav ul li {
+	clear: both;
+	line-height: 40px;
+	padding: 0 !important;
+	margin-top: 5px;
+}
+
+#nav #magic_nav .sub_nav ul li a{
+	display: inline-block;
+	text-transform: capitalize;
+	color: #FFFFFF;
+	margin: 0;
+	padding: 0 10px;
+}
+
+#nav #magic_nav .sub_nav ul li a:hover{
+	background-color: inherit;
+}*/+=a^÷ƒ      Xñﬁ≥Xñﬁ≥=gÀtXù©“   6    :http://ewebdevelopment.com/static/css/concord.css?v=7 request-method GET response-head HTTP/1.1 200 OK
+Date: Sun, 05 Feb 2017 09:13:39 GMT
+Server: Apache/2.2.3 (CentOS)
+Last-Modified: Thu, 15 Dec 2016 20:31:05 GMT
+Etag: "acc390-26f0-5523b440"
+Accept-Ranges: bytes
+Content-Length: 9968
+Content-Type: text/css
+ uncompressed-len 0   &

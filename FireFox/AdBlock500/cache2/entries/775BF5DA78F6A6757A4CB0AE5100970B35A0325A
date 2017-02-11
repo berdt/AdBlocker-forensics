@@ -1,0 +1,372 @@
+
+/* Use an immediately invoked function to isolate variables */
+(function(){
+  var _mainContentId = "main-content";
+  var _mobileTargetId = "survey-target";
+
+  // Fix for window.location.origin for IE
+  if (!window.location.origin) {
+    window.location.origin = window.location.protocol + "//" +
+      window.location.hostname + (window.location.port ? ':' +
+      window.location.port: '');
+  }
+
+  /* main - Main function for the voc invitation.
+   */
+  function main() {
+    if(VOC.fn.isMobile(navigator.userAgent || navigator.vendor || window.opera)) {
+      var _target = document.getElementById(_mobileTargetId);
+      var targetHTML = _target.innerHTML;
+      var pageurl  = window.location.origin + window.location.pathname;
+      var popurl = "//survey.usa.gov/surveys/291?";
+          popurl = popurl + "stylesheet=https://www.usa.gov/sites/all/themes/usa/css/popup-survey.css&";
+      popurl = popurl + "page_url=" + pageurl;
+      var aTag = "<a href='" + popurl + "' target='_blank'>" + targetHTML + "</a>";
+      _target.innerHTML = aTag;
+    } else {
+      /* Hide the mobile target div */
+      var mobileTarget = document.getElementById(_mobileTargetId);
+      if(mobileTarget)
+        mobileTarget.style.display = 'none';
+      var cookieName = 'survey_invitation_291';
+      var invitationInterval = 90;
+      if(invitationInterval == 0 || readCookie(cookieName) == null || false) {
+        var invite = false;
+          invite = Math.random() < 2.0 / 100
+        if(invite) {
+          if (false) {
+            /* Load the passed stylesheet into the page */
+            var stylesheet = 'https://www.usa.gov/sites/all/themes/usa/css/popup-survey.css';
+            if(stylesheet.length > 0) {
+              var stylesheetLinkNode = document.createElement('link');
+              stylesheetLinkNode.rel = "stylesheet";
+              stylesheetLinkNode.type = "text/css";
+              stylesheetLinkNode.href = stylesheet;
+              document.querySelector('head')
+                .appendChild(stylesheetLinkNode);
+            }
+          }
+
+          loadModal();
+            if(invitationInterval > 0) {
+              createCookie(cookieName, true, invitationInterval);
+            }
+        }
+      }
+    }
+  }
+
+  function createCookie(name,value,days) {
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime()+(days*24*60*60*1000));
+      var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+  }
+
+  function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+
+
+  /*
+  ============================================
+  License for Application
+  ============================================
+  This license is governed by United States copyright law, and with respect to matters
+  of tort, contract, and other causes of action it is governed by North Carolina law,
+  without regard to North Carolina choice of law provisions. The forum for any dispute
+  resolution shall be in Wake County, North Carolina.
+  Redistribution and use in source and binary forms, with or without modification, are
+  permitted provided that the following conditions are met:
+  1. Redistributions of source code must retain the above copyright notice, this list
+  of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright notice, this
+  list of conditions and the following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+  3. The name of the author may not be used to endorse or promote products derived from
+  this software without specific prior written permission.
+  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+
+  // jQuery formatted selector to search for focusable items
+  var focusableElementsString = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]:not([tabindex='-1'])";
+
+  // store the item that has focus before opening the modal window
+  var focusedElementBeforeModal;
+
+  function loadModal() {
+    showInvitation();
+
+    /* Add class level event bindings */
+    var modal = document.getElementById("vocModal");
+    var selector = ".vocCancelButton, .vocModalCloseButton, .cancel, " +
+      "#vocCancelButton, #vocModalCloseButton, #cancel";
+    VOC.fn.on(modal, selector, "click", function(e) {
+      hideModal();
+    });
+
+    VOC.fn.on(modal, "#vocModalCloseButton", "keydown", function(e) {
+      trapSpaceKey(this, e, hideModal);
+    });
+
+    /* Add Id event bindings */
+    VOC.fn.addEventListener(document.getElementById('startModal'), 'click', function(e) {
+      showModal(document.getElementById('vocModal'));
+    });
+    VOC.fn.addEventListener(document.getElementById('vocEnter'), 'click', function(e) {
+      enterButtonModal();
+    });
+    VOC.fn.addEventListener(document.getElementById('vocModal'), 'keydown', function(e) {
+      trapTabKey(this, e);
+    });
+    VOC.fn.addEventListener(document.querySelector('body'), 'keydown', function(e) {
+      trapEscapeKey(this, e);
+    });
+  }
+
+  function trapSpaceKey(_obj, evt, f) {
+    // if space key pressed
+    if (evt.which == 32) {
+        // fire the user passed event
+        f();
+        evt.preventDefault();
+    }
+  }
+
+  function trapEscapeKey(_obj, evt) {
+    // if escape pressed
+    if (evt.which == 27) {
+      hideModal();
+      evt.preventDefault();
+    }
+
+  }
+
+  function trapTabKey(obj, evt) {
+
+      // if tab or shift-tab pressed
+      if (evt.which == 9) {
+
+          // get list of all children elements in given object
+          var o = obj.querySelectorAll(focusableElementsString);
+
+          // get list of focusable items
+          var focusableItems;
+          focusableItems = Array.prototype.filter.call(o, function(el) {
+            return (el.offsetWidth > 0 || el.offsetHeight > 0 ||
+                el.getClientRects().length > 0);
+          });
+
+          // get currently focused item
+          var focusedItem;
+          focusedItem = document.activeElement;
+
+          // get the number of focusable items
+          var numberOfFocusableItems;
+          numberOfFocusableItems = focusableItems.length
+
+          // get the index of the currently focused item
+          var focusedItemIndex;
+          focusedItemIndex = focusableItems.indexOf(focusedItem);
+
+          if (evt.shiftKey) {
+              //back tab
+              // if focused on first item and user preses back-tab, go to the last focusable item
+              if (focusedItemIndex == 0) {
+                  focusableItems[numberOfFocusableItems - 1].focus();
+                  evt.preventDefault();
+              }
+
+          } else {
+              //forward tab
+              // if focused on the last item and user preses tab, go to the first focusable item
+              if (focusedItemIndex == numberOfFocusableItems - 1) {
+                  focusableItems[0].focus();
+                  evt.preventDefault();
+              }
+          }
+      }
+
+  }
+
+  function enterButtonModal() {
+    var modalSurvey = false;
+    incrementInvitationAcceptCount();
+    if(modalSurvey) {
+      openSurveyInModal();
+    } else {
+      openSurveyInNewWindow();
+    }
+  }
+
+  function incrementInvitationAcceptCount() {
+    invitationurl = "//survey.usa.gov/surveys/291/invitation_accept"
+    VOC.fn.get(invitationurl);
+  }
+
+  function openSurveyInModal() {
+    var widgetUrl = "//survey.usa.gov/widget/widget.js?target_id=modalContents&survey_id=291&focus=true"
+    VOC.fn.getScript(widgetUrl, function() {
+      hideModal();
+      showModal(document.getElementById("vocModal"));
+      VOC.fn.focusFirstElementIn(document.getElementById("vocModal"));
+    });
+  }
+
+  function openSurveyInNewWindow() {
+    // BEGIN logic for executing the Enter button action for the modal window
+    var pageurl  = window.location.origin + window.location.pathname;
+    var popurl = "//survey.usa.gov/surveys/291/holding_page?";
+    popurl = popurl + "stylesheet=https://www.usa.gov/sites/all/themes/usa/css/popup-survey.css&";
+    popurl = popurl + "page_url=" + pageurl;
+    window.open(popurl,"","width=600,height=400,scrollbars,");
+    // END logic for executing the Enter button action for the modal window
+    hideModal();
+  }
+
+  function showInvitation() {
+    var targetId = 'srvyinvt';
+    var modalSurvey = false;
+    document.getElementById(targetId)
+      .innerHTML = "<style type=\"text/css\">\n  #vocModalOverlay {\n      width:100%;\n      height:100%;\n      z-index:9999; /* places the modal overlay between the main page and the modal dialog*/\n      background-color:#000;\n      opacity:0.5;\n      position:fixed;\n      top:0;\n      left:0;\n      display:none;\n      margin:0;\n      padding:0;\n  }\n\n  #vocModal {\n      width:50%;\n      margin-left:auto;\n      margin-right:auto;\n      padding: 25px;\n      border: thin #000 solid;\n      background-color:#fff;\n      z-index:10000; /* places the modal dialog on top of everything else */\n      position:fixed;\n      top:25%;\n      left:25%;\n      display:none;\n  }\n  #vocModal h1 {\n      text-align:center;\n  }\n\n  #vocEnter {\n    cursor: pointer;\n  }\n\n  #vocModal .vocCancelButton {\n    cursor: pointer;\n  }\n\n  #vocModal .banner {\n    padding-bottom: 10px;\n    border-bottom: 1px solid black;\n  }\n\n  #vocModal .modalCloseButton {\n      float:right;\n      position:absolute;\n      top:10px;\n      left:95%;\n  }\n  #vocModal .modalCloseButton img {\n      border:0;\n  }\n\n  #vocModal .screen-reader-offscreen {\n      position:absolute;\n      left:-999px;\n      width:1px;\n      height:1px;\n      top:auto;\n  }\n  #vocModal .top-right {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    background-color: grey;\n    color: white;\n    font-size: 11px;\n  }\n\n  .top-right {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    background-color: grey;\n    color: white;\n    font-size: 11px;\n  }\n\n<\/style>\n<iframe src=\"//survey.usa.gov/surveys/291/invitation\"\n  height=\"0\" width=\"0\" tabindex=\"-1\" title=\"empty\" style=\"display: none;\"><\/iframe>\n<div id=\'vocModal\' aria-hidden=\'true\' aria-labelledby=\'modalTitle\' aria-describedby=\'modalDescription\' role=\'dialog\' tabindex=\'-1\'>\n  <div id=\"modalTitle\" class=\"screen-reader-offscreen\">\n    Survey Invitation Form\n  <\/div>\n  <div id=\"modalDescription\" class=\"screen-reader-offscreen\">\n    Beginning of dialog window.  Survey invitation form.  Escape will cancel and close the window.\n    Accepting the invitation will load the survey form.  Declining the invitation will cancel and\n    close the window.\n  <\/div>\n  <div id=\"modalContents\">\n    <input class=\"vocCancelButton top-right\" id=\"cancel\" type=\"submit\" value=\"Close | X\">\n<p class=\"firstpara\">Please help us improve USA.gov after your visit!<\/p>\n<p>Your answers to a 2 to 3 minute survey about your experience will give us the feedback we need to make our site better.<\/p>\n<p>Use the \"Yes, I\'ll help\" button and a new window will open with your survey.  It will wait until you are ready.  Thank you!<\/p>\n<br>\n<input type=\"button\" name=\"vocEnter\" id=\"vocEnter\" value=\"Yes, I&#39;ll help\"> <input type=\"button\" name=\"vocCancelButton\" class=\"vocCancelButton\" value=\"No thanks\">\n  <\/div>\n<\/div>\n<div id=\'vocModalOverlay\'><\/div>\n";
+    if(modalSurvey== true && 'false' == 'true') {
+      enterButtonModal();
+    }
+    showModal(document.getElementById('vocModal'));
+  }
+
+  function setFocusToFirstItemInModal(obj){
+    // get list of all children elements in given object
+    var o = obj.find('*');
+
+    // set the focus to the first keyboard focusable item
+    o.filter(focusableElementsString).filter(':visible').first().focus();
+  }
+
+  function showModal(obj) {
+    var mainContent = document.getElementById(_mainContentId)
+    if(mainContent)
+      mainContent.setAttribute('aria-hidden', true);
+    document.getElementById('vocModalOverlay').style.display = 'block';
+    obj.style.display = 'block';
+    obj.setAttribute('aria-hidden', false);
+    document.querySelector('body').style.overflow = 'hidden';
+
+    // attach a listener to redirect the tab to the modal window if the user
+    // somehow gets out of the modal window
+    if(mainContent) {
+      VOC.fn.addEventListener(mainContent, 'focusin', function(e) {
+        VOC.fn.focusFirstElementIn(obj);
+      });
+    }
+
+    // save current focus
+    focusedElementBeforeModal = document.activeElement;
+    VOC.fn.focusFirstElementIn(obj);
+  }
+
+  function hideModal() {
+    document.getElementById('vocModalOverlay').style.display = 'none';
+    document.getElementById('vocModal').style.display = 'none';
+    document.querySelector('body').style.overflow = 'visible';
+    document.getElementById('vocModal').setAttribute('aria-hidden', true);
+    if(document.getElementById(_mainContentId))
+      document.getElementById(_mainContentId).setAttribute('aria-hidden', false);
+
+    // set focus back to element that had it before the modal was opened
+    focusedElementBeforeModal.focus();
+  }
+
+
+  /*
+   * The below code is used to load the VOC tool and show the invitation once
+   * the page content has been loaded.
+   */
+  var countScriptCalled = 0;
+
+  /* Called once the VOC library has been loaded */
+  function scriptLoadHandler(){
+    countScriptCalled++;
+    if(countScriptCalled > 1) return;
+    var interval = setInterval(function(){
+      if(VOC.fn !== undefined) {
+        clearInterval(interval);
+        main();
+      }
+    }, 100);
+  }
+
+
+  /* Load the VOC library helper functions */
+  function loadLibraryFunctions() {
+    var script_tag = document.createElement('script');
+    script_tag.setAttribute('type', 'text/javascript');
+    script_tag.setAttribute('src',
+        "//survey.usa.gov/assets/voc.fn.js");
+
+    /* Wait for the script to load */
+    //Other browsers
+    if(script_tag.addEventListener) {
+      script_tag.addEventListener("load", scriptLoadHandler, false);
+    }
+    // For Old versions of IE
+    else if(script_tag.readyState) {
+      script_tag.onreadystatechange = scriptLoadHandler;
+    }
+
+    // Try to find the head, otherwise default to the documentElement
+    (document.getElementsByTagName("head")[0] || document.documentElement)
+      .appendChild(script_tag);
+  }
+
+  function completed() {
+    document.removeEventListener("DOMContentLoaded", completed);
+    window.removeEventListener("load", completed);
+    loadLibraryFunctions();
+  }
+
+  /* Handle the case where we don't execute this code until after the DOM has
+   * finished loading.
+   */
+  if(document.readyState === "complete" ||
+      (document.readyState !== "loading" && !document.documentElement.doScroll) ){
+    window.setTimeout(loadLibraryFunctions());
+  } else {
+    document.addEventListener("DOMContentLoaded", completed);
+    window.addEventListener("load", completed);
+  }
+
+})();
+ýRšø±      X–àX–à=gÌc       ±    :https://survey.usa.gov/widget/291/invitation.js?target_id=srvyinvt&mobile_target_id=survey-target&stylesheet=https%3A%2F%2Fwww.usa.gov/sites/all/themes/usa/css/popup-survey.css security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAQAAgAAAAAAAAAAAAAAAAAAAAAB4vFIJp5wRkeyPxAQ9RJGKPqbqVvKO0mKuIl8ec8o/uhmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAufMIILmzCCCoOgAwIBAgIQRYW5ZFyicFWzsoTRWNMP2jANBgkqhkiG9w0BAQsFADBEMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNR2VvVHJ1c3QgSW5jLjEdMBsGA1UEAxMUR2VvVHJ1c3QgU1NMIENBIC0gRzMwHhcNMTYxMjIwMDAwMDAwWhcNMTcwOTI2MjM1OTU5WjCBmTELMAkGA1UEBhMCVVMxHTAbBgNVBAgMFERpc3RyaWN0IE9mIENvbHVtYmlhMRMwEQYDVQQHDApXYXNoaW5ndG9uMSgwJgYDVQQKDB9HZW5lcmFsIFNlcnZpY2VzIEFkbWluaXN0cmF0aW9uMRowGAYDVQQLDBFBa2FtYWkgU0FOIFNTTCBPVjEQMA4GA1UEAwwHdXNhLmdvdjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMuOdIQJuAXrBhsEZNpVtj1Cpf1F/azuD1kkY8XT6gKQsvTwHmnY0ZvbaPO2wk9gyEF4NjdXtQsMq0myyHEgXIo/BWFbATqWRh8/GvRDtfEDH3U3CO3Hpq1fvPzNK3yA83ba6JYv+LcCu4avqjiT6nNdj8kiXJumSryg+UcrJ3YlaMTozTKuM2s415waJ/weM36K2FMOtbb5/kE8z1UhwOTo9lQmLUZptMreeVi0QBCTy4CW0vliLTi82VH3HElxFPcDw4EV6gqkZW0k/ltqn13Pd9H7v/t3hbFeFGZG2rGYWMupURixMpxY4fVPZ1SGPMJ+eYf1DvfopaSyFbF6IjMCAwEAAaOCCDEwgggtMIIFoAYDVR0RBIIFlzCCBZOCFXBhdWwucGxhdGZvcm0uZ3NhLmdvdoISc3RhZ2UtYmV0YS51c2EuZ292ggxpZG0uZGF0YS5nb3aCDHd3dy5zZmZlYi51c4ISd3d3LmRpZ2l0YWxnb3YuZ292ggxhcHBzLnVzYS5nb3aCEmJlbmNobWFya3MuZ3NhLmdvdoISaW52ZW50b3J5LmRhdGEuZ292ghJkYXAuZGlnaXRhbGdvdi5nb3aCFWJldGEuZ29iaWVybm8udXNhLmdvdoIXZGFzaGJvYXJkLWxhYnMuZGF0YS5nb3aCDHZvdGUudXNhLmdvdoIUc3RhZ2luZy5hcHBzLnVzYS5nb3aCFHBsYy5wbGF0Zm9ybS5nc2EuZ292ghBmZWVkYmFjay51c2EuZ292ghR3d3cuYnVzaW5lc3MudXNhLmdvdoITd3d3LnBlcmZvcm1hbmNlLmdvdoIUdHdhODAwLnNpdGVzLnVzYS5nb3aCFHN0YWdpbmctdm90ZS51c2EuZ292ghBwbGF0Zm9ybS5nc2EuZ292ghZhZG1pbi1jYXRhbG9nLmRhdGEuZ292ggtkMmQuZ3NhLmdvdoIXc3RhZ2luZy5wZXJmb3JtYW5jZS5nb3aCD3d3dy5mZWRyYW1wLmdvdoIQd3d3LmtpZHMudXNhLmdvdoIbc3RhZ2UtYmV0YS5nb2JpZXJuby51c2EuZ292ggt3d3cudXNhLmdvdoIbZmluYW5jaWFscHJvdGVjdGlvbi51c2EuZ292ghlzdGFnaW5nLWFwaS5jaGFsbGVuZ2UuZ292gg1zaXRlcy51c2EuZ292gg13aWtpLmRhdGEuZ292ghViZXRhLmJ1c2luZXNzLnVzYS5nb3aCGXd3dy5wYXJ0bmVyNHNvbHV0aW9ucy5nb3aCFmVsdmlzLnBsYXRmb3JtLmdzYS5nb3aCEHN0YWdpbmcuZGF0YS5nb3aCGHN0YWdpbmcucGxhdGZvcm0uZ3NhLmdvdoIYd3d3LmxlYXJucGVyZm9ybWFuY2UuZ292ghBnb2JpZXJuby51c2EuZ292ghRhZG1pbi1zdXJ2ZXkudXNhLmdvdoIUb3V0cmVhY2gub3JzLm5paC5nb3aCDXd3dy5ob3d0by5nb3aCEWFwaS5jaGFsbGVuZ2UuZ292ggxpZHAuZGF0YS5nb3aCDHd3dy5kYXRhLmdvdoITd3d3LmJ1c2luZXNzdXNhLmdvdoINd3d3LmVjcGljLmdvdoIMa2lkcy51c2EuZ292ghVwYXJ0aWNpcGF0aW9uLnVzYS5nb3aCDGJldGEudXNhLmdvdoINbGFicy5kYXRhLmdvdoIPd3d3LmNvbm5lY3QuZ292gg9zdGFnaW5nLnVzYS5nb3aCHXN0YWdpbmcuZ29hbHMucGVyZm9ybWFuY2UuZ292gg9ldGhpY3MuZGF0YS5nb3aCE3N0YWdpbmcuZDJkLmdzYS5nb3aCD3N0YXRpYy5kYXRhLmdvdoIRY3JtLWxhYnMuZGF0YS5nb3aCEGJ1c2luZXNzLnVzYS5nb3aCF2ZlYmF0bC5wbGF0Zm9ybS5nc2EuZ292gg5zdXJ2ZXkudXNhLmdvdoIMYmxvZy5kb2wuZ292ghd3d3cuc3VwcG9ydHRoZXZvdGVyLmdvdoIQY2F0YWxvZy5kYXRhLmdvdoIVZ29hbHMucGVyZm9ybWFuY2UuZ292ghVzdW1taXQuZGlnaXRhbGdvdi5nb3aCGnBsYXRmb3JtNS5wbGF0Zm9ybS5nc2EuZ292ghF3d3cuY2hhbGxlbmdlLmdvdoIYc3RhZ2luZy5jYXRhbG9nLmRhdGEuZ292ghBleHBsb3JlLmRhdGEuZ292ghVsYWJzLXN0YWdpbmcuZGF0YS5nb3aCDGdlby5kYXRhLmdvdoIHdXNhLmdvdjAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIFoDArBgNVHR8EJDAiMCCgHqAchhpodHRwOi8vZ24uc3ltY2IuY29tL2duLmNybDCBnQYDVR0gBIGVMIGSMIGPBgZngQwBAgIwgYQwPwYIKwYBBQUHAgEWM2h0dHBzOi8vd3d3Lmdlb3RydXN0LmNvbS9yZXNvdXJjZXMvcmVwb3NpdG9yeS9sZWdhbDBBBggrBgEFBQcCAjA1DDNodHRwczovL3d3dy5nZW90cnVzdC5jb20vcmVzb3VyY2VzL3JlcG9zaXRvcnkvbGVnYWwwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFNJv95b0hT9yPDB9I9qFeJujfFp8MFcGCCsGAQUFBwEBBEswSTAfBggrBgEFBQcwAYYTaHR0cDovL2duLnN5bWNkLmNvbTAmBggrBgEFBQcwAoYaaHR0cDovL2duLnN5bWNiLmNvbS9nbi5jcnQwggEEBgorBgEEAdZ5AgQCBIH1BIHyAPAAdgDd6x0reg1PpiCLga2BaHB+Lo6dAdVciI09EcTNtuy+zAAAAVkeDUQKAAAEAwBHMEUCIQDUK0yJX0ZHS3b9zQ+hBJhiGzzi/D6ehDl9QtbFhZpkPwIga2/UvCXiDEiNAW38YWlVdQ4c4jPK/SLWUykcEDA5zAAAdgDuS723dc5guuFCaR+r4Z5mow9+X7By2IMAxHuJeqj9ywAAAVkeDURXAAAEAwBHMEUCIQC7YAHIAl6IK8sn1TcVG5L9rCDzJVksDEnuXE/JpsWmnwIgBGo31KH4z+h85D8kLyxRaxZnetjJfayfTuRmUSSOie4wDQYJKoZIhvcNAQELBQADggEBAGxT5MRvO2beXNplyRDNL0ZK269p/7jn3fssymdSkP/Yb3jTICMQjltY6Ti0CHItqsJlkSmHiHCUCVFu+Hlx8VS2XWpJC+nVsGyziZ/ckZmRPaKUc+xwmdHATgHrIqxrIzAHEA8vYOEdATn86EO2I6YLQnVut0mlZU1M5sO356KQQ5QWuEzw/VndeVX54frbnaqT9qCtlprKVJAtIXxcrncfOtwTmEsR3VvZ6EslTZeN3EIcasa98GY4w5DWlHBcf6teGqM3/vP/iEfKcgXrKzroZZpSt390NJHxzUdXoO18XnPZ+07iBamjhrVJeja7NzCUDxofwOjeWgGrvPNe+tvALwADAAAAAAEBAAA= request-method GET response-head HTTP/1.1 200 OK
+Access-Control-Allow-Headers: Pragma, Cache-Control
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Origin: *
+Access-Control-Max-Age: 108000
+Content-Type: text/javascript; charset=utf-8
+Etag: "75d1371dd1b076847765afe2ecaab8af"
+Server: nginx/1.4.6 (Ubuntu)
+x-frame-options: ALLOWALL
+x-request-id: 2d041ba2-773f-4689-9f36-89514966f394
+X-Runtime: 0.007381
+Content-Length: 15959
+Cache-Control: private, must-revalidate, max-age=0
+Date: Sun, 05 Feb 2017 09:19:24 GMT
+ uncompressed-len 0   >W
