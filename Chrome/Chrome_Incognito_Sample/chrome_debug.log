@@ -1,8 +1,0 @@
-[1624:1836:0118/164728:INFO:CONSOLE(0)] "Unchecked runtime.lastError while running tabs.create: No current window
-    at Object.open (chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/ext/background.js:135:19)
-    at finishInitialization (chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/lib/adblockplus.js:1925:17)", source: chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/_generated_background_page.html (0)
-[1624:2872:0118/164744:WARNING:spdy_session.cc(2216)] Received HEADERS for invalid stream 7
-[1624:2872:0118/165013:ERROR:ssl_client_socket_impl.cc(1146)] handshake failed; returned -1, SSL error code 1, net_error -100
-[1624:2872:0118/165013:ERROR:ssl_client_socket_impl.cc(1146)] handshake failed; returned -1, SSL error code 1, net_error -100
-[1624:2872:0118/165029:ERROR:ssl_client_socket_impl.cc(1146)] handshake failed; returned -1, SSL error code 1, net_error -100
-[1624:2872:0118/165029:ERROR:ssl_client_socket_impl.cc(1146)] handshake failed; returned -1, SSL error code 1, net_error -100
