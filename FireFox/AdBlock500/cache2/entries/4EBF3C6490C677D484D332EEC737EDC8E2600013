@@ -1,0 +1,208 @@
+var last;
+var clk;
+function SS_gso(objectId) {
+ if(document.getElementById && document.getElementById(objectId)) { 
+  return document.getElementById(objectId).style;
+ } else if (document.all && document.all(objectId)) {        
+  return document.all(objectId).style;
+  
+ } else if (document.layers && document.layers[objectId]) { 
+  return document.layers[objectId];
+ } else {       
+  return false;
+ }
+}
+function getposOffset(what, offsettype){
+ var totaloffset=(offsettype=="left")? what.offsetLeft : what.offsetTop;
+ var parentEl=what.offsetParent; 
+ while (parentEl!=null){
+  totaloffset=(offsettype=="left")? totaloffset+parentEl.offsetLeft : totaloffset+parentEl.offsetTop;
+  parentEl=parentEl.offsetParent;
+ }
+ return totaloffset;
+}
+
+function OpenToolbar(id,user ) {
+ obj = SS_gso(id);
+ 
+ if(last){
+  last.display='none';
+ }
+ obj.left = getposOffset(user, "left") +"px";
+ obj.top = getposOffset(user, "top")+18+"px";
+ obj.display='block';
+ last=obj;
+ clk=3;
+}
+
+function CloseToolbar(){
+ if (clk!=0){
+  clk--;
+  if (clk==1){
+    clk=0;
+    last.display='none';
+  }
+ }
+}
+
+
+function confermaBlocco(lingua,utente,descr,link,t_blocco,lnkOK){
+  if(lnkOK=='')
+    t_bloccoBtn1='<br><button type="button" onclick="javacript: window.location.href=document.getElementById('+"'blocca"+link+"'"+').href">'+(lingua==0?'Conferma':'Confirm')+'</button>';
+  else
+    t_bloccoBtn1='<br><button type="button" onclick="javacript: window.location.href=\''+lnkOK+'\';">'+(lingua==0?'Conferma':'Confirm')+'</button>';
+
+  t_bloccoBtn2='&nbsp; &nbsp;<button type="button" onclick="javacript: document.getElementById('+"'warnLock'"+').style.visibility='+"'hidden';"+'">'+(lingua==0?'Annulla':'Cancel')+'</button>';
+  object=document.getElementById('warnLock');
+  document.getElementById('warnLockText').innerHTML=t_blocco.replace("##utente##",utente).replace("##descrizione##",(descr!="" && descr!=utente?" ("+descr+")":""))+t_bloccoBtn1+t_bloccoBtn2;
+  object.style.marginLeft = "-" + parseInt(object.offsetWidth /2) + "px";
+  object.style.marginTop = "-" + parseInt(object.offsetHeight / 2) + "px";
+
+  object.style.visibility="visible";
+  return false;
+  //return confirm(t_blocco.replace("%s",utente));
+}
+
+function vediConsumi(nome){
+    if(document.getElementById('ill_'+nome).checked){
+       document.getElementById('tr_g'+nome).style.display="none";
+       document.getElementById('tr_m'+nome).style.display="none";
+       document.getElementById('spanlim_'+nome).style.display="none";
+       document.getElementById('spanlim_'+nome+'_1').style.display="";
+    }else{
+       document.getElementById('tr_g'+nome).style.display="";
+       document.getElementById('tr_m'+nome).style.display="";
+       document.getElementById('spanlim_'+nome).style.display="";
+       document.getElementById('spanlim_'+nome+'_1').style.display="none";
+    }
+}
+
+function limiti(obj, nome){
+    if(obj.name.substr(0,5)=="LIM_G"){
+      document.getElementById("LIM_M_"+nome).checked=false;
+      document.getElementById("LIM_M_VAL_"+nome).value=0;
+      if(isNaN(obj.value=parseInt(document.getElementById("LIM_G_VAL_"+nome).value))) document.getElementById("LIM_G_VAL_"+nome).value=0;
+      else if(parseInt(document.getElementById("LIM_G_VAL_"+nome).value)>0) document.getElementById("LIM_G_"+nome).checked=true;
+    }
+    if(obj.name.substr(0,5)=="LIM_M"){
+      document.getElementById("LIM_G_"+nome).checked=false;
+      document.getElementById("LIM_G_VAL_"+nome).value=0;
+      if(isNaN(obj.value=parseInt(document.getElementById("LIM_M_VAL_"+nome).value))) document.getElementById("LIM_M_VAL_"+nome).value=0;
+      else if(parseInt(document.getElementById("LIM_M_VAL_"+nome).value)>0) document.getElementById("LIM_M_"+nome).checked=true;
+    }
+
+
+return false;
+    if(obj.name=="LIM_G" && obj.checked) {
+      document.getElementById("LIM_M_"+nome).checked=false;
+      document.getElementById("LIM_M_VAL_"+nome).value=0;
+    }
+    if(obj.name=="LIM_M" && obj.checked) {
+      document.getElementById("LIM_G_"+nome).checked=false;
+      document.getElementById("LIM_G_VAL_"+nome).value=0;
+    }
+    if(obj.name=="LIM_G" && !obj.checked) document.getElementById("LIM_G_VAL_"+nome).value="0";
+    else if(obj.name=="LIM_M" && !obj.checked) document.getElementById("LIM_M_VAL_"+nome).value="0";
+    else if(obj.name=="LIM_G_VAL" && obj.value!="0") document.getElementById("LIM_G_"+nome).checked=!isNaN(obj.value=parseInt(obj.value));
+    else if(obj.name=="LIM_M_VAL" && obj.value!="0") document.getElementById("LIM_M_"+nome).checked=!isNaN(obj.value=parseInt(obj.value));
+}
+
+function avviso(nome,lingua){
+  frase=new Array();
+  frase[0]="Confermi le modifiche per l'account "+nome+"?";
+  frase[1]="Do you want to confirm changes to the account "+nome+"?";
+  frase[2]="Wollen Sie Änderungen an dem Konto "+nome+" bestätigen?";
+  frase[3]="Voulez-vous confirmer les modifications apportées au compte "+nome+"?";
+  frase[4]="¿Confirmar los cambios en la cuenta "+nome+"?";
+  return confirm(frase[lingua]);
+}
+
+function nascondimi(nome){
+  document.getElementById("lim_"+nome).checked=true;
+  document.getElementById('spanlim_'+nome).style.display="none";
+  document.getElementById('spanlim_'+nome+'_1').style.display="";
+  document.getElementById('ill_'+nome).checked=true;
+  vediConsumi(nome);
+}
+
+function sbloccaDiretto(toolbarID,user,desc,l){
+  if(document.getElementById(toolbarID).style.display!='none') return false;
+  confermaBlocco(0,user,desc,-1,t_sblocco,'/cgi-bin/shinystatwm.cgi?MODE=BLOCCA&amp;USER='+user+'&amp;NH=1&amp;LANG='+l+'&amp;BLOCCA=1&amp;PPRO=0&amp;PBIZ=0');
+  return false;
+}
+
+function stampaFormDettaglio(descr,nome,lingua,l,pannello,id,lm,lg,lnk_blocco,bloccato,prog,abbo, multiaccount, nascondilimiti){
+
+  if(lm+lg==0){
+    chkIllimitato="CHECKED";
+    visibilita='style=\"display:none;\"';
+    visibilita1='';
+  }else {
+    chkIllimitato="";
+    visibilita='';
+    visibilita1='style=\"display:none;\"';
+  }
+  outdiv=document.getElementById(id);
+  var sumAbb="";
+  if(abbo==1) {
+    sumAbb="Pro";
+    linkguida='/it/guidaisp'+(multiaccount==1?'m':'')+'-elemento_gestione_singolo_account_pro_a_scalare.html';
+    linkguida2='<a href="/it/guidaisp'+(multiaccount==1?'m':'')+'-elemento_gestione_singolo_account_pro_a_scalare_altre_opzioni.html" target=_blank><img src="/php/images/statistiche/icon-guida-nobord.gif" style="margin-right: 20px;" alt="" align=right class="guide"></a>';
+  }else{
+    sumAbb="Biz";
+    linkguida='/it/guidaisp'+(multiaccount==1?'m':'')+'-elemento_gestione_singolo_account_business_a_scalare.html';
+    linkguida2='<a href="/it/guidaisp'+(multiaccount==1?'m':'')+'-elemento_gestione_singolo_account_business_a_scalare_altre_opzioni.html" target=_blank><img src="/php/images/statistiche/icon-guida-nobord.gif" alt="" style="margin-right: 20px;" align=right class="guide"></a>';
+  }
+  if(bloccato==1)
+    txt_confermaBlocco='onClick="javascript: return confermaBlocco('+l+',\''+nome+'\',\''+descr+'\','+prog+',t_sblocco,\'\');"';
+  else
+    txt_confermaBlocco="";
+
+  t_innerHTML='<FORM NAME="ispToolbarForm_'+nome+'" ENCTYPE="multipart/form-data" ACTION="/cgi-bin/shinystatwm.cgi" METHOD=POST>';
+  t_innerHTML+='<table border=0 id="tablebianca" onMouseOver="javascript: last=0;" onMouseOut="javascript: last=document.getElementById(\'ispToolbarID_'+nome+'\').style;"><tr class="summary'+sumAbb+'"><th colspan="2"><b>'+nome+'</b></th>';
+  t_innerHTML+='<th valign="top" align="right">';
+  t_innerHTML+='<a target=_blank href="'+linkguida+'"><img src="/php/images/statistiche/icon-guida-nobord.gif" alt="" style="margin-right: 5px;" class="guide"></a>';
+  t_innerHTML+='<a href="#" onClick="document.getElementById(\'ispToolbarID_'+nome+'\').style.display=\'none\'; return false;"><img src="/img/chiudi.gif"></a>';
+  t_innerHTML+='</th></tr>';
+  t_innerHTML+='<tr><td align="left" colspan="3">';
+  t_innerHTML+=pannello;
+  t_innerHTML+='</td></tr>';
+  if(!nascondilimiti){
+	  t_innerHTML+='<tr id="limiti'+nome+'" '+(bloccato==0?"":'style="display:none;"')+'><td colspan="3">'+linkguida2+'<span id="spanlim_'+nome+'" '+visibilita+'><input type="CHECKBOX" CHECKED onClick="javascript: nascondimi(\''+nome+'\');" id="lim_'+nome+'">'+consumi_limitati+' </span><input type="checkbox" name="ILLIMITATO" id="ill_'+nome+'" '+chkIllimitato+' onClick="javascript: vediConsumi(\''+nome+'\');">'+consumi_illimitati+'<span id="spanlim_'+nome+'_1" '+visibilita1+'><br>'+consumi_illimitati1.replace(/##utente##/gi,nome)+'</span></td></tr>';
+	  t_innerHTML+='<tr id="tr_g'+nome+'" '+(chkIllimitato=="" && bloccato==0?"":'style="display:none;"')+'><td colspan="3" style="display:none;"><div style="width: 200px; position: absolute;">'+limite_g+'</div><div style="position: relative; padding-left: 110px; display:none;"><input type="checkbox" name="LIM_G" id="LIM_G_'+nome+'" value="1" '+(lg>0?"CHECKED":"")+' onClick="limiti(this,\''+nome+'\');"><input type="text" name="LIM_G_VAL" id="LIM_G_VAL_'+nome+'" value="'+lg+'" onChange="limiti(this,\''+nome+'\');"></div></td></tr>';
+	  t_innerHTML+='<tr id="tr_m'+nome+'" '+(chkIllimitato=="" && bloccato==0?"":'style="display:none;"')+'><td colspan="3"><div style="width: 200px; position: absolute;">'+limite_m+'</div><div style="position: relative; padding-left: 110px;"><input type="checkbox" style="display:none;" name="LIM_M" id="LIM_M_'+nome+'" value="1" '+(lm>0?"CHECKED":"")+' onClick="limiti(this,\''+nome+'\');"><input type="text" size=10 name="LIM_M_VAL" id="LIM_M_VAL_'+nome+'" value="'+lm+'" onChange="limiti(this,\''+nome+'\');">'+pv_mese_txt+'</div>'; //</td></tr>';
+	  t_innerHTML+= descr_lim_m+''+(bloccato==1?txt_sblocca:txt_blocca)+' <a href="'+lnk_blocco+'" '+txt_confermaBlocco+'>'+txt_cliccaqui+'</a></td></tr>';
+	  if(bloccato==1) t_innerHTML+= '<tr><td colspan="3"><br>'+(bloccato==1?txt_sblocca:txt_blocca)+' <a id="blocca'+prog+'" href="'+lnk_blocco+'" '+txt_confermaBlocco+'>'+txt_cliccaqui+'</a></td></tr>';
+  }
+
+  //t_innerHTML+='<tr><td colspan="3"></td></tr>';
+  t_innerHTML+='<tr><td colspan="3">';
+  t_innerHTML+=t_descrizione+' <input type="text" name="DESCR2" value="'+descr+'" style="width: 230px;">';
+  t_innerHTML+='<input type="hidden" name="MODE" value="EDITDESCR2"><input type="hidden" name="USER" value="'+nome+'">';
+  t_innerHTML+='<input type="hidden" name="NH" value="1"><input type="hidden" name="LANG" value="'+l+'">';
+  t_innerHTML+=t_d_descrizione;
+  t_innerHTML+='</td></tr>';
+
+  t_innerHTML+='<tr><td colspan="3" align="center">';
+  //t_innerHTML+='<button type="button" onClick="javascript: if(confirm(\''+t_reset+'\')) stampaForm(\''+descr+'\',\''+nome+'\',\''+lingua+'\','+l+',pannello_'+nome+',\''+id+'\','+lm+','+lg+');">Reset</button>&nbsp; &nbsp; ';
+  t_innerHTML+='<button type="submit" onClick="return avviso(\''+descr+'\','+l+');" class="oklink">'+t_modifica+'</button></td></tr></table>';
+  t_innerHTML+='</form>';
+  outdiv.innerHTML=t_innerHTML;
+}
+
+function stampaForm(descr,nome,lingua,l,pannello,id,lm,lg,lnk_blocco,bloccato,prog,abbo){
+	stampaFormDettaglio(descr,nome,lingua,l,pannello,id,lm,lg,lnk_blocco,bloccato,prog,abbo, 0, 0);
+}
+
+function stampaFormNoLimiti(descr,nome,lingua,l,pannello,id,lm,lg,lnk_blocco,bloccato,prog,abbo){
+	stampaFormDettaglio(descr,nome,lingua,l,pannello,id,lm,lg,lnk_blocco,bloccato,prog,abbo, 0, 1);
+}
+@uï“k+      X–ß[X–ß\=gËéYbm   *    :http://shinystat.com/php/js/isptoolbar.js request-method GET response-head HTTP/1.1 200 OK
+Date: Sun, 05 Feb 2017 09:16:28 GMT
+Server: Apache
+Last-Modified: Wed, 14 Nov 2012 09:31:27 GMT
+Etag: "2bee-4ce7132dfd9c0"
+Accept-Ranges: bytes
+Content-Length: 11246
+Content-Type: application/javascript
+ uncompressed-len 0   +î

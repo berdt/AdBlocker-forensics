@@ -1,0 +1,748 @@
+jQuery.extend(jQuery.easing,{
+	easeInQuart: function (x, t, b, c, d) {
+		return c*(t/=d)*t*t*t + b;
+	},
+	easeOutQuart: function (x, t, b, c, d) {
+	return -c * ((t=t/d-1)*t*t*t - 1) + b;
+	}
+});
+
+jQuery(document).ready(function(){
+	
+	 jQuery('#search_back').click(function(){
+		alert('aaa'); 
+	 });
+	
+	/* domainTable height */
+	jQuery('#pricelist').show(0,function(){
+		jQuery('#pricelistColumn').find('table').find('tr').each(function(index){
+			var height1 = jQuery(this).height();
+			var height2 = jQuery('#srch_area #pricelist .scrl').find('table').find('tr').eq(index).height();
+			var height = Math.max(height1,height2);
+			jQuery(this).css('height',height);
+			if(index && $.browser.msie && $.browser.version < 8) height = height+2;
+			jQuery('#srch_area #pricelist .scrl').find('table').find('tr').eq(index).css('height',height);
+		});
+		jQuery('#srch_area #pricelist .scrl').css('height',jQuery('#pricelistColumn').outerHeight());
+		jQuery(this).hide();
+	}).hide();
+	
+	jQuery("img.rollover").mouseover(function(){
+		jQuery(this).attr("src",jQuery(this).attr("src").replace(/^(.+)(\.[a-z]+)$/, "$1_ov$2"));
+	}).mouseout(function(){
+		jQuery(this).attr("src",jQuery(this).attr("src").replace(/^(.+)_on(\.[a-z]+)$/, "$1$2"));
+	}).each(function(){
+		jQuery("<img>").attr("src",jQuery(this).attr("src").replace(/^(.+)(\.[a-z]+)$/, "$1_ov$2"));
+	});
+
+	/* settings */
+	var tab0_on = '//cache.img.gmo.jp/onamae/images/srch_area_domain_on.gif';
+	var tab1_on = '//cache.img.gmo.jp/onamae/images/srch_area_ikan_on.gif';
+	var tab0_off = '//cache.img.gmo.jp/onamae/images/srch_area_domain_df.gif';
+	var tab1_off = '//cache.img.gmo.jp/onamae/images/srch_area_ikan_df.gif';
+	var tab0_ov = '//cache.img.gmo.jp/onamae/images/srch_area_domain_ov.gif';
+	var tab1_ov = '//cache.img.gmo.jp/onamae/images/srch_area_ikan_ov.gif';
+	var rotateTime = 7000;
+	var DefStr = "ŒŸõ‚µ‚½‚¢•¶Žš—ñ‚ð“ü—Íi“ü—Í—áj\nonamae\ndomain-navi\n‚¨–¼‘O";
+	var DefStrTransfer = "onamae.com\nonamae.net";
+
+	/* form */
+	var dmnSrchNm = 'domains';
+	var trnSrchNm = 'inputDomains';
+	var frmSrchUrl = 'http://dom.onamae.com/onamae/domainSeekBulkResult.do';
+	var frmTrnsUrl = 'http://dom.onamae.com/onamae/transferin/seek.do';
+
+	/* price list */
+	var dfDstnc = 134;
+
+
+	var tabFlg = rrtFlg = lmtflg = dispFlg = prcLstFlg = 0;
+
+//	jQuery('#srch_right02').attr('style','display: none');
+	jQuery(".tab0 a").attr('style','cursor: default;background-image: url('+tab0_on+')');
+//	jQuery("#svcblck02").attr('style','top: 105px;');
+//	jQuery('#trns_btn').attr('style','display: none');
+	jQuery('#wncls').attr('style','display: none');
+	jQuery('#bulk_searchArea').val('');
+	jQuery('#bulk_searchArea').attr('style','background:none;');
+
+
+	// over?
+	jQuery(".wink").wink(300);
+	
+	$(".wink2").mouseover(function(){
+		jQuery(".wink2 span").css({
+		  opacity: "0.8",
+		  filter: "alpha(opacity=80)"
+		});
+		jQuery(".wink2 span").fadeTo("fast", 0.0);
+	});
+		
+	//XV‘i‹ƒo[
+	//ƒNƒbƒL[“Ç‚Ýž‚Ý
+	var CookieName = jQuery.cookie("domainRenewalMsg");
+	var CookieBtn = "msgClick"+jQuery.cookie("msgClick")+"";
+	jQuery('#domainEmergencyMessage').attr('class', CookieBtn);
+	
+	//’mo‚é
+	jQuery('#domainRenewMessage').slideDown("slow");
+	
+	//•Â‚¶‚éƒ{ƒ^ƒ“‰Ÿ‚µ‚½‚ç
+	jQuery('#renewClose').click(function(){
+		//ƒXƒ‰ƒCƒhƒAƒbƒv
+		jQuery('#domainRenewMessage').slideUp();	
+		jQuery('#header').css("cssText", "padding: 0 ;");
+		//ƒNƒbƒL[‚Ì’l•ÏX
+		jQuery.cookie('msgClick', '1' ,{ path: '/', expires:30});
+		});
+	//•Â‚¶‚éƒ{ƒ^ƒ“1‰ñ‰Ÿ‚µ‚½l‚ªƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚ç
+	jQuery('.msgClick1').click(function(){
+		//ƒXƒ‰ƒCƒhƒAƒbƒv
+		jQuery('#domainRenewMessage').slideUp();	
+		jQuery('#header').css("cssText", "padding: 0 ;");
+		//ƒNƒbƒL[íœ
+		jQuery.removeCookie('domainRenewalMsg');
+		jQuery.removeCookie('msgClick');
+	});
+	
+	//•Â‚¶‚éƒ{ƒ^ƒ“‰Ÿ‚µ‚½‚ç
+	jQuery('#emergencyClose').click(function(){
+		jQuery('#domainEmergencyMessage').animate( { height: 'toggle' }, 'slow' );
+	});
+/*
+	jQuery('#bulk_searchArea').val(DefStr) ;
+
+	jQuery('#bulk_searchArea').focus(function(){
+			if(jQuery(this).val() == DefStr ) {
+				jQuery(this).val('');
+				jQuery('#bulk_searchArea').attr('style','background:none;');
+			}
+	});
+	
+	jQuery('#bulk_searchArea').blur(function(){
+			if(!jQuery(this).val() ) {
+				jQuery(this).val(DefStr);
+				jQuery('#bulk_searchArea').attr('style','background:url("//cache.img.gmo.jp/onamae/images/tennmetu.gif") left top no-repeat;');
+			}
+	});
+*/
+
+	jQuery('#transfer_searchArea').val(DefStrTransfer) ;
+	
+	jQuery('#transfer_searchArea').focus(function(){
+		var txtHeight = '';
+			if(jQuery(this).val() == DefStrTransfer ) {
+				jQuery(this).val('');
+			}
+	});
+
+	jQuery('#transfer_searchArea').blur(function(){
+			if(!jQuery(this).val() ) {
+				jQuery(this).val(DefStrTransfer);
+		}
+	});
+
+	jQuery('.inner > dl > dd > select').change( function () {
+		var typeChck = jQuery('select[name=dmntyp]').val();
+		var numYr = jQuery('select[name=nmyr]').val();
+		if ( typeChck == 'transfer' ) {
+			numYr = 11;
+			jQuery('#nmyrdt').attr('style','display: none;');
+			jQuery('#nmyrdd').attr('style','display: none;');
+		} else {
+			jQuery('#nmyrdt').attr('style','display: block;');
+			jQuery('#nmyrdd').attr('style','display: block;');
+		}
+		dstnc = (dfDstnc*(numYr-1));
+		jQuery(".scrl > table").animate({left: '-'+dstnc+'px'}, 'slow', "easeOutQuart");;
+	});
+
+
+
+	jQuery('.p_list > a').click(function(){
+		jQuery('#pricelist').attr('style','display:block');
+	});
+
+	jQuery('#pricelist > .ttl > a').click(function(){
+		jQuery('#pricelist').attr('style','display:none');
+	});
+
+	jQuery('.all > img').click(function(){
+		clearTimeout(lmtflg);	lmtflg = 0;
+		if ( !rrtFlg ) {
+			jQuery('#wncls').attr('style','display: block');
+			jQuery('#wnopn').attr('style','display: none');
+//			jQuery('#svc_area div').animate({height: '205px'}, 'slow', "easeOutQuart");
+//			jQuery("#svcblck01").attr('style','top: 0px;');
+//			jQuery("#svcblck02").attr('style','top: 105px;');
+			rrtFlg = 1;	dispFlg = 0;
+		} else {
+			jQuery('#wncls').attr('style','display: none');
+			jQuery('#wnopn').attr('style','display: block');
+//			jQuery('#svc_area div').animate({height: '100px'}, 'slow', "easeOutQuart");
+			rrtFlg = 0;
+			if ( !lmtflg ) lmtflg = setTimeout(changeSvcdisp, rotateTime );
+		}
+	});
+
+
+	jQuery('#svc_area img').hover(function(){
+		clearTimeout(lmtflg);	lmtflg = 0;	},function(){
+		if (!rrtFlg && !lmtflg) lmtflg = setTimeout(changeSvcdisp, rotateTime );
+	});
+
+
+	jQuery(window).scroll(function(){
+		if ( jQuery(document).scrollTop() > 500 ) {
+			jQuery('.lnktop').animate({bottom: '21px'}, "fast");
+		} else {
+			jQuery('.lnktop').animate({bottom: '0px'}, "fast");
+		}
+//	alert(jQuery(window).scrollTop());
+	});
+
+	jQuery('a').click(function(){
+		if ( jQuery(this).attr('href') == '#top' ) {
+			jQuery('html,body').animate({scrollTop: 0}, 1000, "easeOutQuart");
+			return false;
+		}
+	});
+
+
+
+
+
+//mainImageƒ^ƒuØ‚è‘Ö‚¦
+
+	jQuery("#main #selectAction li").click(function(){
+		jQuery("#srch_area").attr('style','');
+		jQuery("#selectAction li a").removeClass("self");
+		jQuery("a",this).addClass("self");
+	});
+
+
+	jQuery("#main #selectAction li.regist").click(function(){
+		jQuery("#regist").css("display","block");
+		jQuery("#newgtld, #setprice, #transfer, #renew, #isonamae").css("display","none");
+		return false;
+	});
+	
+	jQuery("#main #selectAction li.newgtld").click(function(){
+		jQuery("#newgtld").css("display","block");
+		jQuery("#regist, #setprice, #transfer, #renew, #isonamae").css("display","none");
+		return false;
+	});
+	
+	jQuery("#main #selectAction li.setprice").click(function(){
+		jQuery("#setprice").css("display","block");
+		jQuery("#regist, #newgtld, #transfer, #renew, #isonamae").css("display","none");
+		return false;
+	});
+	
+	jQuery("#main #selectAction li.transfer").click(function(){
+		jQuery("#transfer").css("display","block");
+		jQuery("#regist, #newgtld, #setprice, #renew, #isonamae").css("display","none");
+		return false;
+	});
+	
+	jQuery("#main #selectAction li.renew").click(function(){
+		jQuery("#renew").css("display","block");
+		jQuery("#regist, #newgtld, #setprice, #transfer, #isonamae").css("display","none");
+		return false;
+	});
+	
+	var setFlg = false;
+	
+	jQuery("#main #selectAction li.isonamae").click(function(){
+		jQuery("#isonamae").css("display","block");
+		jQuery("#regist, #newgtld, #setprice, #transfer, #renew").css("display","none");
+		
+		if(!setFlg) {
+			var maxheight1 = jQuery("#isonamae .inner .text").map(function(i,e) {
+				return parseInt(jQuery(e).height(), 10);
+			}).get();
+			
+			jQuery("#isonamae .inner .text").height(Math.max.apply(null, maxheight1));
+			
+			var maxheight2 = jQuery("#isonamae .inner").map(function(i,e) {
+				return parseInt(jQuery(e).height(), 10);
+			}).get();
+			
+			jQuery("#isonamae .inner").height(Math.max.apply(null, maxheight2));
+			
+			setFlg = true;
+		}
+		
+		return false;
+	});
+	
+	jQuery("#isonamae .inputDomain").click(function() {
+		$("input", this).focus();
+	});
+	
+	//flotingBanner close
+	jQuery('.closeBtn').click(function(){
+		jQuery('.tokyoBanner').fadeOut();
+	});
+	
+});
+
+
+
+
+
+
+
+/*-----------------------------------------------------------------
+  top_rotation.js
+-------------------------------------------------------------------*/
+
+jQuery.extend(jQuery.easing,{
+	easeInQuart: function (x, t, b, c, d) {
+		return c*(t/=d)*t*t*t + b;
+	},
+	easeOutQuart: function (x, t, b, c, d) {
+	return -c * ((t=t/d-1)*t*t*t - 1) + b;
+	}
+});
+
+var label = '';
+
+jQuery(document).ready(function(){
+
+	var rotateTime = 7000;
+	var tabFlg = 1;
+	var limitFlg = 0;
+	jQuery('.btn_002 > a').attr('href','http://onamae-premium.com/onamae/premiumDomain/select/?banner_id=831_top_premium-banner_pop&#pop');
+
+	rotateScroll();
+
+	jQuery('#rttnBnnr > ul > li > a').click(function(){
+		
+//		clearTimeout(lmtsflg);	lmtsflg = 0;			/* auctionƒoƒi[ŽžŽ~‚ß‚é */
+		tabFlg = Number(jQuery(this).attr("href").substring(4,5));
+		rotateScroll();
+		
+		/*-- ƒ^ƒuClick”ƒJƒEƒ“ƒg --*/
+		setTimeout(function(){
+			var s=s_gi('gmoinonamaecom');
+			s.linkTrackVars='eVar35';
+			
+			if(tabFlg == 2){//–¼‘O
+				s.eVar35='top_premium-bannertab_japanese_n0509';
+				s.tl(this,'o','top_premium-bannertab_japanese_n0509');
+			}else if(tabFlg == 3){//l‹C
+				s.eVar35='top_premium-bannertab_pop_n0509';
+				s.tl(this,'o','top_premium-bannertab_pop_n0509');
+			}else if(tabFlg == 4){//ƒrƒWƒlƒX
+				s.eVar35='top_premium-bannertab_holiday_n0509';
+				s.tl(this,'o','top_premium-bannertab_holiday_n0509');
+			}else if(tabFlg == 5){//HŽ–
+				s.eVar35='top_premium-bannertab_baseball_n0509';
+				s.tl(this,'o','top_premium-bannertab_baseball_n0509');
+			}else if(tabFlg == 1){//’´‚Šz
+				s.eVar35='top_premium-bannertab_super_n0509';
+				s.tl(this,'o','top_premium-bannertab_super_n0509');
+			}
+		},500);
+		/*-- ƒ^ƒuClick”ƒJƒEƒ“ƒg --*/
+		
+		return false;
+	});
+
+	jQuery('#rotation_inner > dl').hover(function(){
+		jQuery("#rotation_inner > dl").attr('style','cursor: pointer;');
+		},function(){
+		jQuery("#rotation_inner > dl").attr('style','');
+	});
+
+	jQuery('#rotation_inner > dl').click(function(){
+		//location.href=jQuery('.btn_002 > a').attr('href');
+		var locationurl = jQuery('.btn_002 > a').attr('href');
+		window.open(locationurl);
+	});
+
+
+	function rotateScroll(iD) {
+		hrefData = '#tab'+tabFlg;
+		jQuery('#rttnBnnr > ul > li > a').attr('style','background-image: url(//cache.img.gmo.jp/onamae/images/RotationBanner_tab.gif);');
+		jQuery('#tb'+tabFlg+' > a').attr('style','background-image: url(//cache.img.gmo.jp/onamae/images/RotationBanner_tab_ov.gif);color:#fff;');
+		switch(hrefData){
+		case '#tab1':
+		jQuery('#rotation_inner').animate({left: '0px'}, 600, "easeOutQuart");
+		jQuery('.btn_002 > a').attr('href','http://onamae-premium.com/onamae/premiumDomain/select/?banner_id=831_top_premium-banner_japanese&#japanese');
+		break;
+		
+		case '#tab2':
+		jQuery('#rotation_inner').animate({left: '-918px'}, 600, "easeOutQuart");
+		jQuery('.btn_002 > a').attr('href','http://onamae-premium.com/onamae/premiumDomain/select/?banner_id=831_top_premium-banner_pop&#pop');
+//		jQuery('#rotation_inner').attr('style','left:-842px');
+		break;
+		
+		case '#tab3':
+		jQuery('#rotation_inner').animate({left: '-1836px'}, 600, "easeOutQuart");
+		jQuery('.btn_002 > a').attr('href','http://onamae-premium.com/onamae/premiumDomain/select/?banner_id=831_top_premium-banner_business&#business');
+		break;
+		
+		case '#tab4':
+		jQuery('#rotation_inner').animate({left: '-2754px'}, 600, "easeOutQuart");
+		jQuery('.btn_002 > a').attr('href','http://onamae-premium.com/onamae/premiumDomain/select/?banner_id=831_top_premium-banner_food&#food');
+		break;
+
+		case '#tab5':
+		jQuery('#rotation_inner').animate({left: '-3672px'}, 600, "easeOutQuart");
+		jQuery('.btn_002 > a').attr('href','http://onamae-premium.com/onamae/premiumDomain/select/?banner_id=831_top_premium-banner_super&#super');
+		break;
+
+		}
+
+		tabFlg++;
+		if ( tabFlg > 5 ) tabFlg = 1;
+		//lmtsflg = setTimeout(rotateScroll, rotateTime );			/* auctionƒoƒi[ŽžŽ~‚ß‚é */
+
+
+		return false;
+	}  
+
+	jQuery('#auction_banner').click(function(){
+		location.href = "http://auction.onamae.com/onamae/search.cgi?acc=category&ct_no=01&btn_id=1_auction";
+		return false;
+	});
+
+	var auction_animete_flg = 3;
+	jQuery('#ctgrty0'+auction_animete_flg).animate({left: '0px'}, 1000, "easeOutQuart");
+	var auction_animete_lmtsflg = setTimeout(auction_animete, rotateTime );
+	function auction_animete () {
+		clearTimeout(auction_animete_lmtsflg);
+		jQuery('#ctgrty0'+auction_animete_flg).animate({left: '400px'}, 1000, "easeOutQuart");
+		jQuery('#ctgrty0'+auction_animete_flg).attr('style', 'left: -500px');
+		auction_animete_flg++;
+		if ( auction_animete_flg > 3 ) auction_animete_flg = 1;
+		jQuery('#ctgrty0'+auction_animete_flg).attr('style', 'left: -500px').animate({left: '0px'}, 1000, "easeOutQuart");
+		auction_animete_lmtsflg = setTimeout(auction_animete, rotateTime );
+	}
+
+
+
+});
+
+/*=====================================================
+meta: {
+  title: "jquery-opacity-rollover.js",
+  version: "2.1",
+  copy: "copyright 2009 h2ham (h2ham.mail@gmail.com)",
+  license: "MIT License(http://www.opensource.org/licenses/mit-license.php)",
+  author: "THE HAM MEDIA - http://h2ham.seesaa.net/",
+  date: "2009-07-21"
+  modify: "2009-07-23"
+}
+=====================================================*/
+(function($) {
+	
+	$.fn.opOver = function(op,oa,durationp,durationa){
+		
+		var c = {
+			op:op? op:1.0,
+			oa:oa? oa:0.6,
+			durationp:durationp? durationp:'fast',
+			durationa:durationa? durationa:'fast'
+		};
+		
+
+		$(this).each(function(){
+			$(this).css({
+					opacity: c.op,
+					filter: "alpha(opacity="+c.op*100+")"
+				}).hover(function(){
+					$(this).fadeTo(c.durationp,c.oa);
+				},function(){
+					$(this).fadeTo(c.durationa,c.op);
+				})
+		});
+	},
+	
+	$.fn.wink = function(durationp,op,oa){
+
+		var c = {
+			durationp:durationp? durationp:'slow',
+			op:op? op:1.0,
+			oa:oa? oa:0.2
+		};
+		
+		$(this).each(function(){
+			$(this)	.css({
+					opacity: c.op,
+					filter: "alpha(opacity="+c.op*100+")"
+				}).hover(function(){
+				$(this).css({
+					opacity: c.oa,
+					filter: "alpha(opacity="+c.oa*100+")"
+				});
+				$(this).fadeTo(c.durationp,c.op);
+			},function(){
+				$(this).css({
+					opacity: c.op,
+					filter: "alpha(opacity="+c.op*100+")"
+				});
+			})
+		});
+	}
+	
+})(jQuery);
+
+
+
+/*-----------------------------------------------------------------
+  top_searchBox.js.js
+-------------------------------------------------------------------*/
+
+//slide
+jQuery("body").append("<div id='glayLayer'></div>");
+
+jQuery(function(){
+
+	//focus
+	//jQuery("#bulk_searchArea").focus();
+
+	jQuery(".searchToggle").click(function(){
+		if(jQuery(".slctB").css("display")=="block"){
+			jQuery(".slctB:not(:animated)").slideUp(300);
+		}else{
+			jQuery(".slctB").slideDown(300);
+		}
+	});
+
+	//toggle
+	jQuery(".searchToggle").click(function(){
+		if (jQuery(this).hasClass('searchToggle-down')) {
+		jQuery(this).removeClass('searchToggle-down').addClass('searchToggle-up');
+	}
+	else {
+		jQuery(this).removeClass('searchToggle-up').addClass('searchToggle-down');
+	}
+	});
+
+	//hover
+	jQuery("#domin01 li").hover(function(){
+		jQuery(this).addClass("hoverC");
+	},function(){
+		jQuery(this).removeClass("hoverC");
+	})
+
+	jQuery("#domin02 li").hover(function(){
+		jQuery(this).addClass("hoverC");
+	},function(){
+		jQuery(this).removeClass("hoverC");
+	})
+
+	//textIn
+	jQuery("#domin01 li").click(function(){
+	jQuery(".searchTld").text(jQuery(this).text());
+	jQuery("input[name='selectTld']").val(jQuery(this).attr("class").replace(" hoverC",""));
+	jQuery(".searchToggle").removeClass('searchToggle-up').addClass('searchToggle-down');
+	jQuery(".slctB").attr('style','display:none');
+	});
+
+	jQuery("#domin02 li").click(function(){
+	jQuery(".searchTld").text(jQuery(this).text());
+	jQuery("input[name='selectTld']").val(jQuery(this).attr("class").replace(" hoverC",""));
+	jQuery(".searchToggle").removeClass('searchToggle-up').addClass('searchToggle-down');
+	jQuery(".slctB").attr('style','display:none');
+	});
+
+	//glayLayer
+	jQuery("#anotherB").hide();
+	jQuery("body").append("<div id='glayLayer'></div>");
+	jQuery("#glayLayer").click(function(){
+		jQuery(this).hide()
+	});
+	jQuery("a.modal").click(function(){
+		jQuery("#glayLayer").show();
+		jQuery("#anotherB").show();
+		jQuery("#srch_area").attr('style','z-index:auto; position:static');
+		jQuery("#header").attr('style','z-index:auto');
+		jQuery("#bookmark").attr('style','z-index:auto');
+		jQuery("#anotherB form").attr('style','background-image:none');
+		jQuery("#bulk_searchArea2").focus();
+		return false;
+	});
+	
+	jQuery("#anotherB02").hide();
+	jQuery("body").append("<div id='glayLayer'></div>");
+	jQuery("#glayLayer").click(function(){
+		jQuery(this).hide()
+	});
+	jQuery("a.modal").click(function(){
+		jQuery("#glayLayer").show();
+		jQuery("#anotherB02").show();
+		jQuery("#srch_area").attr('style','z-index:auto; position:static');
+		jQuery("#header").attr('style','z-index:auto');
+		jQuery("#bookmark").attr('style','z-index:auto');
+		jQuery("#anotherB02 form").attr('style','background-image:none');
+		jQuery("#bulk_searchArea2").focus();
+		return false;
+	});
+			
+	//Á‚¦‚é
+	jQuery("#closeB").click(function(){
+		jQuery("#glayLayer").hide();
+		jQuery("#anotherB").hide();
+		jQuery("#anotherB02").hide();
+		jQuery("#srch_area").attr('style','');
+		jQuery("#header").attr('style','');
+		jQuery("#bookmark").attr('style','');
+		jQuery(".searchToggle").removeClass('searchToggle-up').addClass('searchToggle-down');
+		jQuery("#bulk_searchArea").focus();
+		return false;
+	});
+	jQuery("#glayLayer").click(function(){
+		jQuery("#glayLayer").hide();
+		jQuery("#anotherB").hide();
+		jQuery("#anotherB02").hide();
+		jQuery("#srch_area").attr('style','');
+		jQuery("#header").attr('style','');
+		jQuery("#bookmark").attr('style','');
+		jQuery("#bulk_searchArea").focus();
+		jQuery(".searchToggle").removeClass('searchToggle-up').addClass('searchToggle-down');
+		return false;
+	});
+	
+	jQuery("#closeB02").click(function(){
+		jQuery("#glayLayer").hide();
+		jQuery("#anotherB").hide();
+		jQuery("#anotherB02").hide();
+		jQuery("#srch_area").attr('style','');
+		jQuery("#header").attr('style','');
+		jQuery("#bookmark").attr('style','');
+		jQuery(".searchToggle").removeClass('searchToggle-up').addClass('searchToggle-down');
+		return false;
+	});
+	jQuery("#glayLayer").click(function(){
+		jQuery("#glayLayer").hide();
+		jQuery("#anotherB").hide();
+		jQuery("#anotherB02").hide();
+		jQuery("#srch_area").attr('style','');
+		jQuery("#header").attr('style','');
+		jQuery("#bookmark").attr('style','');
+		jQuery(".searchToggle").removeClass('searchToggle-up').addClass('searchToggle-down');
+		return false;
+	});
+
+	jQuery(document).keypress(function(e){
+		if(e.keyCode=='13'){
+			jQuery("#snglsrch").submit(function() {
+				actionSubmitP();
+				var s=s_gi('gmoinonamaecom');
+				s.linkTrackVars='eVar35';
+				s.eVar35='ƒhƒƒCƒ“ŒŸõ';
+				s.tl(this,'o','ƒhƒƒCƒ“ŒŸõ');
+				return false;
+			});
+		}
+	});
+
+});
+
+
+function actionSubmitP(fname) {
+	
+	if ( jQuery("#tld").text() == undefined || jQuery("#tld").text() == "" ) {
+		return;
+	}
+	
+	var form = eval('document.' + fname);
+	if (form == undefined) {
+		return;
+	}
+
+	// delete R (hidden)
+	var r = form.elements['R'];
+	if ( r.length != undefined && r.length > 1 ) {
+		for(i = 0; i < r.length; i++) {
+			deleteR(r[i].value);
+		}
+	} else {
+		deleteR(r.value);
+	}
+	
+	var tlds = []; 
+	jQuery("#list li").each(function() { 
+		tlds.push(jQuery(this).text()) 
+	}); 
+	
+	// delete R (p)
+	for ( i = 0; i < tlds.length; i++ ) {
+		deleteR(tlds.value);
+	}
+	
+	// delete C
+	for ( i = 0; i < tlds.length; i++ ) {
+		deleteC(tlds.value);
+	}
+	
+	// create R
+	if ( r.length != undefined && r.length > 1 ) {
+		for(i = 0; i < r.length; i++) {
+			createR(form, r[i].value);
+		}
+	} else {
+		createR(form, r.value);
+	}
+	
+	// create R (select)
+	createR(form, jQuery("input[name='selectTld']").val());
+	
+	// create C
+	createC(form, jQuery("input[name='selectTld']").val());
+	
+	form.action = "http://" + form.server.value + "/onamae/domainSeekResult.do";
+	form.method = "POST";
+	form.submit();
+}
+function createR( form, tld ) {
+	tldsR = document.createElement('input');
+	tldsR.setAttribute('type', 'hidden');
+	tldsR.id = "tldsR(." + tld + ")";
+	tldsR.name = "tldsR(." + tld + ")";
+	tldsR.value = tld;
+	form.appendChild(tldsR);
+}
+function createC( form, tld ) {
+	tldsC = document.createElement('input');
+	tldsC.setAttribute('type', 'hidden');
+	tldsC.id = "tldsC(." + tld + ")";
+	tldsC.name = "tldsC(." + tld + ")";
+	tldsC.value = tld;
+	form.appendChild(tldsC);
+}
+function deleteR( tld ) {
+	id = "tldsR(." + tld + ")";
+	r = document.getElementById(id);
+	if ( r != undefined ) {
+		r.parentNode.removeChild(r);
+	}
+}
+function deleteC( tld ) {
+	id = "tldsC(." + tld + ")";
+	c = document.getElementById(id);
+	if ( c != undefined ) {
+		c.parentNode.removeChild(c);
+	}
+}
+
+
+jQuery(document).ready(function(){
+	$('.parking p span').click(function(){
+		$('.parking').animate( { height: 'toggle',}, '1000', 'swing');
+	});
+});sƒû¨¢      X–á~X–á=gÍdX™è   +    :http://www.onamae.com/script.js?1484303852 request-method GET response-head HTTP/1.1 200 OK
+Date: Sun, 05 Feb 2017 09:25:35 GMT
+Server: Apache
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+Last-Modified: Fri, 13 Jan 2017 10:37:32 GMT
+Etag: "5540-545f76bd65300"
+Accept-Ranges: bytes
+Content-Length: 21824
+Content-Type: application/javascript
+ uncompressed-len 0   U@

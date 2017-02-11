@@ -1,0 +1,793 @@
+/*
+ * Tooltip v1.0 - a full featured, light-weight, customizable IBP UI tool tip
+ * help text and tool tip text link Plugin
+ * 
+ * Author: Nagarajan Ramalingam <n.ramalingam@ieee.org> and IEEE MISI deliverables 
+ * Date: 8th Aug 20011
+ * 
+ * Usage:
+ * 
+ * To use this tooltip text add this one to your page template
+ * 
+ * $.ibpUIToolTip({'serviceUrl' : <tooltiptextUrl>, 'timeout':20000});
+ * timeout is an optional field, and can be customized on need basis
+ * serviceUrl is an optional field in case href is mentioned in the a tag, and can be customized on need basis
+ * 
+ * 
+ * html snippet:
+ * 
+ * Example:1 simple tooltip text
+ * <a class="help-tooltip" href="#" tooltip-info="key.panel.miniCatalog.help.journalsAndMagazines">
+ *	<img border="0" title="<s:text name='key.page.membership.label.help' />" alt="<s:text name='key.page.membership.label.help' />" src="<s:url value='/assets/images/helpicon.gif' />">
+ *</a>
+ *
+ * Example2:Long tooltip for rich text
+ * <a class="help-tooltip long-tooltip" href="#" tooltip-info="key.panel.miniCatalog.help.researchCollections">
+ *	<img border="0" title="<s:text name='key.page.membership.label.help' />" alt="<s:text name='key.page.membership.label.help' />" src="<s:url value='/assets/images/helpicon.gif' />">
+ * </a>
+ * ****key.panel.miniCatalog.help.researchCollections corresponds to jsp in props file /jsp/common/richTextToolTip.jsp
+ * 
+ * Example#: external link for tooltip for future enhancements to goto CMS url 
+ * <a class="help-tooltip" href="http://www.ieeelocal.org:90/abc/gettt.html?toolTipId=key.panel.miniCatalog.help.researchCollections">
+ *		<img border="0" title="<s:text name='key.page.membership.label.help' />" alt="<s:text name='key.page.membership.label.help' />" src="<s:url value='/assets/images/helpicon.gif' />">
+ *</a>
+ */
+
+(function($) {
+
+	var ibpTTUtil = {
+
+		ipbTTOptions : {
+			"serviceUrl" : "",
+			"isTTInProgress" : false,
+			"appName":"IBP",
+			"timeout" : 3000
+		},
+		TT_INFO_UNAVAILABLE : "Tooltip information is not available at this time.  Please try again.",
+
+		// initializing the tooltip
+		initPageTT : function() {
+			$(document).ready(function() {				
+				ibpTTUtil.bindTTEvt();
+			});
+		},
+		// function to close the tooltip text
+		closeTT : function() {
+			ibpTTUtil.ipbTTOptions.isTTInProgress=false;
+			var $toolTip = $('#ibp-tooltip');
+			if ($toolTip.is(':visible')) {
+				$toolTip.hide();
+				$toolTip.remove();
+			}
+		},
+
+		// function to bind the tooltip events
+		bindTTEvt : function() {
+			$('body').delegate('a.help-tooltip', 'click', function() {
+				var $this = $(this);
+				ibpTTUtil.setTTHandler($this, false);
+				return false;
+			});
+
+			$('body').delegate('a.help-tooltip-link', 'click', function() {				
+				var $this = $(this);
+				ibpTTUtil.setTTHandler($this, true);
+				return false;
+			});
+			$('body').delegate('a.help-tooltip-link-hover', 'mouseover', function(){
+				ibpTTUtil.setTTHandler($(this), true);
+				return false;
+			});
+			$('body').delegate('a.help-tooltip-link-hover', 'mouseleave', function(){			
+				ibpTTUtil.closeTT();
+				return false;
+			});
+			$('body').delegate('a.help-tooltip-link-hover', 'click', function() {				
+				return false;
+			});
+			
+			$('html').delegate('body', 'click', function(event) {
+				var $ipbTT = $(event.target).closest("#ibp-tooltip");
+				if($ipbTT.length==0){
+					ibpTTUtil.closeTT();	
+				}
+			});
+			$('html').delegate('body', 'click', function(event) {
+				var $ipbTT = $(event.target).closest("#ibp-tooltip");
+				if($ipbTT.length==0){
+					ibpTTUtil.closeTT();	
+				}
+			});	
+			
+			$(document).delegate('#ibpTT-close', 'click', function(event) {
+				ibpTTUtil.closeTT();
+				return false;
+			});			
+			
+			$(document).bind('keydown', function (e) {
+				if (e.keyCode == 27) {
+					ibpTTUtil.closeTT();
+				}
+			});
+		},
+		// function to get the tooltip text from cache if not then from server
+		setTTHandler : function($this, isTTLink) {
+			try {
+				if((ibpTTUtil.ipbTTOptions.isTTInProgress==true) || 
+					($this.next().hasClass("tooltip-overlay"))){ 
+					return;
+				}
+				ibpTTUtil.closeTT();
+				ibpTTUtil.ipbTTOptions.isTTInProgress = true;
+				var ttText = "";
+				// if its present in the cache then get the info. from cache and
+				// show it in the screen
+				if ($this.next().hasClass('ibp-tt-cache')) {
+					ttText = $this.next().html();
+					ibpTTUtil.showTT(ttText, $this, false, isTTLink);
+				} else {
+					// get the tooltip text from the server
+					var dataIn = null;
+					var docLoc = document.location+"";
+					var hrefVal = $this.attr("href");			
+					if (hrefVal == "#" || hrefVal.indexOf(docLoc)==0 || docLoc.indexOf(hrefVal)==0) {
+						var serviceUrl = ibpTTUtil.ipbTTOptions.serviceUrl;
+						var toolTipId = $this.attr('tooltip-info');
+						var hasLongTT = $this.hasClass('long-tooltip');
+						dataIn = {
+							"toolTipId" : toolTipId,
+							"longToolTip" : hasLongTT
+						};
+					} else {
+						serviceUrl = $this.attr("href");
+					}					
+					$.ajax({
+						url : serviceUrl,
+						data : dataIn,
+						cache : true,
+						type : "POST",
+						timeout : ibpTTUtil.ipbTTOptions.timeout,
+						success : function(data) {
+							ibpTTUtil.showTT(data, $this, true, isTTLink);							
+						},
+						error : function() {
+							ttText = ibpTTUtil.TT_INFO_UNAVAILABLE;
+							ibpTTUtil.showTT(ttText, $this, false, isTTLink);							
+						}
+					});
+				}
+			} catch (e) {
+				// dont do anything let it go
+			}			
+		},
+		// function to show the tooltip text
+		showTT : function(data, $this, cacheFlag, isTTLink) {
+			try {				
+				var isTTLinkHover = $this.hasClass('help-tooltip-link-hover');
+				var targetContainer = $this;
+				var tPosition = null;
+				var hasAltClass = $this.hasClass('alternate');
+				var helpIconImgPath = "";
+				tPosition = $this.position();
+
+				var offSetM = 8;
+				var ifBorderoffSetM = 1;
+				var border_top = $(window).scrollTop();
+				var top_pos;
+				if (typeof cacheFlag != 'undefined' && cacheFlag == true) {
+					var cacheResp = "<div class='display-none ibp-tt-cache'>"
+							+ data + "</div>";
+					$(targetContainer).after(cacheResp);
+				}
+				
+				//if the response came back late b4 the close function is called
+				//dont show the tooltip let it go
+				if(ibpTTUtil.ipbTTOptions.isTTInProgress==false){
+					return;
+				}
+				
+				
+				var styleTopVal  = parseInt(tPosition.top - offSetM - ifBorderoffSetM);
+				var styleLeftVal = parseInt(tPosition.left - ifBorderoffSetM);
+				var ttContent = '<div>' + data + '</div>';
+				if(!isTTLinkHover){
+					ttContent = '<div><span id="ibpTT-close">Close</span></div>'+ttContent;
+					styleLeftVal += 3;
+				}
+				
+				var styleCss = 'overflow:hidden;visibility:hidden;display:block;left:'
+						+ styleLeftVal
+						+ 'px;top:'
+						+ styleTopVal
+						+ 'px;';
+				
+				var cssAltClass = "";
+				var ttWidthClass = "tooltip-Wclass";				
+				var ttCssClass = "";
+				if($this.hasClass("tooltip-medium")){
+					ttWidthClass =" tooltip-medium";
+				}else if($this.hasClass("tooltip-small")){
+					ttWidthClass =" tooltip-small";					
+				}else if($this.hasClass("tooltip-large")){
+					ttWidthClass =" tooltip-large";
+				}else if($this.attr("ttClass")!=null){
+					ttWidthClass =" "+ $this.attr("ttClass");
+				}
+				
+				if (hasAltClass) {
+					cssAltClass = "alternate";
+				}				
+				ttCssClass+= " tooltip-overlay ";
+				if(cssAltClass!=""){
+					ttCssClass+=" "+cssAltClass;
+				}
+				var topRound ='<div class="topSec">'+
+								'<div class="top-left">&nbsp;</div>'+
+								'<div class="top '+ttWidthClass+'" >&nbsp;</div>'+
+								'<div class="top-right">&nbsp;</div>'+
+							  '</div>';
+				
+				var botRound='<div class="botSec">'+
+								'<div class="bot-left">&nbsp;</div>'+
+								'<div class="bot '+ttWidthClass+'">&nbsp;</div>'+
+								'<div class="bot-right">&nbsp;</div>'+
+							  '</div>';
+				
+				var topContHolder ='<div class="centerSec">'+
+										'<div class="center">'+
+										'<div class="tt-content-body '+ttWidthClass+'">';
+				
+				var botContHolder='</div></div></div>';
+				var ttHolderHtml = '<div id="ibp-tooltip" class="'
+									+ ttCssClass
+									+ ' " style='
+									+ styleCss
+									+ '>'
+									+topRound
+									+topContHolder
+									+ttContent
+									+botContHolder
+									+botRound+'</div>';	
+				
+				$(targetContainer).after(ttHolderHtml);
+				$ttOverlay = $(targetContainer).next('#ibp-tooltip');					
+				if(isTTLinkHover){
+					var ttHeight = $ttOverlay.height();
+					top_pos = parseInt(tPosition.top-ttHeight);						
+				}else{
+					top_pos = parseInt(tPosition.top + $this.height()+5);
+					if (hasAltClass) {
+						$ttOverlay.addClass('tooltip-viewport-alt');
+					} 
+				}				
+				$ttOverlay.css({
+					top : top_pos+'px'
+				});
+				if (hasAltClass) {
+					if($("#ibpTTLoadTxt").length==0){
+						var ttTxtDiv = "<div id='ibpTTLoadTxt' style='visibility:hidden;display:block;height:0px;'>&nbsp;</div>";
+						$("body").append(ttTxtDiv);
+					}
+					var $ibpTTLoadTxt = $("#ibpTTLoadTxt");
+					$ibpTTLoadTxt.addClass(ttWidthClass);
+					var leftWidth = $ibpTTLoadTxt.width();
+					$ibpTTLoadTxt.removeClass(ttWidthClass);
+					//alert($this.width() +"lw="+leftWidth+"tpLeft="+tPosition.left);
+					var ttLeft = tPosition.left-leftWidth+$this.width();
+					if(isTTLinkHover){
+						$ttOverlay.css({
+							left : parseInt(ttLeft-15)	
+									+ 'px'
+						});
+					}else{
+						if(isTTLink){
+							$ttOverlay.css({
+								left : parseInt(ttLeft+5)
+										+ 'px'
+							});	
+						}else{
+							$ttOverlay.css({
+								left : parseInt(ttLeft-15)
+										+ 'px'
+							});
+						}
+						
+					}
+				}
+				var isOldIEBrowser = false;
+				if (navigator.appVersion.indexOf("MSIE") != -1) {
+					var appVersion = navigator.appVersion.split("MSIE");
+					var version = parseFloat(appVersion[1]);
+					if (version <= 6) {
+						isOldIEBrowser = true;
+					}
+				}
+				// if its a old ie browser then apply bgiframe to suppress
+				// heavy weight components from piercing through the tooltip
+				// text popup
+				if (isOldIEBrowser) {
+					$ttOverlay.bgIframe();
+				}
+				$ttOverlay.css("visibility", "visible");
+				//DCS tracking start
+				try{
+					if(typeof dcsMultiTrack !='undefined'){
+						var toolTipId = $this.attr("tooltip-info");
+						if(typeof toolTipId == 'undefined'){
+							var reqParamTTArr = $this.attr("href").split("toolTipId=");
+							if(reqParamTTArr!=null && reqParamTTArr.length>1){
+								var ttIdArr = reqParamTTArr[1].split("&");
+								if(ttIdArr!=null && ttIdArr.length>0){
+									toolTipId = ttIdArr[0];
+								}
+							}
+						}
+						dcsMultiTrack('WT.si_n',ibpTTUtil.ipbTTOptions.appName + ".tooltip."+toolTipId);
+					}
+				}catch(e){
+					//dont do anything let it go
+				}
+				//DCS tracking end
+				if (isOldIEBrowser) {
+					$ttOverlay.css("height", $ttOverlay.height());
+				}
+				ibpTTUtil.ipbTTOptions.isTTInProgress=false;
+				
+			} catch (e) {
+				ibpTTUtil.ipbTTOptions.isTTInProgress=false;
+			}			
+		}
+	};
+
+	// options={"serviceUrl":<tooltipServiceUrl>, "timeout":<timeout>};
+	$.ibpUIToolTip = function(options) {
+		$.extend(ibpTTUtil.ipbTTOptions, options);
+		ibpTTUtil.initPageTT();
+	};
+})(jQuery);
+
+/*
+ * ibpFloatVertical plugin 
+ *
+ * Author: Nagarajan Ramalingam <n.ramalingam@ieee.org> and IEEE MISI deliverables 
+ * Date: 8th Aug 20011
+ * 
+ * ibpFloatVertical plugin is used to float the right hand side section namely the contents of minicart and 
+ * all the contents below mini cart
+ *  $(<div to float>).ibpFloatVertical(<bottom collision id>);
+ *  <bottom collision id> is optional if not present then it will be floating till the end of the page
+ *  
+ *  $('#MiniCart').ibpFloatVertical("footer");
+ */
+(function($) {
+
+	var ibpFloatUtil = {
+
+			options : {
+				"$floatSec":"",
+				"bottomCollisionId":"",	//optional bottomCollisionId			
+				"offset":30//offset for metanav as page container is position relative
+			},
+			initFloat: function (){
+				try{
+					var $floatDiv = $(ibpFloatUtil.options.floatSec);					
+					$floatDiv.addClass("ibpFloatContainer");
+					var isOldIEBrowser = false;
+					if (navigator.appVersion.indexOf("MSIE") != -1) {
+						var appVersion = navigator.appVersion.split("MSIE");
+						var version = parseFloat(appVersion[1]);
+						if (version <= 6) {
+							isOldIEBrowser = true;
+						}
+					}
+					var topPos = ($floatDiv.offset().top);
+					if (!isOldIEBrowser) {
+						$floatDiv.bind('customIbpScroll', function(event) {
+							var $pageContainer = $("#page-container");
+							var leftSecHt  = $pageContainer.find(".content-lc").height();
+							var rightSecHt = $pageContainer.find(".content-r").height();
+							//if left section is greater than right sec dont float
+							if(leftSecHt<rightSecHt){
+								return;
+							}
+							//if bottom collision id is not provided then stop at the end of the document
+							if(typeof ibpFloatUtil.options.bottomCollisionId!= 'undefined'){
+								var botColTop = parseInt($("."+ibpFloatUtil.options.bottomCollisionId).offset().top)-ibpFloatUtil.options.offset;	
+							}else{
+								var botColTop = $(document).height()-ibpFloatUtil.options.offset;
+							}
+							
+							var floatHt = $floatDiv.height();
+						      var y = $(window).scrollTop();
+						      var scrollLeft = $(window).scrollLeft();
+						      if((scrollLeft==0) && (y>topPos)){
+						    	  if(((parseInt(y+floatHt))>=botColTop)){
+						    		  $floatDiv.css("position","absolute");
+							    	  $floatDiv.css("top",(botColTop-floatHt) +"px");
+						    	  }else{
+						    		  $floatDiv.css("position","fixed");
+								  	  $floatDiv.css("top",0);
+						    	  }		    	
+						      }else{
+						    	  $floatDiv.css("position","");
+						    	  $floatDiv.css("top",topPos +"px");
+						      }
+						});
+						$(window).scroll(function (event) {
+							$floatDiv.trigger('customIbpScroll');		     
+						});
+						$(window).resize(function (event) {
+							$floatDiv.trigger('customIbpScroll');
+						});
+						$(window).load(function() {
+							$floatDiv.trigger('customIbpScroll');
+						});
+					} 
+				}catch(e){
+					//donot do anything let it go
+				}
+			}
+	};
+
+	$.fn.ibpFloatVertical = function(options) {
+		$.extend(ibpFloatUtil.options, options);
+		return this.each(function() {
+			ibpFloatUtil.options.floatSec=this;
+			$(document).ready(function() {
+				if(!$(this).hasClass("ibpFloatContainer")){
+					ibpFloatUtil.initFloat();	
+				}
+			});
+		});
+	};
+})(jQuery);
+
+/*
+ * IBP UI common javascript utility functions Author: Nagarajan Ramalingam
+ * <n.ramalingam@ieee.org> Date: 15th Sep 20011
+ */
+var ibpCommonUtils = {
+	defIbpLoadingTxt:"Loading...",
+	isOldIEBrowser : function() {
+		var oldBrowser = false;
+		if (navigator.appVersion.indexOf("MSIE") != -1) {
+			var appVersion = navigator.appVersion.split("MSIE");
+			var version = parseFloat(appVersion[1]);
+			if (version <= 6) {
+				oldBrowser = true;
+			}
+		}
+		return oldBrowser;
+	},
+	getProgTxtWidth: function(modalWidth, inProgressText){
+		
+		var lTxtMinWidth = 40;
+		var lTxtMaxWidth = modalWidth-100;
+		var lTxtWidth = lTxtMinWidth;
+		if (typeof inProgressText != "undefined") {			
+			if($("#ibpTLoadTxt").length==0){
+				var progTxtTDiv = "<div id='ibpTLoadTxt' style='float:left;visibility:hidden;display:block;font-size:12px;font-weight:bold;'>&nbsp;</div>";
+				$("body").append(progTxtTDiv);
+			}
+			
+			$ibpTLoadTxt = $("#ibpTLoadTxt");
+			$ibpTLoadTxt.html(inProgressText);
+			lTxtCalcWidth = $ibpTLoadTxt.width()+40;
+			if(lTxtCalcWidth>lTxtMaxWidth){
+				lTxtWidth = lTxtMaxWidth;
+			}else if(lTxtCalcWidth<lTxtMinWidth){
+				lTxtWidth = lTxtMinWidth;
+			}else{
+				lTxtWidth = lTxtCalcWidth;
+			}					
+		}
+		return lTxtWidth;
+		
+	},
+	showIbpProgressImg : function(respId, inProgressText, delayTextInfo) {
+		try {
+			var $ibpAjaxLoading  = null;
+			var $respId = null;
+			var loadingText = "&nbsp;";
+			if(respId=="body"){
+				respId = "page-container";
+			}
+			if(typeof respId == "string"){
+				$respId = $("#" + respId);
+			}else{
+				$respId = respId;
+			}	
+			if (($respId == null) || ($respId.length == 0)
+					|| ($respId.prev("div.ibpAjaxLoading").length > 0)) {
+				return;
+			}
+			
+			var modalWidth = $respId.width()
+							+ ibpCommonUtils.getIbpPadding($respId.css("padding-left"))
+							+ ibpCommonUtils.getIbpPadding($respId.css("padding-right"));
+			
+			var lTxtWidth = ibpCommonUtils.getProgTxtWidth(modalWidth, inProgressText);
+			var lTxtLeft = (modalWidth - lTxtWidth)/2;
+			var lStyleWidth = lTxtWidth;
+			var lTxtWidth = lTxtWidth-38;
+			
+			//default with no text
+			if(lTxtWidth<=40){
+				lStyleWidth = 30;
+				lTxtWidth = 1;
+			}			
+			if ((typeof inProgressText != "undefined") &&
+				($.trim(inProgressText).length>0)) {
+				loadingText = inProgressText;
+			}
+			var $modalDiv ="";
+			var $ibpAjaxLoading="";
+			if (respId == "page-container") {												
+				
+				lTxtLeft +=	$("#page-container").offset().left;
+				$modalDiv = $("<div class='ibpAjaxLoadingMask' style='top:0;width:100%;height:100%;position:fixed;'>&nbsp;</div>");
+				
+				$ibpAjaxLoading = $("<div class='ibpAjaxLoading' style='width:100%;position:fixed;height:100%;left:0;top:0'>"+
+												"<div style='top:48%;left:"+(lTxtLeft)+"px;"+ "width:"+lStyleWidth+"px; position: fixed;font-weight:bold;' class='ibpAjaxLoadingSec'>"+
+												"<div class='ibpAjaxLoadingText' style='width:"+lTxtWidth+"px;'>"+loadingText+"</div>"+
+											"</div>"+
+										"</div>");
+							
+				$respId.before($modalDiv);
+				$respId.before($ibpAjaxLoading);
+				
+			}else{								
+				
+				var modalHeight = $respId.height()
+									+ ibpCommonUtils.getIbpPadding($respId.css("padding-top"))
+									+ ibpCommonUtils.getIbpPadding($respId.css("padding-bottom"));
+				if(modalHeight<=30){
+					modalHeight = 30;
+				}				
+				
+				var lTxtTop = (modalHeight / 2) - 10;
+				
+				var secStyle = "height:" + modalHeight + "px;width:" + modalWidth
+								+ "px;position:absolute;padding:0;margin-left:"+ibpCommonUtils.getIbpPadding($respId.css("left"))+"px;";						
+				
+				var loadingStyle = "position:absolute;top:" + lTxtTop
+									+ "px;left:" + lTxtLeft + "px;width:"+(lStyleWidth)+"px;";
+				var loadingTxtStyle = "width:"+(lTxtWidth)+"px;";
+				
+				$ibpAjaxLoading = $("<div class='ibpAjaxLoading' style='" + secStyle
+								+ "'><div class='ibpAjaxLoadingSec' style='" + loadingStyle + "'><div class='ibpAjaxLoadingText' style='"+loadingTxtStyle+"' >" + loadingText
+								+ "</div></div></div>");
+								
+				$modalDiv = "<div class='ibpAjaxLoadingMask' style='" + secStyle+"'>&nbsp;</div>";
+				
+				$respId.before($modalDiv);
+				$respId.before($ibpAjaxLoading);
+			}
+			
+			showIbpProgText = function(delayTimeout, delayMsg){
+				
+				var showIbpProgresText = function() {
+					var $ajaxLoadingText = $ibpAjaxLoading.find('div.ibpAjaxLoadingText');
+					if(typeof delayMsg != "undefined"){							
+						var ldTxtWidth = ibpCommonUtils.getProgTxtWidth(modalWidth, delayMsg);
+						var ldTxtLeft = (modalWidth - ldTxtWidth)/2;
+						$ibpAjaxLoading.find('.ibpAjaxLoadingSec').css({'width' : ldTxtWidth+'px', 'left' : ldTxtLeft+'px'});
+						$ibpAjaxLoading.find('.ibpAjaxLoadingText').css({'width' : ldTxtWidth-10+'px'});
+						$ajaxLoadingText.html(delayMsg);
+					}
+					$ajaxLoadingText.css('display', 'block');
+				};
+				setTimeout(showIbpProgresText, delayTimeout);
+				
+			};
+			
+			$ibpAjaxLoading.find('div.ibpAjaxLoadingText').css('display', 'block');
+			if (typeof inProgressText == "undefined") {				
+				showIbpProgText(2000, ibpCommonUtils.defIbpLoadingTxt);
+			}
+			
+			if(typeof delayTextInfo != "undefined"){
+				
+				if($.isArray(delayTextInfo)){
+					$.each(delayTextInfo, function(index, dtextInfo) { 
+						showIbpProgText(dtextInfo.delayTextInMillis, dtextInfo.delayTextMsg);  
+					});
+				}else{
+					showIbpProgText(delayTextInfo.delayTextInMillis, delayTextInfo.delayTextMsg);	
+				}
+				
+			}
+		} catch (e) {
+			// dont do anything let it go
+		}
+	},
+	clearIbpProgressImg : function(respId) {
+		try {
+			if (typeof respId != "undefined" && respId=="body") {				
+				var $body = $("body");
+				$body.find(">div.ibpAjaxLoading, >div.ibpAjaxLoadingMask").remove();
+			}else if (typeof respId != "undefined") {
+				var $respId = $("#" + respId);
+				if ($respId == null || $respId.length == 0) {
+					return;
+				}			
+				$respId.prev("div.ibpAjaxLoading").remove();
+				$respId.prev("div.ibpAjaxLoadingMask").remove();
+			} else {
+				$("div.ibpAjaxLoading, div.ibpAjaxLoadingMask").remove();				
+			}
+		} catch (e) {
+			// dont do anything let it go
+		}
+	},
+	getIbpPadding : function(paddingStr) {
+		var intVal = 0;		
+		try {
+			if(paddingStr=="auto"){
+				intVal = 0;
+			}else{
+				intVal = parseInt(paddingStr.replace("px", ""));	
+			}			
+		} catch (e) {
+			intVal = 0;
+		}
+		return intVal;
+	},
+	setTempUserIdCookie :function(userid){
+		$.cookie("tempuid", userid, {path : '/', domain: '.ieee.org'});
+	},
+	readTempUserIdCookie : function(){
+		var tempuserid = $.cookie("tempuid");	
+		$.cookie("tempuid", "", {path : '/', domain: '.ieee.org'});
+		return tempuserid;
+	}
+};
+
+/*
+ * ibpStaticModal plugin 
+ *
+ * Author: Nagarajan Ramalingam <n.ramalingam@ieee.org> and colorbox plugin
+ * Date: 8th Aug 20011
+ * 
+ * ibpStaticModal plugin is used to create a static modal dialog with 
+ * title, content, button label, button(s) callback, along with the desired width
+ * 
+ * Eg:
+ * $.ibpStaticModal({
+ *		"title":key_popup_mem_renew_mergeQuote_title,
+ *		"contentMsg":key_popup_mem_renew_mergeQuote_membership_msg,				
+ *		"btn1Label":key_popup_mem_renew_mergeQuote_renewNow,
+ *		"btn1Handler":function(){ibpMem.mergeQuotePopup();},
+ *		"btn2Label":key_popup_mem_renew_mergeQuote_removeItems,
+ *		"btn2Handler":function(){ibpMem.removeMemProducts();},
+ *		"showCloseBtn":false,
+ *		"width":"500px"
+ *	});
+ */
+
+(function($) {	
+	$.ibpStaticModal = function(options) {		
+		function show(){
+			try{
+				if(options==null){
+					return;
+				}
+				$.extend(ibpModalUtils.options, options);
+				var modalHtml = ibpModalUtils.getModalHtml();
+				window.scrollTo(0,0);
+				var closeFn = null;
+				var bindEvts = function(){					
+					//bind all btn events
+					var $ipbModal = $("#ipbModal");
+					var $ipbBtn1 = $ipbModal.find(".ibpModalBtn1");
+					var btnHandler = ibpModalUtils.options.btn1Handler;
+					if(typeof btnHandler == "function"){
+						$ipbBtn1.bind("click", btnHandler);
+					}
+					var $ipbBtn2 = $ipbModal.find(".ibpModalBtn2");
+					var btnHandler = ibpModalUtils.options.btn2Handler;
+					if(typeof btnHandler == "function"){
+						$ipbBtn2.bind("click", btnHandler);
+					}
+				};
+				//if showclosebtn is false then remove the close button
+				if(ibpModalUtils.options.showCloseBtn==false){
+					closeFn = function(){$('#cboxClose').css("display", "none");};
+				}else{
+					closeFn = function(){
+							$('#cboxClose').css("display", "block");
+							$('#cboxClose').attr("title", "Close");
+					};					
+				}
+				$.colorbox({html:modalHtml,
+							escKey:false, 
+							title:ibpModalUtils.options.title,
+							scrolling:false,
+							close:"",
+							opacity:0.6,
+							overlayClose:false,	
+							onComplete: bindEvts,
+							onLoad:closeFn
+						});
+			}catch(e){
+				//console.log(e);
+			}
+		}
+		var ibpModalUtils = {
+			options : {
+				"title":"IEEE",
+				"contentMsg":"IEEE",	
+				"btn1Label":null,
+				"btn2Label":null,
+				"btn1Handler":null,
+				"btn2Handler":null,
+				"btn1CssClass":"button-large",
+				"btn2CssClass":"button-large",
+				"showCloseBtn":true,
+				"width":"500px"
+			},
+			getModalBtn: function(btnLabel, btnHandler, btnClass){
+				var btnHtml="";
+				if(((typeof btnLabel != "undefined") && (btnLabel!=null) && ($.trim(btnLabel)!="")) &&
+					(typeof btnHandler == "function")){
+					btnHtml = "<div class='"+ btnClass + "' title='"+btnLabel+"'>"+btnLabel+"</div>";
+				}
+				return btnHtml;
+			},
+			getModalHtml: function(){			
+				var htmlData = "<div id='ipbModal' style='width:"+ibpModalUtils.options.width+";'>"+
+									ibpModalUtils.getModalBody()+									
+								"</div>";
+				return htmlData;
+			},
+			getModalBody:function(){
+					var htmlData = "<div class='ibpModal-cholder'>"+
+											"<div id='ibpModal-error'>&nbsp;</div>"+
+											"<div class='clearit'></div>"+
+											"<div class='ibpModalContent'>" +
+												ibpModalUtils.options.contentMsg+
+											"</div>"+											
+										"</div>"+
+										"<div class='clearit'></div>"+
+										"<div class='ibpModalBtnRow'>"+	
+											ibpModalUtils.getModalBtn(ibpModalUtils.options.btn1Label, ibpModalUtils.options.btn1Handler, ibpModalUtils.options.btn1CssClass + " ibpModalBtn1")+
+											ibpModalUtils.getModalBtn(ibpModalUtils.options.btn2Label, ibpModalUtils.options.btn2Handler, ibpModalUtils.options.btn2CssClass + " ibpModalBtn2")+
+										"</div>"+
+									"<div class='clearit'></div>";										
+				return htmlData;
+			}
+		};		
+		show();
+	};
+	
+	$.ibpStaticModal.close = function(){
+		$.colorbox.close();
+	};	
+	
+	$.ibpStaticModal.invokeCBFn= function(cbFn){
+		if(typeof cbFn == "function"){
+			cbFn();
+		}
+	};
+	
+})(jQuery);
+
+/* Copyright (c) 2006 Brandon Aaron (http://brandonaaron.net)
+ * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) 
+ * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ *
+ * $LastChangedDate: 2007-07-21 18:45:56 -0500 (Sat, 21 Jul 2007) $
+ * $Rev: 2447 $
+ *
+ * Version 2.1.1
+ */
+(function($){$.fn.bgIframe=$.fn.bgiframe=function(s){if($.browser.msie&&/6.0/.test(navigator.userAgent)){s=$.extend({top:'auto',left:'auto',width:'auto',height:'auto',opacity:true,src:'javascript:false;'},s||{});var prop=function(n){return n&&n.constructor==Number?n+'px':n;},html='<iframe class="bgiframe"frameborder="0"tabindex="-1"src="'+s.src+'"'+'style="display:block;position:absolute;z-index:-1;'+(s.opacity!==false?'filter:Alpha(Opacity=\'0\');':'')+'top:'+(s.top=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderTopWidth)||0)*-1)+\'px\')':prop(s.top))+';'+'left:'+(s.left=='auto'?'expression(((parseInt(this.parentNode.currentStyle.borderLeftWidth)||0)*-1)+\'px\')':prop(s.left))+';'+'width:'+(s.width=='auto'?'expression(this.parentNode.offsetWidth+\'px\')':prop(s.width))+';'+'height:'+(s.height=='auto'?'expression(this.parentNode.offsetHeight+\'px\')':prop(s.height))+';'+'"/>';return this.each(function(){if($('> iframe.bgiframe',this).length==0)this.insertBefore(document.createElement(html),this.firstChild);});}return this;};})(jQuery);õ¯µšb      X–ádX–ád=gÍQX™Úƒ   >    :https://www.ieee.org/ieee-mashup/js/common/ibpUICommonUtil.js security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Last-Modified: Fri, 13 Jan 2017 20:10:30 GMT
+Etag: "6a25-545ff6cecf980"
+Accept-Ranges: bytes
+Content-Length: 27173
+Content-Type: text/javascript
+content-security-policy: frame-ancestors http://*.ieee.org https://*.ieee.org
+Strict-Transport-Security: max-age=31536000 includeSubDomains
+Date: Sun, 05 Feb 2017 09:25:08 GMT
+ uncompressed-len 0   j%

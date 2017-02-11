@@ -1,0 +1,459 @@
+<?xml version="1.0"?>
+<ArrayOfProductMinPrice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProductMinPrice>
+    <Product>Switch Alpha</Product>
+    <SKU>US_QF9-00437,US_QF9-00438</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$955</Price>
+    <RawPrice>955</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Switch 10</Product>
+    <SKU>US_QF9-00010,US_QF9-00011</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$237</Price>
+    <RawPrice>237</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Aspire S</Product>
+    <SKU>US_S5</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$551</Price>
+    <RawPrice>551</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Zenbook Flip</Product>
+    <SKU>US_UX360UA</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,199</Price>
+    <RawPrice>1199</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Transformer Mini</Product>
+    <SKU>US_T102HA,US_T102HA-C4-GR</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$349</Price>
+    <RawPrice>349</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Inspiron 11 3000</Product>
+    <SKU>US_QF9-00471</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$199</Price>
+    <RawPrice>199</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Inspiron 13 5000</Product>
+    <SKU>US_13-5000,US_13-5001</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$312</Price>
+    <RawPrice>312</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Inspiron 13 7000</Product>
+    <SKU>US_13-7000,US_13-7001</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$709</Price>
+    <RawPrice>709</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Alienware 17</Product>
+    <SKU>US_17R4</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$2,299</Price>
+    <RawPrice>2299</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>XPS 13</Product>
+    <SKU>US_XPS13-1,US_XPS13-2,US_XPS13-3</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$999</Price>
+    <RawPrice>999</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Envy x360</Product>
+    <SKU>US_QF9-00445,US_QF9-00446,US_QF9-00447,US_QF9-004471</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$899</Price>
+    <RawPrice>899</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Spectre Notebook</Product>
+    <SKU>US_HP13,US_HP13-1</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$999</Price>
+    <RawPrice>999</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Pavilion x360_11</Product>
+    <SKU>US_CWF-02185</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$429</Price>
+    <RawPrice>429</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Pavilion x360_13</Product>
+    <SKU>US_CWF-02186</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$529</Price>
+    <RawPrice>529</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Pavilion x360_15</Product>
+    <SKU>US_CWF-02187</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$529</Price>
+    <RawPrice>529</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Omen X</Product>
+    <SKU>US_X3V89AV_1,US_X3V89AV_2,US_X3V89AV_3,US_X3V89AV_4</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,949</Price>
+    <RawPrice>1949</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Pavillion Wave</Product>
+    <SKU>US_V9B00AA</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$449</Price>
+    <RawPrice>449</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Matebook</Product>
+    <SKU>US_QF9-00448,US_QF9-00449,US_QF9-00450,US_QF9-00451,US_QF9-00452</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$699</Price>
+    <RawPrice>699</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Yoga 900</Product>
+    <SKU>US_QF9-00432,US_QF9-00433,US_QF9-00428,US_QF9-00429,US_QF9-00430,US_QF9-00431</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,149</Price>
+    <RawPrice>1149</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Yoga 710</Product>
+    <SKU>US_80V50009US</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,099</Price>
+    <RawPrice>1099</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>ideapad 710S</Product>
+    <SKU>US_710s-1,US_710s-2,US_710s-3</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,308</Price>
+    <RawPrice>1308</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>idecentre Y710</Product>
+    <SKU>US_Y710</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,799</Price>
+    <RawPrice>1799</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Yoga Book</Product>
+    <SKU>US_YB1-X91F</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$549</Price>
+    <RawPrice>549</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>ideapad Miix 700</Product>
+    <SKU>US_4974600,US_4974601,US_4974602</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$838</Price>
+    <RawPrice>838</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Yoga 910</Product>
+    <SKU>US_5207101,US_5207102</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,199</Price>
+    <RawPrice>1199</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Razer Blade Stealth</Product>
+    <SKU>US_QF9-00252,US_QF9-00305</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,399</Price>
+    <RawPrice>1399</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Galaxy TabPro S</Product>
+    <SKU>US_QF9-00293,US_QF9-00294</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$799</Price>
+    <RawPrice>799</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Notebook 7 Spin_15</Product>
+    <SKU>US_5339101</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$899</Price>
+    <RawPrice>899</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Notebook 7 Spin_13</Product>
+    <SKU>US_5339102</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$749</Price>
+    <RawPrice>749</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Surface Book</Product>
+    <SKU>US_CR9-00001,US_CS4-00001,US_SX3-00001,US_CS5-00001,US_CR7-00001,US_PA9-00001</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,499</Price>
+    <RawPrice>1499</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Surface Pro</Product>
+    <SKU>US_CQ9-00001,US_CR3-00001,US_CR5-00001,US_SU3-00001,US_TH2-00001</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$699</Price>
+    <RawPrice>699</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Lumia 950</Product>
+    <SKU>US_L950,US_L951</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$298</Price>
+    <RawPrice>298</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Lumia 950 Dual Sim</Product>
+    <SKU>US_L9502</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$399</Price>
+    <RawPrice>399</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Lumia 950 XL</Product>
+    <SKU>US_L950XL,US_L950XL</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$499</Price>
+    <RawPrice>499</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Lumia 950 XL Dual</Product>
+    <SKU>US_L950XL2</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$499</Price>
+    <RawPrice>499</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Lumia 650_Dual</Product>
+    <SKU>US_L6502</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$199</Price>
+    <RawPrice>199</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Lumia 550</Product>
+    <SKU>US_L550</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$139</Price>
+    <RawPrice>139</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Alienware Area 51</Product>
+    <SKU>US_AlienArea51,US_AlienArea51_1</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$2,099</Price>
+    <RawPrice>2099</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Ideacentre Y900</Product>
+    <SKU>US_Ideactr,US_Ideactr_1</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,599</Price>
+    <RawPrice>1599</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Vortex G65</Product>
+    <SKU>US_VortexG65,US_VortexG65_1</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,426</Price>
+    <RawPrice>1426</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Predator 15</Product>
+    <SKU>US_Predator15,US_Predator15_1,US_Predator15_2,US_Predator15-1</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,699</Price>
+    <RawPrice>1699</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Alienware Aurora R5</Product>
+    <SKU>US_AlienAurR5,US_AlienAurR5_1</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,999</Price>
+    <RawPrice>1999</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Liquid Jade Primo</Product>
+    <SKU>US_JadePrimo</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$449</Price>
+    <RawPrice>449</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Liquid M330</Product>
+    <SKU>US_M330</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$99</Price>
+    <RawPrice>99</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>HP Curved ENVY 34 All-in-One</Product>
+    <SKU>US_CurvedEnvy34</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,546</Price>
+    <RawPrice>1546</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Dell Alienware 15</Product>
+    <SKU>US_ANW15-8214SLV</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,799</Price>
+    <RawPrice>1799</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Acer Predator 17 X</Product>
+    <SKU>US_Predator17x</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$2,738</Price>
+    <RawPrice>2738</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>ASUS Q534UX</Product>
+    <SKU>US_Q534UX-BHI7T19</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$1,249</Price>
+    <RawPrice>1249</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>HP x2 Detachable</Product>
+    <SKU>US_QF9-00728</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$179</Price>
+    <RawPrice>179</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>HP Spectre x360 13</Product>
+    <SKU>US_QF9-00003,US_QF9-00004</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$949</Price>
+    <RawPrice>949</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>ASUS ZenBook Flip UX360CA</Product>
+    <SKU>US_QF9-00508</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$749</Price>
+    <RawPrice>749</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Dell Inspiron 13</Product>
+    <SKU>US_QF9-00678</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$549</Price>
+    <RawPrice>549</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Dell Inspiron 15</Product>
+    <SKU>US_QF9-00299</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$449</Price>
+    <RawPrice>449</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>Dell Inspiron 17</Product>
+    <SKU>US_QF9-00746</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$579</Price>
+    <RawPrice>579</RawPrice>
+  </ProductMinPrice>
+  <ProductMinPrice>
+    <Product>HP Pavilion x360 Convertible 15</Product>
+    <SKU>US_QF9-00727</SKU>
+    <CurrencySymbol>$</CurrencySymbol>
+    <Currency>USD</Currency>
+    <Price>$529</Price>
+    <RawPrice>529</RawPrice>
+  </ProductMinPrice>
+</ArrayOfProductMinPrice>-#5ë8Y      X–âX–â=gÍÇX–â>   A    a,:https://winminprice.blob.core.windows.net/windevices/en-us.xml security-info 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 request-method GET request-Origin https://www.microsoft.com response-head HTTP/1.1 200 OK
+Content-Length: 13791
+Content-Type: application/octet-stream
+Content-MD5: vEstyXfSbtI3Y8rsTJ+VFw==
+Last-Modified: Sun, 05 Feb 2017 09:19:38 GMT
+Etag: 0x8D44DA81BF03F1B
+Vary: Origin
+Server: Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
+x-ms-request-id: 4b680c56-0001-003c-0e92-7f1d9b000000
+x-ms-version: 2009-09-19
+x-ms-lease-status: unlocked
+x-ms-blob-type: BlockBlob
+access-control-expose-headers: x-ms-request-id,x-ms-version,x-ms-lease-status,x-ms-blob-type
+Access-Control-Allow-Origin: https://www.microsoft.com
+access-control-allow-credentials: true
+Date: Sun, 05 Feb 2017 09:27:56 GMT
+   5ß

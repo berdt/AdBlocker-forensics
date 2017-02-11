@@ -1,0 +1,12 @@
+
+2.53.2
+ff 46
+
+firefox_profile.py
+
+change
+with open(os.path.join(addon_path, 'install.rdf'), 'r') as f:
+
+TO
+
+with open(os.path.join(addon_path, 'install.rdf'), 'r', encoding='utf-8') as f:

@@ -1,0 +1,417 @@
+function changeMain(obj,index) {  
+	$(".pagination a:eq("+index+")").click();
+	OnlineOut();  
+}    
+
+function addRemoveHover(obj, clazzPre, clazzNext) {
+	$(obj).find("div").removeClass(clazzPre); 
+	$(obj).find("div").attr("class", clazzNext);
+}
+
+function downloadsoftNum(id) { 
+	var url = window.basePath+"/addDownloadcount.html?_t_="+Math.random(); 
+	$.ajax({
+		url:url,
+		dataType: "json", 
+		data: {"id": id},  
+		success : function(data) {
+	} 
+	});  
+}
+
+//-----控制右侧企业QQ窗口的伸缩----start-----
+function OnlineOver(){ 
+	$(".contact_small").hide();     
+	$(".contact").show();
+		} 
+ 
+	    
+		if(typeof(HTMLElement)!="undefined"){   
+       HTMLElement.prototype.contains    =    function(obj) {   
+       while(obj!=null    &&    typeof(obj.tagName)!="undefind"){
+		     if(obj==this)    
+		     return    true;    
+		     obj=obj.parentNode;
+		     }    
+		     return    false;   
+	       };   
+   }
+    
+	
+	function OnlineOut(thiz,event){
+		var evt = window.event || event;
+		var obj = event.toElement || evt.relatedTarget;
+		if(thiz != undefined && thiz.contains(obj)){
+			return;
+		}
+		$(".contact").hide(); 
+	$(".contact_small").show(); 
+}
+
+
+
+
+function hideMsgBox(theEvent){
+	if (theEvent){
+		var browser=navigator.userAgent;
+		if (browser.indexOf("Firefox")>0){
+			if (document.getElementById('divOnline').contains(theEvent.relatedTarget)) {
+				return;
+			}
+		}
+		if (browser.indexOf("MSIE")>0){
+			if (document.getElementById('divOnline').contains(event.toElement)) {
+			return;
+			}
+		}
+	}
+	document.getElementById("divMenu").style.display = "block";
+	document.getElementById("divOnline").style.display = "none";
+}
+//-----控制右侧企业QQ窗口的伸缩----end-----------
+
+
+function format_number(n){
+   var b=parseInt(n).toString();
+   var len=b.length;
+   if(len<=3){return b;}
+   var r=len%3;
+   return r>0?b.slice(0,r)+","+b.slice(r,len).match(/\d{3}/g).join(","):b.slice(r,len).match(/\d{3}/g).join(",");
+}
+
+$(document).ready(function(){
+	/**鼠标移到模块以后的边框等样式*/
+	/*
+	$(".fwqaqglpt").mouseover(function() {
+		$(this).css("border-color","#2995E0");
+		$(".fwqaqglpt .fwqaqtx_bt").css("background","#46ABF1").css("color","#fff");
+		$(".fy_bottom,.fy_bottom li").css("border-color","#2995E0");
+    });
+    $(".fwqaqfh").mouseover(function() {
+		$(this).css("border-color","#2995E0");
+		$(".fwqaqfh .fwqaqtx_bt").css("background","#46ABF1").css("color","#fff");
+		$(".fwqaqfh_fwqaqg,.fwqaqfh_bottom,.fwqaqfh_bottom li").css("border-color","#2995E0");
+    });
+    $(".sjap").mouseover(function() {
+		$(this).css("border-color","#2995E0");
+		$(".sjap .fwqaqtx_bt").css("background","#46ABF1").css("color","#fff");
+		$(".sjap_web,.sjap_right").css("border-color","#2995E0");
+    });
+    $(".fwqaqglpt").mouseleave(function() {
+		$(this).css("border-color","#e3e5e8");
+		$(".fwqaqglpt .fwqaqtx_bt").css("background","#e1e5ed").css("color","#3b475b");
+		$(".fy_bottom,.fy_bottom li").css("border-color","#e3e5e8");
+    });
+    $(".fwqaqfh").mouseleave(function() {
+		$(this).css("border-color","#e3e5e8");
+		$(".fwqaqfh .fwqaqtx_bt").css("background","#e1e5ed").css("color","#3b475b");
+		$(".fwqaqfh_fwqaqg,.fwqaqfh_bottom,.fwqaqfh_bottom li").css("border-color","#e3e5e8");
+    });
+    $(".sjap").mouseleave(function() {
+		$(this).css("border-color","#e3e5e8");
+		$(".sjap .fwqaqtx_bt").css("background","#e1e5ed").css("color","#3b475b");
+		$(".sjap_web,.sjap_right").css("border-color","#e3e5e8");
+    });*/
+    
+    /**鼠标移到模块以后的图标等样式*//*
+    $("#icon_fy_pc,#icon_fy_ios,#icon_fy_android").mouseover(function() {
+    	var className = $(this).attr("id");
+		$(this).find("a i").removeAttr("class").addClass(className+"_02");
+    });
+    $("#icon_fy_pc,#icon_fy_ios,#icon_fy_android").mouseleave(function() {
+    	var className = $(this).attr("id");
+		$(this).find("a i").removeAttr("class").addClass(className);
+    });
+    $("#icon_sjap_web,#icon_sjap_khd").mouseover(function() {
+    	var className = $(this).attr("id");
+		$(this).find(".sjap_web_text span").removeAttr("class").addClass(className+"_02");
+    });
+    $("#icon_sjap_web,#icon_sjap_khd").mouseleave(function() {
+    	var className = $(this).attr("id");
+		$(this).find(".sjap_web_text span").removeAttr("class").addClass(className);
+    });*/
+    /**鼠标到达windows版本软件下载区域**//*
+    $("#fwqaqg_windows,#fwqaqg_linux,#wzaqg_windows,#wzaqg_linux").mouseover(function() {
+    	$("#fwqaqg_windows_div").hide();
+		$("#fwqaqg_linux_div").hide();
+		$("#wzaqg_windows_div").hide();
+		$("#wzaqg_linux_div").hide();
+    	var divName = $(this).attr("id");
+    	$(this).css("background-color","#46ABF1");
+    	$(this).find("a").css("color","#fff");
+		$("#"+divName+"_div").show();
+    });
+    $("#fwqaqg_windows,#fwqaqg_linux,#wzaqg_windows,#wzaqg_linux").mouseleave(function(e) {
+    	var divName = $(this).attr("id");
+	    $(this).css("background-color","#fff");
+    	$(this).find("a").css("color","#8b94a2");
+		$("#"+divName+"_div").hide();
+    });*/
+    
+    /**鼠标到达windows版本软件下载区域**//*
+    $("#icon_fy_pc,#icon_fy_android,#icon_fy_ios").mouseover(function() {
+    	$("#icon_fy_pc_div").hide();
+		$("#icon_fy_ios_div").hide();
+		$("#icon_fy_android_div").hide();
+    	var divName = $(this).attr("id");
+		$("#"+divName+"_div").show();
+    });
+    $("#icon_fy_pc,#icon_fy_android,#icon_fy_ios").mouseleave(function(e) {
+    	var divName = $(this).attr("id");
+		$("#"+divName+"_div").hide();
+    });
+    
+	if(allAttackInterceptTimes == ''){
+		return;
+	}
+	$("#dd_allAttackInterceptTimes").html("累计拦截： <b>"+  allAttackInterceptTimes +"</b> 次篡改攻击<span></span>");
+	$("#dd_allAlarmSMSCount").html("累计发送告警短信：<b>"+ allAlarmSMSCount +"</b>条");
+	$("#dd_allBackupFileCount").html("累计备份： <b>"+ allBackupFileCount +"</b> 个文件<span></span>");
+	$("#dd_allServerCount").html("累计管理： <b>"+ allServerCount +"</b> 台服务器");
+	$("#dd_allWebsiteCount").html("累计管理： <b>"+ allWebsiteCount +"</b>个网站<span></span>");
+	$("#dd_allUseScanWebsiteCount").html("累计检测： <b>"+ allUseScanWebsiteCount +"</b> 个网站<span></span>");
+	*/
+});
+		
+
+function openWebPopularizePage(downloadUrl){
+	if("ActiveXObject" in window){
+		window.open(downloadUrl);
+		//window.location.href = "http://fuyun.safedog.cn/website_popularize.html";
+	}else{
+	//	window.open("http://fuyun.safedog.cn/website_popularize.html");
+		window.location.href = downloadUrl;
+	}
+};		
+
+function openServerPopularizePage(downloadUrl){
+	if("ActiveXObject" in window){
+		window.open(downloadUrl);
+		//window.location.href = "http://fuyun.safedog.cn/server_popularize.html";
+	}else{
+	//	window.open("http://fuyun.safedog.cn/server_popularize.html");
+		window.location.href = downloadUrl;
+	}
+};	
+
+var home_data_show_flag = false;
+function topScrollFunction(){
+	/**
+		绑定首页展示数据的方法
+	**/
+	if(!home_data_show_flag){
+		if($(document).scrollTop()>1250){
+			showDataTotal();
+		}
+	}
+};
+
+function showDataTotal(){
+    home_data_show_flag = true;
+    $.ajax({
+    	type: "post",
+    	dataType:'json',
+    	url:"/content/homePageStatInfo.html",
+    	success: function(data) {
+			$("#userCount").val(data.userCount);
+			$("#serverCount").val(data.allServerCount);
+			$("#alarmCountByType").val(data.alarmCountByType);
+			$("#alarmCount").val(data.alarmCount);
+			var bro = $.browser;
+			if(bro.msie&&((bro.version.substring(0,1))*1<9)){
+				showDataForIE7();
+			}else{
+				showData();
+			}
+		},
+		error: function() {
+		}
+    });
+};
+
+function showDataForIE7(){
+	$("#userCountDiv").html($("#userCount").val());
+	$("#serverCountDiv").html($("#serverCount").val());
+	$("#alarmCountByTypeDiv").html($("#alarmCountByType").val());
+	$("#alarmCountDiv").html($("#alarmCount").val());
+};
+
+var allNumStr = '<div>0</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div>';
+function showData(){
+	changeNum("userCount","userCountDiv");
+	changeNum("serverCount","serverCountDiv");
+	changeNum("alarmCountByType","alarmCountByTypeDiv");
+	changeNum("alarmCount","alarmCountDiv");
+};
+function changeNum(countDiv,changDiv){
+	var num = $("#"+countDiv).val();
+	var count = String(num).length;
+	var nums = String(num).split("");
+	$("#"+changDiv).css("padding-left",(230-22*count)/2+"px");
+	for(var i=0;i<count;i++){
+		var str = '<div class="t_num" style="margin-top: 0px;display: inline;float: left;">';
+		str = str + allNumStr+allNumStr+allNumStr;
+		for(var j=0;j<(nums[i]*1)+1;j++){
+			str = str+ "<div>"+j+"</div>";
+		}
+		str = str+"</div>";
+		$("#"+changDiv).append(str);
+	}
+	
+	var t_nums = $("#"+changDiv).find(".t_num");
+
+	for(var i=0;i<t_nums.length;i++){
+		var end = 3*523+(nums[i]*52.3);
+		$(t_nums[i]).animate({marginTop:"-"+end+"px"},1000+200*(count-i));
+	}
+	
+};
+
+function showUp(bun){
+	var bannContent = $(bun).next();
+	var totalCount = $(bannContent).attr("count");
+	var current = $(bannContent).find("[show='on']");
+	var curNum = $(current).attr("part");
+	var prv = totalCount;
+	if(curNum!=1){
+		prv = curNum*1-1;
+	}
+	changMessagePage(prv,bannContent);
+};
+function showDown(bun){
+	var bannContent = $(bun).prev();
+	var totalCount = $(bannContent).attr("count");
+	var current = $(bannContent).find("[show='on']");
+	var curNum = $(current).attr("part");
+	var next = 1;
+	if(curNum!=totalCount){
+		next = curNum*1+1;
+	}
+	changMessagePage(next,bannContent);
+};
+
+function changMessagePage(page,bannContent){
+	var currentPage = $(bannContent).attr("currentPage");
+	if(page==currentPage){
+		return;
+	}else{
+		var leftOther = 960;
+		var leftFirst = 20;
+		if(isUseLargeWidth()){
+			leftOther = 1190;
+			leftFirst = 30;
+		}
+		
+		if(page>currentPage){
+			$(bannContent).find("[show='on']").animate({left:"-"+leftOther+"px"},200).attr("show","off");
+			$(bannContent).find("[part='"+page+"']").css("left",leftOther+"px").animate({left:leftFirst+"px"},200).attr("show","on");
+		}else if(page<currentPage){
+			$(bannContent).find("[show='on']").animate({left:leftOther+"px"},200).attr("show","off");
+			$(bannContent).find("[part='"+page+"']").css("left","-"+leftOther+"px").animate({left:leftFirst+"px"},200).attr("show","on");
+		}
+		$(bannContent).attr("currentPage",page);
+	}
+};
+
+function clickPage(page,li){
+	var bannContent = $(li).parents(".circle").prev();
+	changMessagePage(page,bannContent);
+	$(li).parent().find(".on").removeClass("on");
+	$(li).find("a").addClass("on");
+};
+
+// 切换产品页面tab
+function changeProductTab(index){
+	$("#safeManager,#safeService,#safeProtect").hide();
+	if(index==3){
+		$("#safeService").show();
+	}else if(index==2){
+		$("#safeManager").show();
+		if($("#samIdx").length>0){
+			window.location.href="#"+$("#samIdx").val();
+		}
+	}else{
+		$("#safeProtect").show();
+	}
+	var tab = $("#product_tab>li:eq("+(index-1)+")");
+	$(tab).parent().find(".on").removeClass("on");
+	$(tab).find("a").addClass("on");
+};
+
+//解决方案页面切换tab
+function changeSolutionTab(index){
+	$("#it_div,#public_cloud_div,#private_cloud_div,#ds_div,#game_div,#mobile_it_div,#gov_div").hide();
+	switch(index){
+		case 1:{
+			$("#it_div").show();
+			break;
+		}
+		case 2:{
+			$("#ds_div").show();
+			break;
+		}
+		case 3:{
+			$("#game_div").show();
+			break;
+		}
+		case 4:{
+			$("#mobile_it_div").show();
+			break;
+		}
+		case 5:{
+			$("#gov_div").show();
+			break;
+		}
+		case 6:{
+			$("#public_cloud_div").show();
+			break;
+		}
+		case 7:{
+			$("#private_cloud_div").show();
+			break;
+		}
+		default:{
+			$("#it_div").show();
+			break;
+		}
+	}
+	var tab = $("#jjfa_link>dl:eq("+(index-1)+")");
+	$(tab).parent().find(".on").removeClass("on");
+	$(tab).find("dt").addClass("on");
+	$(document).scrollTop(0);
+};
+
+//客户端页面切换tab
+function changeClientTab(index){
+	$("#pc_div,#android_div,#ios_div,#web_div").hide();
+	if(index==1){
+		$("#web_div").show();
+	}else if(index==3){
+		$("#android_div").show();
+	}else if(index==4){
+		$("#ios_div").show();
+	}else{
+		$("#pc_div").show();
+	}
+	
+	var tab = $("#client_tabs>li:eq("+(index-1)+")");
+	$(tab).parent().find(".on").removeClass("on");
+	$(tab).find("a").addClass("on");
+};
+
+function showEwm(id){
+	$("#"+id).show();
+};
+
+function hideEwm(id){
+	$("#"+id).hide();
+};
+�Ue�9      X��FX��G=g̋X���   !    :http://safedog.cn/js/index.js?32 request-method GET response-head HTTP/1.1 200 OK
+Server: nginx
+Date: Sun, 05 Feb 2017 09:20:22 GMT
+Content-Type: application/javascript
+Content-Length: 12171
+Accept-Ranges: bytes
+Etag: W/"12171-1460951097000"
+Last-Modified: Mon, 18 Apr 2016 03:44:57 GMT
+ uncompressed-len 0   /�

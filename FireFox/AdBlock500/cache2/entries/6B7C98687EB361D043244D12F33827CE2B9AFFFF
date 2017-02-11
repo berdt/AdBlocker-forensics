@@ -1,0 +1,1019 @@
+{
+	button19l0=new Image(); 
+	button19l0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-19-l-off.gif";
+	button19l1=new Image();
+	button19l1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-19-l-over.gif";
+	button19l2=new Image();
+	button19l2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-19-l-active.gif";
+	
+	button19r0=new Image();
+	button19r0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-19-r-off.gif";
+	button19r1=new Image();
+	button19r1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-19-r-over.gif";
+	button19r2=new Image();
+	button19r2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-19-r-active.gif";
+	
+	button24l0=new Image();
+	button24l0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-24-l-off.gif";
+	button24l1=new Image();
+	button24l1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-24-l-over.gif";
+	button24l2=new Image();
+	button24l2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-24-l-active.gif";
+	
+	button24r0=new Image();
+	button24r0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-24-r-off.gif";
+	button24r1=new Image();
+	button24r1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-24-r-over.gif";
+	button24r2=new Image();
+	button24r2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-24-r-active.gif";
+	
+	button34l0=new Image();
+	button34l0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-34-l-off.gif";
+	button34l1=new Image();
+	button34l1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-34-l-over.gif";
+	button34l2=new Image();
+	button34l2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-34-l-active.gif";
+	
+	button34r0=new Image();
+	button34r0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-34-r-off.gif";
+	button34r1=new Image();
+	button34r1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-34-r-over.gif";
+	button34r2=new Image();
+	button34r2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/button-34-r-active.gif";
+	
+	signin0=new Image();
+	signin0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/signin-off.gif";
+	signin1=new Image();
+	signin1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/signin-on.gif";
+	
+	shop0=new Image();
+	shop0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/shop-off.gif";
+	shop1=new Image();
+	shop1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/shop-on.gif";
+	
+	join0=new Image();
+	join0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/join-off.gif";
+	join1=new Image();
+	join1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/join-on.gif";
+	
+	nav0=new Image();
+	nav0.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/nav-back-off.jpg";
+	nav1=new Image();
+	nav1.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/nav-back-on.jpg";
+	nav2=new Image();
+	nav2.src=g_HttpRelativeWebRoot + "groups/webassets/@ieee/@web/@org/documents/images/nav-back-select.jpg";
+	
+	navedu0=new Image();
+	navedu0.src=g_HttpRelativeWebRoot + "groups/public/@ieee/@web/@org/documents/images/nav-edu-back-off.jpg";
+	navedu1=new Image();
+	navedu1.src=g_HttpRelativeWebRoot + "groups/public/@ieee/@web/@org/documents/images/nav-edu-back-on.jpg";
+	navedu2=new Image();
+	navedu2.src=g_HttpRelativeWebRoot + "groups/public/@ieee/@web/@org/documents/images/nav-edu-back-select.jpg";
+}
+
+function imgOn(imgName) {
+	if (document.images) {
+		document.images[imgName].src = eval(imgName + '1.src');
+	}
+}
+
+function imgOff(imgName) {
+	if (document.images) {
+		document.images[imgName].src = eval(imgName + '0.src');
+	}
+}
+
+// main nav functions
+function navOn(navName) {
+	if (document.getElementById(navName)) {
+		var navClasses = document.getElementById(navName).className;
+		if (navClasses.indexOf("nav-select") == -1) {
+			$("#"+navName).removeClass("nav-off");
+			$("#"+navName).addClass("nav-on");
+			//document.getElementById(navName).className = 'nav-on';
+		}
+	}
+}
+
+function navOff(navName) {
+	if (document.getElementById(navName)) {
+		var navClasses = document.getElementById(navName).className;
+		if (navClasses.indexOf("nav-select") == -1) {
+			$("#"+navName).removeClass("nav-on");
+			$("#"+navName).addClass("nav-off");
+			//document.getElementById(navName).className = 'nav-off';
+		}
+	}
+}
+
+function navSelect(navName) {
+    if ('edu'==navName)
+      return navEduSelect();
+	if (document.getElementById(navName)) {
+		$("#"+navName).removeClass("nav-off");
+		$("#"+navName).addClass("nav-select");
+		$("#"+navName).addClass("dc-mega");
+		//document.getElementById(navName).className = 'nav-select'
+	}
+}
+
+function navEduOn() {
+	if (document.getElementById('edu')) {
+		var navClasses = document.getElementById('edu').className;
+		if (navClasses.indexOf("nav-edu-select") == -1) {
+			$("#edu").removeClass("nav-edu-off");
+			$("#edu").addClass("nav-edu-on");
+			//document.getElementById('edu').className = 'nav-edu-on';
+		}
+	}
+}
+
+function navEduOff() {
+	if (document.getElementById('edu')) {
+		var navClasses = document.getElementById('edu').className;
+		if (navClasses.indexOf("nav-edu-select") == -1) {
+			$("#edu").removeClass("nav-edu-on");
+			$("#edu").addClass("nav-edu-off");
+			//document.getElementById('edu').className = 'nav-edu-off';
+		}
+	}
+}
+
+function navEduSelect() {
+	if (document.getElementById('edu')) {
+		$("#edu").removeClass("nav-edu-off");
+		$("#edu").addClass("nav-edu-select");
+		$("#edu").addClass("dc-mega");
+		//document.getElementById('edu').className = 'nav-edu-select';
+	}
+}
+	
+// left nav function
+function showHideLnav(navNum) {
+	if (document.getElementById) {
+		if (document.getElementById('lnav' + navNum + '-sub').style.display == 'block') {
+			document.getElementById('lnav' + navNum + '-sub').style.display = 'none';
+			document.getElementById('lnav' + navNum).className = 'lnav1 lnav1-plus';
+		}
+		else {
+			document.getElementById('lnav' + navNum + '-sub').style.display = 'block';
+			document.getElementById('lnav' + navNum).className = 'lnav1 lnav1-minus';
+		}
+	}
+}
+
+// util nav function
+function utilSelect(navName) {
+	if (document.getElementById(navName)) {
+		document.getElementById(navName).style.fontWeight = 'bold';
+		document.getElementById(navName).style.textDecoration = 'none';
+	}
+}
+
+// button functions
+function buttonOff(buttonSz,buttonName) {
+	if (document.getElementById) {
+		document.getElementById('button-' + buttonSz + '-' + buttonName).src = g_HttpRelativeWebRoot + 'groups/webassets/@ieee/@web/@org/documents/images/button-' + buttonSz + '-l-off.gif';
+		imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/webassets/@ieee/@web/@org/documents/images/button-' + buttonSz + '-r-off.gif) top right no-repeat';
+		document.getElementById(buttonName + '-r').style.background = imgbkgUrl;
+	}
+}
+
+function buttonOn(buttonSz,buttonName) {
+	if (document.getElementById) {
+		document.getElementById('button-' + buttonSz + '-' + buttonName).src = g_HttpRelativeWebRoot + 'groups/webassets/@ieee/@web/@org/documents/images/button-' + buttonSz + '-l-over.gif';
+		imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/webassets/@ieee/@web/@org/documents/images/button-' + buttonSz + '-r-over.gif) top right no-repeat';
+		document.getElementById(buttonName + '-r').style.background = imgbkgUrl;
+	}
+}
+
+function buttonActive(buttonSz,buttonName) {
+	if (document.getElementById) {
+		document.getElementById('button-' + buttonSz + '-' + buttonName).src = g_HttpRelativeWebRoot + 'groups/webassets/@ieee/@web/@org/documents/images/button-' + buttonSz + '-l-active.gif';
+		imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/webassets/@ieee/@web/@org/documents/images/button-' + buttonSz + '-r-active.gif) top right no-repeat';
+		document.getElementById(buttonName + '-r').style.background = imgbkgUrl;
+	}
+}
+
+//email address string validation funciton 
+function isEmailAddr(Email){
+	var result = false;
+	var theStr = new String(Email);
+	var index = theStr.indexOf("@");
+	if (index > 0){
+	var pindex = theStr.indexOf(".",index);
+	if ((pindex > index+1) && (theStr.length > pindex+1))
+	result = true;
+	}
+  
+	var illegalChars= /[\(\)\<\>\;\:\\\ \"\[\]]/ ;
+	if (theStr.match(illegalChars)){
+      var result = false;
+	}
+  return result;
+}
+
+function validEmail(formField){
+  var result = true;
+  if (result && ((formField.value.length < 3) || !isEmailAddr(formField.value)) ){
+    result = false;
+  }
+  return result;
+}
+
+function lnavSearchSelect(linkName) {
+	if (document.getElementById(linkName)) {
+		document.getElementById(linkName).style.color = '#000000';
+		document.getElementById(linkName).style.fontWeight = 'bold';
+		document.getElementById(linkName).style.textDecoration = 'none';
+	}
+}
+
+function locationGo(SelectID) {
+	Url=document.getElementById(SelectID)[document.getElementById(SelectID).selectedIndex].value;
+	document.location = Url;
+}
+
+// diagonal sub headers
+
+function showSub(subNum) {
+	/*
+	if (document.getElementById) {
+		if (subNum == '1') {
+			document.getElementById('sub1-a').style.color = '#ffffff';
+			document.getElementById('sub1-a').style.cursor = 'default';
+			document.getElementById('sub1-a').className = 'sub-on';
+			document.getElementById('diag-sub1').style.background = '#8DB0C3';
+			imgUrl = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on.gif';
+			document.getElementById('diag-divider1-img').src = imgUrl;
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on-back.gif' + ') top left repeat-y';
+			document.getElementById('diag-divider1').style.background = imgbkgUrl;
+			document.getElementById('sub2-a').style.color = '#333333';
+			document.getElementById('sub2-a').style.cursor = 'pointer';
+			document.getElementById('sub2-a').className = 'sub-off';
+			document.getElementById('diag-sub2').style.background = '#EBE9EA';
+			document.getElementById('diag-divider2-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('diag-divider2').style.background = imgbkgUrl;
+			document.getElementById('sub1').style.display = 'block';
+			document.getElementById('sub2').style.display = 'none';
+			if (document.getElementById('diag-sub3')) {
+				document.getElementById('sub3-a').style.color = '#333333';
+				document.getElementById('sub3-a').style.cursor = 'pointer';
+				document.getElementById('sub3-a').className = 'sub-off';
+				document.getElementById('diag-sub3').style.background = '#EBE9EA';
+				if (document.getElementById('diag-divider3')) {
+					//document.getElementById('diag-divider3-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-last-off.gif';
+					//document.getElementById('diag-divider3').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				}
+				document.getElementById('sub3').style.display = 'none';
+			}
+			if (document.getElementById('diag-sub4')) {
+				document.getElementById('sub4-a').style.color = '#333333';
+				document.getElementById('sub4-a').style.cursor = 'pointer';
+				document.getElementById('sub4-a').className = 'sub-off';
+				document.getElementById('diag-sub4').style.background = '#EBE9EA';
+				document.getElementById('diag-divider4-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('diag-divider4').style.background = imgbkgUrl;
+				document.getElementById('sub4').style.display = 'none';
+			}
+			if (document.getElementById('diag-sub5')) {
+				document.getElementById('sub5-a').style.color = '#333333';
+				document.getElementById('sub5-a').style.cursor = 'pointer';
+				document.getElementById('sub5-a').className = 'sub-off';
+				document.getElementById('diag-sub5').style.background = '#EBE9EA';
+				document.getElementById('diag-divider5-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				document.getElementById('diag-divider5').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('sub5').style.display = 'none';
+			}
+		}
+		else if (subNum == '2') {
+			document.getElementById('sub1-a').style.color = '#333333';
+			document.getElementById('sub1-a').style.cursor = 'pointer';
+			document.getElementById('sub1-a').className = 'sub-off';
+			document.getElementById('diag-sub1').style.background = '#EBE9EA';
+			document.getElementById('diag-divider1-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on-back.gif) top left repeat-y';
+			document.getElementById('diag-divider1').style.background = imgbkgUrl;
+			document.getElementById('sub2-a').style.color = '#ffffff';
+			document.getElementById('sub2-a').style.cursor = 'default';
+			document.getElementById('sub2-a').className = 'sub-on';
+			document.getElementById('diag-sub2').style.background = '#8DB0C3';
+			document.getElementById('diag-divider2-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on-back.gif) top left repeat-y';
+			document.getElementById('diag-divider2').style.background = imgbkgUrl;
+			document.getElementById('sub1').style.display = 'none';
+			document.getElementById('sub2').style.display = 'block';
+			if (document.getElementById('diag-sub3')) {
+				document.getElementById('sub3-a').style.color = '#333333';
+				document.getElementById('sub3-a').style.cursor = 'pointer';
+				document.getElementById('sub3-a').className = 'sub-off';
+				document.getElementById('diag-sub3').style.background = '#EBE9EA';
+				if (document.getElementById('diag-divider3')) {
+					//document.getElementById('diag-divider3-img').src = g_HttpRelativeWebRoot +  'groups/public/@ieee/@web/@org/documents/images/diag-divider-last-off.gif';
+					//imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+					//document.getElementById('diag-divider3').style.background = imgbkgUrl;
+				}
+				document.getElementById('sub3').style.display = 'none';
+			}
+			if (document.getElementById('diag-sub4')) {
+				document.getElementById('sub4-a').style.color = '#333333';
+				document.getElementById('sub4-a').style.cursor = 'pointer';
+				document.getElementById('sub4-a').className = 'sub-off';
+				document.getElementById('diag-sub4').style.background = '#EBE9EA';
+				document.getElementById('diag-divider4-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('diag-divider4').style.background = imgbkgUrl;
+				document.getElementById('sub4').style.display = 'none';
+			}
+			if (document.getElementById('diag-sub5')) {
+				document.getElementById('sub5-a').style.color = '#333333';
+				document.getElementById('sub5-a').style.cursor = 'pointer';
+				document.getElementById('sub5-a').className = 'sub-off';
+				document.getElementById('diag-sub5').style.background = '#EBE9EA';
+				document.getElementById('diag-divider5-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('diag-divider5').style.background = imgbkgUrl;
+				document.getElementById('sub5').style.display = 'none';
+			}
+		}
+		else if (subNum == '3') {	
+			document.getElementById('sub1-a').style.color = '#333333';
+			document.getElementById('sub1-a').style.cursor = 'pointer';
+			document.getElementById('sub1-a').className = 'sub-off';
+			document.getElementById('diag-sub1').style.background = '#EBE9EA';
+			document.getElementById('diag-divider1-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('diag-divider1').style.background = imgbkgUrl;
+			document.getElementById('sub2-a').style.color = '#333333';
+			document.getElementById('sub2-a').style.cursor = 'pointer';
+			document.getElementById('sub2-a').className = 'sub-off';
+			document.getElementById('diag-sub2').style.background = '#EBE9EA';
+			document.getElementById('diag-divider2-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on-back.gif) top left repeat-y';
+			document.getElementById('diag-divider2').style.background = imgbkgUrl;
+			document.getElementById('sub3-a').style.color = '#ffffff';
+			document.getElementById('sub3-a').style.cursor = 'default';
+			document.getElementById('sub3-a').className = 'sub-on';
+			document.getElementById('diag-sub3').style.background = '#8DB0C3';
+			if (document.getElementById('diag-divider3')) {
+				//document.getElementById('diag-divider3-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on.gif';
+				//document.getElementById('diag-divider3-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-last-on.gif';
+				//imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on-back.gif) top left repeat-y';
+				//document.getElementById('diag-divider3').style.background = imgbkgUrl;
+			}
+			document.getElementById('sub1').style.display = 'none';
+			document.getElementById('sub2').style.display = 'none';
+			document.getElementById('sub3').style.display = 'block';
+			if (document.getElementById('diag-sub4')) {
+				document.getElementById('sub4-a').style.color = '#333333';
+				document.getElementById('sub4-a').style.cursor = 'pointer';
+				document.getElementById('sub4-a').className = 'sub-off';
+				document.getElementById('diag-sub4').style.background = '#EBE9EA';
+				document.getElementById('diag-divider4-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('diag-divider4').style.background = imgbkgUrl;
+				document.getElementById('sub4').style.display = 'none';
+			}
+			if (document.getElementById('diag-sub5')) {
+				document.getElementById('sub5-a').style.color = '#333333';
+				document.getElementById('sub5-a').style.cursor = 'pointer';
+				document.getElementById('sub5-a').className = 'sub-off';
+				document.getElementById('diag-sub5').style.background = '#EBE9EA';
+				document.getElementById('diag-divider5-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('diag-divider5').style.background = imgbkgUrl;
+				document.getElementById('sub5').style.display = 'none';
+			}
+		}
+		else if (subNum == '4') {	
+			document.getElementById('sub1-a').style.color = '#333333';
+			document.getElementById('sub1-a').style.cursor = 'pointer';
+			document.getElementById('sub1-a').className = 'sub-off';
+			document.getElementById('diag-sub1').style.background = '#EBE9EA';
+			document.getElementById('diag-divider1-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('diag-divider1').style.background = imgbkgUrl;
+			document.getElementById('sub2-a').style.color = '#333333';
+			document.getElementById('sub2-a').style.cursor = 'pointer';
+			document.getElementById('sub2-a').className = 'sub-off';
+			document.getElementById('diag-sub2').style.background = '#EBE9EA';
+			document.getElementById('diag-divider2-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('diag-divider2').style.background = imgbkgUrl;
+			document.getElementById('sub3-a').style.color = '#333333';
+			document.getElementById('sub3-a').style.cursor = 'pointer';
+			document.getElementById('sub3-a').className = 'sub-off';
+			document.getElementById('diag-sub3').style.background = '#EBE9EA';
+			document.getElementById('diag-divider3-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on-back.gif) top left repeat-y';
+			document.getElementById('diag-divider3').style.background = imgbkgUrl;
+			document.getElementById('sub1').style.display = 'none';
+			document.getElementById('sub2').style.display = 'none';
+			document.getElementById('sub3').style.display = 'none';
+			document.getElementById('sub4-a').style.color = '#ffffff';
+			document.getElementById('sub4-a').style.cursor = 'default';
+			document.getElementById('sub4-a').className = 'sub-on';
+			document.getElementById('diag-sub4').style.background = '#8DB0C3';
+			document.getElementById('diag-divider4-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on.gif';
+			imgbkgUrl = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/public/images/diag-divider-l-on-back.gif) top left repeat-y';
+			document.getElementById('diag-divider4').style.background = imgbkgUrl;
+			document.getElementById('sub4').style.display = 'block';
+			if (document.getElementById('diag-sub5')) {
+				document.getElementById('sub5-a').style.color = '#333333';
+				document.getElementById('sub5-a').style.cursor = 'pointer';
+				document.getElementById('sub5-a').className = 'sub-off';
+				document.getElementById('diag-sub5').style.background = '#EBE9EA';
+				document.getElementById('diag-divider5-img').src = g_HttpRelativeWebRoot + '/groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+				document.getElementById('diag-divider5').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+				document.getElementById('sub5').style.display = 'none';
+			}
+		}
+		else if (subNum == '5') {	
+			document.getElementById('sub1-a').style.color = '#333333';
+			document.getElementById('sub1-a').style.cursor = 'pointer';
+			document.getElementById('sub1-a').className = 'sub-off';
+			document.getElementById('diag-sub1').style.background = '#EBE9EA';
+			document.getElementById('diag-divider1-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			document.getElementById('diag-divider1').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('sub2-a').style.color = '#333333';
+			document.getElementById('sub2-a').style.cursor = 'pointer';
+			document.getElementById('sub2-a').className = 'sub-off';
+			document.getElementById('diag-sub2').style.background = '#EBE9EA';
+			document.getElementById('diag-divider2-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			document.getElementById('diag-divider2').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('sub3-a').style.color = '#333333';
+			document.getElementById('sub3-a').style.cursor = 'pointer';
+			document.getElementById('sub3-a').className = 'sub-off';
+			document.getElementById('diag-sub3').style.background = '#EBE9EA';
+			document.getElementById('diag-divider3-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off.gif';
+			document.getElementById('diag-divider3').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-off-back.gif) top left repeat-y';
+			document.getElementById('sub1').style.display = 'none';
+			document.getElementById('sub2').style.display = 'none';
+			document.getElementById('sub3').style.display = 'none';
+			document.getElementById('sub4-a').style.color = '#333333';
+			document.getElementById('sub4-a').style.cursor = 'pointer';
+			document.getElementById('sub4-a').className = 'sub-off';
+			document.getElementById('diag-sub4').style.background = '#EBE9EA';
+			document.getElementById('diag-divider4-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on.gif';
+			document.getElementById('diag-divider4').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-r-on-back.gif) top left repeat-y';
+			document.getElementById('sub4').style.display = 'none';
+			document.getElementById('sub5-a').style.color = '#ffffff';
+			document.getElementById('sub5-a').style.cursor = 'default';
+			document.getElementById('sub5-a').className = 'sub-on';
+			document.getElementById('diag-sub5').style.background = '#8DB0C3';
+			document.getElementById('diag-divider5-img').src = g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on.gif';
+			document.getElementById('diag-divider5').style.background = 'url(' + g_HttpRelativeWebRoot + 'groups/public/@ieee/@web/@org/documents/images/diag-divider-l-on-back.gif) top left repeat-y';
+			document.getElementById('sub5').style.display = 'block';
+		}
+	}
+	*/
+}
+
+/**
+ * HTML-Encode the supplied input
+ * 
+ * Parameters:
+ *
+ * (String)  source    The text to be encoded.
+ * 
+ * (boolean) display   The output is intended for display.
+ *
+ *                     If true:
+ *                     * Tabs will be expanded to the number of spaces 
+ *                       indicated by the 'tabs' argument.
+ *                     * Line breaks will be converted to <br />.
+ *
+ *                     If false:
+ *                     * Tabs and linebreaks get turned into &#____;
+ *                       entities just like all other control characters.
+ *
+ * (integer) tabs      The number of spaces to expand tabs to.  (Ignored 
+ *                     when the 'display' parameter evaluates to false.)
+ *
+ * v 0.3 - January 4, 2006
+ */
+function htmlEncode(source, display, tabs)
+{
+	function special(source)
+	{
+		var result = '';
+		for (var i = 0; i < source.length; i++)
+		{
+			var c = source.charAt(i);
+			if (c < ' ' || c > '~')
+			{
+				c = '&#' + c.charCodeAt() + ';';
+			}
+			result += c;
+		}
+		return result;
+	}
+	
+	function format(source)
+	{
+		// Use only integer part of tabs, and default to 4
+		tabs = (tabs >= 0) ? Math.floor(tabs) : 4;
+		
+		// split along line breaks
+		var lines = source.split(/\r\n|\r|\n/);
+		
+		// expand tabs
+		for (var i = 0; i < lines.length; i++)
+		{
+			var line = lines[i];
+			var newLine = '';
+			for (var p = 0; p < line.length; p++)
+			{
+				var c = line.charAt(p);
+				if (c === '\t')
+				{
+					var spaces = tabs - (newLine.length % tabs);
+					for (var s = 0; s < spaces; s++)
+					{
+						newLine += ' ';
+					}
+				}
+				else
+				{
+					newLine += c;
+				}
+			}
+			// If a line starts or ends with a space, it evaporates in html
+			// unless it's an nbsp.
+			newLine = newLine.replace(/(^ )|( $)/g, '&nbsp;');
+			lines[i] = newLine;
+		}
+		
+		// re-join lines
+		var result = lines.join('<br />');
+		
+		// break up contiguous blocks of spaces with non-breaking spaces
+		result = result.replace(/  /g, ' &nbsp;');
+		
+		// tada!
+		return result;
+	}
+
+	var result = source;
+	
+	// ampersands (&)
+	result = result.replace(/\&/g,'&amp;');
+
+	// less-thans (<)
+	result = result.replace(/\</g,'&lt;');
+
+	// greater-thans (>)
+	result = result.replace(/\>/g,'&gt;');
+	
+	if (display)
+	{
+		// format for display
+		result = format(result);
+	}
+	else
+	{
+		// Replace quotes if it isn't for display,
+		// since it's probably going in an html attribute.
+		result = result.replace(new RegExp('"','g'), '&quot;');
+	}
+
+	// special characters
+	result = special(result);
+	
+	// tada!
+	return result;
+}
+
+$(document).ready(function() {
+	$(".ieee-btn").renderIeeeBtn();
+	if (document.getElementById('sub1')) { 
+		document.getElementById('sub1').style.display = 'block';
+	}
+	if (document.getElementById('sub2')) { 
+		document.getElementById('sub2').style.display = 'none';
+	}
+	
+	var modulesHeight = 0;
+	$('.content-lc').children().each(function() { 
+		modulesHeight = modulesHeight + $(this).height();
+	});
+												
+	var lastModuleHeight = $(".content-lc .box-lc:last-child").height();
+	
+	//kb - removed to fix defects 356 and 
+	//var containerHeight = $('.content-gray').height();
+	//$(".content-lc .box-lc:last-child").height(lastModuleHeight + (containerHeight - modulesHeight) - 14);
+
+	//Remove the html tags inside the title tag.
+	$("title").html($("title").text().replace(/(<([^>]+)>)/ig,""));
+	
+	//Adjust the image caption text to fit into the width of the image.	
+	$(".img-caption").each(function() {
+		var $caption = $(this);
+		//Sometimes, the img tag itself has an enclosing .img-caption <p> tag.
+		//So this should be ignored.
+		if(! $caption.children("img").length > 0){
+			var $image = $caption.prev().children("img");
+			$image.load(function() { //This is for the first time load.
+					var imgWidth = $(this).width();
+					$caption.css("width", imgWidth);
+					if($image.hasClass("img-right")) {
+  						$caption.css("float", "right");
+  						$caption.css("clear", "both");
+  					}
+			}).each(function() { //This is for the cached image instances.
+				if(this.complete){
+					var imgWidth = $(this).width();
+  					$caption.css("width", imgWidth);
+  					if($image.hasClass("img-right")) {
+  						$caption.css("float", "right");
+  						$caption.css("clear", "both");
+  					}
+				}
+			});
+		}
+	});
+	
+	//This is for an expand-collapse module based on predefined styles.
+	$(".expand-collapse a.list-title").click(function() {
+		var parentli = $(this).parent("li");
+		var parentul = parentli.parent("ul");
+		var childul = parentli.children("ul");
+		if(parentul.hasClass("list-expanded")){
+			parentul.removeClass("list-expanded");
+			parentul.addClass("list-collapsed");
+			childul.hide();
+		} else {
+			parentul.removeClass("list-collapsed");
+			parentul.addClass("list-expanded");
+			childul.show();		
+		}
+	});
+	
+	//This is for an expand-collapse module based on predefined styles.
+	$(".expand-collapse.list-collapsed").each(function() {
+		$(this).find("ul").hide();
+	});
+	
+	//Apply alternate colors to the .grid-shading and .nogrid-shading tables.
+	$(".grid-shading tr:even").addClass("grid-shading-even");
+	$(".grid-shading tr:odd").addClass("grid-shading-odd");
+	$(".nogrid-shading tr:even").addClass("nogrid-shading-even");
+	$(".nogrid-shading tr:odd").addClass("nogrid-shading-odd");
+	
+	//Open all the Pdf links in new window.
+	$('a').filter('[href$=".pdf"],[href$=".PDF"]').each(function() {
+   		$(this).attr("target", "_blank");
+	});
+
+	// adjust the links inside the p tag along the content-101-10 divs to make it wrap around the image.
+	$("div.content-101-10").siblings("p.arrow-link").find("a").addClass("arrow-link");
+	$("div.content-101-10").siblings("p.arrow-link").addClass("list-plain");
+	$("div.content-101-10").siblings("p.arrow-link").removeClass("arrow-link");
+	// adjust the links inside the ul > li tag along the content-101-10 divs to make it wrap around the image.
+	$("div.content-101-10").siblings("ul.arrow-link").find("a").addClass("arrow-link");
+	$("div.content-101-10").siblings("ul.arrow-link").addClass("list-plain");
+	$("div.content-101-10").siblings("ul.arrow-link").removeClass("arrow-link");
+
+    /*$('.dropdown-right').hide();
+    $('.dropdown-right:first').show();
+    $('.dropdown-left li:first').addClass('active');
+    $('.dropdown-left li').hover(function() {
+        $('.dropdown-left li').removeClass('active');
+        $(this).addClass('active');
+        $('.dropdown-right').hide();
+        var activeTab = $(this).find('a').attr('name');
+        $(activeTab).show();
+        return false;
+    });
+	*/
+
+    // main slider
+    $('#carousel').carousel({
+        interval: 5000,
+        pause: 'click'
+    });
+
+    $('.play-btn').click(function(e) {
+        if ($(e.currentTarget).hasClass('active')) {
+            $('#carousel').carousel('pause');
+        } else {
+            $('#carousel').carousel('cycle');
+        }
+        $(e.currentTarget).toggleClass('active');
+    });
+
+    $('.carousel-indicators li').click(function() {
+        $('#carousel').carousel('pause');
+        $('.play-btn').removeClass('active');
+    })
+
+    // items sliders
+    $.each($('.slide-wrapper'), function(e){
+        itemsCarousel($(this)) 
+    });
+    
+	//Fetch the mega menu content in an AJAX request to save the page loading time.
+	//fetchMegaMenuContent("");
+});
+
+function itemsCarousel(el) {
+    var slider = el.find('.video-box'),
+        sliderItem = slider.children('li.item'),
+        sliderItemW = sliderItem.innerWidth(),
+        sliderWidth = sliderItem.length * sliderItemW,
+        sliderArrowRight = el.find('.right.arrow'),
+        sliderArrowLeft = el.find('.left.arrow'),
+        baseLength = sliderItem.length;
+
+    slider.width(sliderWidth);
+
+    sliderArrowRight.click(function(e) {
+        if (slider.is(':not(:animated)') && sliderArrowRight.hasClass('active')) {
+            slider.animate({
+                left: '-='+ sliderItemW
+            }, 500, function(){
+                if (!sliderArrowLeft.hasClass('active')) {
+                    sliderArrowLeft.addClass('active');
+                }
+				var rightspace = parseInt(sliderWidth) + parseInt(slider.css('left'));
+				var totalspace = (sliderItemW * baseLength);
+                if(rightspace <= sliderItemW) {
+                    sliderArrowRight.removeClass('active');
+                }
+            });
+        }
+        return false;
+    });
+    sliderArrowLeft.click(function(e) {
+        if (slider.is(':not(:animated)') && sliderArrowLeft.hasClass('active')) {
+			console.log("sliderWidth : " + sliderWidth);
+			console.log("slider.css:left : " + parseInt(slider.css('left')));
+			console.log("sliderItemW : " + sliderItemW);
+			console.log("baseLength : " + baseLength);
+				
+            slider.animate({
+                left: '+='+ sliderItemW
+            }, 500, function(){
+                if (!sliderArrowRight.hasClass('active')) {
+                    sliderArrowRight.addClass('active');
+                }
+                if (parseInt(slider.css('left')) >= 0) {
+                    sliderArrowLeft.removeClass('active');
+                }
+            });
+        }
+        return false;
+    });
+}
+
+function isIE(){
+	var ie_version = getInternetExplorerVersion();
+	if(ie_version > -1){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// Returns the version of Internet Explorer or a -1
+// (indicating the use of another browser).
+function getInternetExplorerVersion() {
+  var rv = -1; // Return value assumes failure.
+  if (navigator.appName == 'Microsoft Internet Explorer')
+  {
+    var ua = navigator.userAgent;
+    var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+    if (re.exec(ua) != null)
+      rv = parseFloat( RegExp.$1 );
+  }
+  return rv;
+}
+
+var ucm_mm_content_url = "/idcplg?IdcService=WCM_PLACEHOLDER&placeholderDefinitionDocName=PLDEF_IEEE_MEGA_MENUS&dataFileDocName=DF_IEEE_MEGA_MENUS&templateDocName=RGTMP_IEEE_MEGA_MENUS&SSDoLinkEvaluation=true&SSLinkUrlEvaluationPrefix=/ucm/";
+function fetchMegaMenuContent(navId){
+	$.ajax({
+		type: "GET",
+		url: ucm_mm_content_url,
+		data: null,
+		dataType: 'html',	
+		success: function (data){
+			$(document).ready(function () {
+				try{
+					$("#ucmMegaMenuContent").html(data);
+					createMegaMenus(navId);
+				}catch(e){}
+			});
+		},
+		error:function(xhr, ajaxOptions, thrownError){
+			$(document).ready(function () {
+			});
+		}
+	});
+}
+	
+function createMegaMenus(navId){
+	var mmSubContainer;
+	var container_index = 1;
+	$("#mm-wrapper").children().each(function() {
+		mmSubContainer = $(this).detach();
+		var $clone = $("#srch").clone();
+		$clone.attr("id", "mm-srch-"+container_index);
+		$clone.attr("name", "siteSearch"+container_index);
+		//$clone.attr("name", "mmSiteSearch");
+		var $srchterm = $clone.find("#srchterm");
+		$srchterm.attr("id", "mm-srchterm-"+container_index)
+		$srchterm.attr("class", "mm-srchterm");
+		$srchterm.focus(function(){
+			$(this).attr("style", "background: none repeat scroll 0 0 #FFFFFF; border: 1px solid #7E9DB9; padding: 2px;");
+		});
+		$srchterm.blur(function(){
+			if ($(this).attr("value") == '') {
+				$(this).attr("style", "background: url(https://www.google.com/cse/intl/en/images/google_custom_search_watermark.gif) no-repeat scroll left center #FFFFFF;   border: 1px solid #7E9DB9;   padding: 2px;");
+			}
+		});
+
+		var $srchgo = $clone.find("#srchgo");
+		$srchgo.attr("id","mm-srchgo-"+container_index);
+		$srchgo.attr("class","mm-srchgo small ieee-button");
+		
+		// Change the onclick event of the search button to trigger the search in the proper form.
+		var $srchbtn = $srchgo.find("a");
+		$srchbtn.removeAttr('onclick');
+		$srchbtn.click(function() {
+			trackEvent('gcs_button');
+			var $formObj = $(this).parents("form");
+			$formObj.submit();
+		});
+		
+		$clone.appendTo(mmSubContainer.find(".mm-srch"));
+		$('#nav .dc-mega-li').eq(container_index-1).append(mmSubContainer);
+		container_index = container_index + 1;
+	});
+	
+	
+	//This is to render the button in the mega menu dom content.
+	$(".ieee-btn").renderIeeeBtn();
+	$(document).ready(function() {
+		$('#nav').dcMegaMenu({
+			speed: 'fast',
+			effect: 'fade',
+			event: 'click',
+			fullWidth: true
+		});
+		
+		var $csrchform = $("#nav").find("#srchlft");
+		$csrchform.attr("id","srchlft-mm");
+		$csrchform.attr("name","srchlft-mm");
+		
+		var $keywords_input = $csrchform.find("#KEYWORDS");
+		$keywords_input.attr("id","KEYWORDS_CFS_MM");
+		var $mm_conf_srch_from_date = $("#nav").find("#RANGE_FROM_DATE");
+		$mm_conf_srch_from_date.attr("id","RANGE_FROM_DATE_MM");
+		var $mm_conf_srch_to_date = $("#nav").find("#RANGE_TO_DATE");
+		$mm_conf_srch_to_date.attr("id","RANGE_TO_DATE_MM");
+		
+		var $eventsrch = $("#nav").find("#eventsrch");
+		$eventsrch.attr("id","eventsrchmm");
+		
+		var $eventsrchl = $("#nav").find("#eventsrch-l");
+		$eventsrchl.attr("id","eventsrchmm-l");
+		var $eventsrchr = $("#nav").find("#eventsrch-r");
+		$eventsrchr.attr("id","eventsrchmm-r");
+		var newSubmitForm = function() { 
+    		submitform("srchlft-mm");
+		};
+		
+		var $eventsrchla = $eventsrchl.find('a');
+		var $eventsrchra = $eventsrchr.find('a');
+		
+		$eventsrchla.attr('onclick','').unbind('click');
+		$eventsrchla.click(newSubmitForm);
+		$eventsrchla.removeAttr('onmouseover');
+		$eventsrchla.mouseover(function() { buttonOn('24','eventsrchmm'); });
+		$eventsrchla.removeAttr('onmouseout');
+		$eventsrchla.mouseout(function() { buttonOn('24','eventsrchmm'); });
+		$eventsrchla.removeAttr('onmousedown');
+		$eventsrchla.mousedown(function() { buttonOn('24','eventsrchmm'); });
+		$eventsrchla.removeAttr('onmouseup');
+		$eventsrchla.mouseup(function() { buttonOn('24','eventsrchmm'); });
+		
+		$eventsrchra.attr('onclick','').unbind('click');
+		$eventsrchra.click(newSubmitForm);
+		$eventsrchra.removeAttr('onmouseover');
+		$eventsrchra.mouseover(function() { buttonOn('24','eventsrchmm'); });
+		$eventsrchra.removeAttr('onmouseout');
+		$eventsrchra.mouseout(function() { buttonOn('24','eventsrchmm'); });
+		$eventsrchra.removeAttr('onmousedown');
+		$eventsrchra.mousedown(function() { buttonOn('24','eventsrchmm'); });
+		$eventsrchra.removeAttr('onmouseup');
+		$eventsrchra.mouseup(function() { buttonOn('24','eventsrchmm'); });
+		
+		var $eventsrchbtn = $("#nav").find("#button-24-eventsrch");
+		$eventsrchbtn.attr("id","button-24-eventsrchmm");
+		
+		var $mm_conf_srch_from_date = $("#nav").find("#eventsrchmm-r");
+		$(function() {
+			var dates_mm = $( "#RANGE_FROM_DATE_MM, #RANGE_TO_DATE_MM" ).datepicker({
+			defaultDate: "+1w",
+			changeMonth: true,
+			changeYear: true,
+			yearRange: '2003:+14',
+			numberOfMonths: 1,
+			dateFormat: 'yy-mm-dd',
+			minDate:'2003-01-01',
+			maxDate:'+14y',
+			showOn: "both",
+			buttonImage: "/ucm/groups/public/@ieee/@web/@org/documents/images/10025015.gif",
+			buttonImageOnly: true,
+			buttonText:'click to select date',
+			showButtonPanel: true,
+			onSelect: function( selectedDate ) {
+				var option = this.id == "RANGE_FROM_DATE_MM" ? "minDate_mm" : "maxDate_mm",
+					instance = $( this ).data( "datepicker_mm" ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				dates_mm.not( this ).datepicker( "option", option, date );
+			}
+		});
+	});
+
+	$(function() {
+		var dates = $( "#RANGE_FROM_DATE, #RANGE_TO_DATE" ).datepicker({
+			defaultDate: "+1w",
+			changeMonth: true,
+			changeYear: true,
+			yearRange: '2003:+14',
+			numberOfMonths: 1,
+			dateFormat: 'yy-mm-dd',
+			minDate:'2003-01-01',
+			maxDate:'+14y',
+			showOn: "both",
+			buttonImage: "/ucm/groups/public/@ieee/@web/@org/documents/images/10025015.gif",
+			buttonImageOnly: true,
+			buttonText:'click to select date',
+			showButtonPanel: true,
+			onSelect: function( selectedDate ) {
+				var option = this.id == "RANGE_FROM_DATE" ? "minDate" : "maxDate",
+					instance = $( this ).data( "datepicker" ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				dates.not( this ).datepicker( "option", option, date );
+			}
+		});
+	});
+	
+		// This is to open the mega menu just after the first time load
+		// because we are loading the mega menu on the first time click.
+		if(navId){
+			$("#"+navId).trigger('click');
+		}
+	});
+}
+	
+function selectMegaMenu(navId) {
+	if ($("#mm-wrapper").length <= 0){
+		fetchMegaMenuContent(navId);
+	} else {
+		selectMegaMenuInternal(navId);
+	}
+}
+	
+function selectMegaMenuInternal(navName) {
+	//This is to deselect the previously selected tab.
+	$(".nav-select").addClass("nav-off");
+	$(".nav-select").removeClass("nav-select");
+	$(".nav-edu-select").addClass("nav-edu-off");
+	$(".nav-edu-select").removeClass("nav-edu-select");
+	
+	//Select the current tab.
+	if ('edu'==navName) {
+      //navEduSelect();
+      document.getElementById(navName).className='nav-edu-select';
+    } else {
+		document.getElementById(navName).className = 'nav-select';
+	}
+}
+
+function closeMegaMenu() {
+	$(".nav-select").addClass("nav-off");
+	$(".nav-select").removeClass("nav-select");
+	$(".nav-edu-select").addClass("nav-edu-off");
+	$(".nav-edu-select").removeClass("nav-edu-select");
+}¶db¦´{      X–ádX–ád=gÍQ       U    :http://www.ieee.org/ucm/groups/webassets/@ieee/@web/@org/documents/webassets/main.js request-method GET response-head HTTP/1.1 200 OK
+Pragma: no-cache
+Last-Modified: Wed, 28 Dec 2016 19:02:54 GMT
+Etag: "2951b6182-b199-544bc9db55380"
+Accept-Ranges: bytes
+Content-Length: 45465
+Content-Type: application/x-javascript
+content-security-policy: frame-ancestors http://*.ieee.org https://*.ieee.org
+Cache-Control: no-cache
+Date: Sun, 05 Feb 2017 09:25:08 GMT
+ uncompressed-len 0   ±™
